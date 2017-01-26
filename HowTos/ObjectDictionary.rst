@@ -29,14 +29,24 @@ Lets look at an entry in the motor-controller Object Dictionary:
 
 The first thing an entry has is a header. The header will always be in the
 "[]". In this case [2220] and represents the **index**
-1. Parameter name is simply the name of the object.
-2. Object Type -an integer which points to the object type.
-3.DataType - an integer representing a type of data eg. String,Int,Short
-4.AccessType - denotes the permissions and actions of this object Read,Write,Write)
-5.LowLimit - the max  you can set that object
-6.HighLimit - the lowest value you can set that object
-7. Unknown
-8. Unkown
+
+
+ 1.Parameter name is simply the name of the object.
+
+ 2.Object Type -an integer which points to the object type.
+
+ 3.DataType - an integer representing a type of data eg. String,Int,Short
+
+ 4.AccessType - denotes the permissions and actions of this object Read,Write,Write)
+
+ 5.LowLimit - the max  you can set that object
+
+ 6.HighLimit - the lowest value you can set that object
+
+ 7.Unknown
+
+ 8.Unkown
+
 
 There are addition Sevcon fields, commented for no reason, that help describe
 the object more.
