@@ -16,7 +16,9 @@ Basis
 =====
 In base ten there are 10 symbols which represent our number system. In Hexadecimal there are 16 symbols.
 
-These symbols are::
+These symbols are:
+::
+
       0  1  2   3    4   5  6  7  8  9  a b  c  d  e  f
 
 Notice that we run out of numbers to represent 11-15 and begin to use letters.
@@ -27,12 +29,16 @@ Constructing Hex Numbers
 What if we have a number bigger then 15(F) we want to represent? Well lets look at our number system for comparison.
 When we count up to 9, we simply start over and now add what we call the "tens digit"
 
-therefore we get::
+therefore we get:
+::
+
     9, *10* , 11 , 12 , 13 , 14... 99, *100*
 
 The pattern is quite similar to the way we write hex bigger then F.
 
-So for hex bigger then F::
+So for hex bigger then F:
+::
+
     Hex : E,F, *10*, 11, 12
 
     Decimal: 14,15,16,17,18
@@ -47,12 +53,16 @@ It is important to understand simple hex to decimal and hex to binary conversion
 
 A hex symbol can represent 4 bits.
 
-For example::
+For example:
+::
+
    1110 ---> E in Hex ---> 14 in decimal
 
 Most of can notation is very byte manipulated intensive. Representing a byte is very easy as using two hex symbols
 
-for example::
+for example:
+::
+
    1110 1111   --> 0xEF  --> 239 in decimal
    0000 0011  --> 0x03 ---> 3 in decimal
 
