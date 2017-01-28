@@ -7,8 +7,11 @@ class DictObj():
 
     def __init__(self, index, parameterName, objectType):
         self.index = index
-        self.ParameterName = parameterName
-        self.ObjectType = objectType
+        self.parameterName = parameterName
+        self.objectType = objectType
+
+    def __str__(self):
+        return str(self.index)+': '+self.parameterName+' ObjectType: '+self.objectType
 
 class ObjectDictionary(collections.Mapping):
 
@@ -22,7 +25,14 @@ class ObjectDictionary(collections.Mapping):
         eds = configparser.ConfigParser()
         eds.read(edsPath)
         for section in eds.sections():
-
+            if len(section) is 4:
+                pn = eds.get(section, 'ParameterName')
+                objtype = eds.get(section, 'ObjectType')
+                hexIndex = int(section, 16)
+                obj = DictObj(hexIndex, pn, objtype)
+                dic.names[pn] = obj
+                dic.ids[hexIndex] = obj
+        return dic
 
     def __setitem__(self,key,value):
         if type(key) is str:
@@ -33,21 +43,25 @@ class ObjectDictionary(collections.Mapping):
     def __getitem__(self,key):
         if type(key) is str:
             return self.names[key]
-        else:
+        if type(key) is type(0x0):
             return self.ids[key]
+        else:
+            print('unkown key: '+key)
 
 
     def __iter__(self):
         for objitem in self.ids:
             yield objitem
 
-
     def __len__(self):
         return len(self.ids)
 
-
+    def __str__(self):
+        return '\n'.join([str(obj) for obj in self.ids.values()])
+        # for key in self.ids:
+        #     print(key+': ')
 
 if __name__ == '__main__':
-
-    cow = ObjectDictionary.initialize('..\edsfiles\MotorController.eds')
-    feature-initialize-ObjectDictionary
+    print("initializing motorController Dictionary")
+    test = ObjectDictionary.initialize('../edsfiles/MotorController.eds')
+    print(str(test.ids[0x1018]))
