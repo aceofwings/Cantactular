@@ -1,4 +1,5 @@
 import collections, configparser
+import os
 
 class DictionaryObject(collections.Mapping):
 
@@ -45,6 +46,7 @@ class DictionaryObject(collections.Mapping):
 
 
 class ObjectDictionary(collections.Mapping):
+    edsFilePath = None
 
     def __init__(self):
         self.names = {}
@@ -52,9 +54,15 @@ class ObjectDictionary(collections.Mapping):
 
     @classmethod
     def initialize(self, edsPath):
+
         dic = ObjectDictionary()
         eds = configparser.ConfigParser()
-        eds.read(edsPath)
+
+        if  self.edsFilePath is None:
+            eds.read(edsPath)
+        else:
+            eds.read(os.path.join(self.edsFilePath,edsPath))
+            
         for section in eds.sections():
             if len(section) is 4:
                 pn = eds.get(section, 'ParameterName')
