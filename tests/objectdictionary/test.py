@@ -1,4 +1,4 @@
-from src import objectdictionary
+from gateway.utils import objectdictionary
 import unittest
 
 class TestObjectDictionary():
