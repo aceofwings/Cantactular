@@ -1,14 +1,17 @@
-from gateway.utils import objectdictionary
+from gateway.utils.objectdictionary import ObjectDictionary
 import unittest
 
-class TestObjectDictionary():
+class TestObjectDictionary(unittest.TestCase):
     def setUp(self):
-        self.obj = ObjectDictionary.initialize()
+        self.obj = ObjectDictionary.initialize('edsfiles/MotorController.eds')
     def tearDown(self):
         pass
     def test_ReadEdsFile(self):
-        pass
+        self.assertNotEqual(self.obj, None)
     def test_index(self):
-        pass
+        self.assertEqual(self.obj[0x1018].parametername, "Identity object")
     def test_SubIndex(self):
-        pass
+        self.assertEqual(self.obj[0x1018][0x0].parametername, "Number of entries")
+
+if __name__ == '__main__':
+    unittest.main()

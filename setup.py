@@ -1,4 +1,5 @@
 import os
+import sys
 from setuptools import setup, find_packages
 
 
@@ -9,7 +10,11 @@ setup(name='evtgateway',
       author='EVT RIT',
       author_email='EVT@RIT.EDU',
       packages=find_packages(),
+      scripts= ['bin/gateway'],
       license='MIT',
       include_package_data=False,
       package_data={ '': ['*.txt', '*.rst']},
       zip_safe=False)
+
+
+BIN_PATH = '/usr/local/bin'
