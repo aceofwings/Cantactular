@@ -2,8 +2,8 @@
 
 A heaven for our RIT electric vehicle team code.  
 
->"This is a beautiful mess" - Daniel Harrington 
-  
+>"This is a beautiful mess" - Daniel Harrington
+
 ##Contributors and Team Members  
 * Daniel Harrington
 * Daniel Cox
@@ -16,9 +16,13 @@ The Gateway is a raspherry PI accompanied by a PI-Can Cape. This device is mount
 ##Purpose
 Implemented to follow can-open protocol and is able to operate effectivtly and effciently with many nodes on the network, retrieving various data measurements.
 
-##How can *you* contribute?
+## How can *you* contribute?
 Contributing is easy and must following our *guidelines*.
 
-##Resources
+## Resources
 * [CanOpen](https://en.wikipedia.org/wiki/CANopen)
 
+## install
+```
+python3 setup.py install
+```
