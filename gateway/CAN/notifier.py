@@ -11,12 +11,11 @@
 #
 #
 class Notifier:
-    def __init__(self,interface):
-        self.interface = interface
-        self.listeners = []
+    def __init__(self):
         self.thread = None
+
     #Listen on interface and notify all listeners
     #
     # Returns None
-    def notifyAll(self,canmessage):
+    def readloop(self, [Listener]):
         pass
