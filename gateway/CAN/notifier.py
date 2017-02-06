@@ -17,5 +17,5 @@ class Notifier:
     #Listen on interface and notify all listeners
     #
     # Returns None
-    def readloop(self, [Listener]):
+    def readloop(self, listeners):
         pass

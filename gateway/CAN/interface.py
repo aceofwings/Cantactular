@@ -15,9 +15,9 @@ import threading.Thread
 
 class Interface:
         def __init__(self, controller, device):
-        	self.notifier = None
-		self.controller = controller
-		self.device = device
+            self.notifier = None
+		    self.controller = controller
+		    self.device = device
 
         def close(self):
             pass

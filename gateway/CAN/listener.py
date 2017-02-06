@@ -16,5 +16,5 @@ class Listener:
         self.listening = {}
 
 
-    def notify(self,Canmessage):
+    def notify(self,canmessage):
         pass
