@@ -16,12 +16,29 @@
 #
 #
 #
+import struct
+
 class CanMessage:
-    def __init__(self, bytes):
-        self.cobid = None
-        self.data = None
-        self.nodeid = None
+	def __init__(self, bytes):
+		hexarray = 0x8543
+		
+		can_frame = struct.Struct("BBBB")
+
+		print('0x'+str(hexarray)+'+'+str(bytes)+'='+str(can_frame.unpack(bytes)))
+		self.cobid = None
+		self.data = None
+		self.nodeid = None
+		
 
 
-    def __disectFrame(self):
-        pass
+	def __disectFrame(self):
+		pass
+
+if __name__ == '__main__':
+	cannmess = CanMessage(b'8543')
+	
+
+
+
+
+
