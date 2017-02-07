@@ -14,14 +14,20 @@
 # extracting Node_ID and function ID
 #Returns None
 #
-#
-#
+#toBytes(self)
+# Pack the COB_ID, DLC, data into a byte representation
+#returns the byte representation of the frame
+#Note length must equal 16 bytes
 class CanMessage:
     def __init__(self, bytes):
         self.cobid = None
         self.data = None
+        self.dlc = None
         self.nodeid = None
 
 
     def __disectFrame(self):
         pass
+
+    def toBytes(self):
+        return bytes()
