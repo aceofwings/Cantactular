@@ -12,20 +12,17 @@ def lookForLauncher(path):
 def unpackLauncher(path):
     return open(path, 'r').read()
 
-if 1 == 1:
-		checkDir = os.path.join(os.path.abspath('.'), RUN_FILE)
-		print('running: '+checkDir)
-        launcher = lookForLauncher(checkDir)
-        if launcher:
-            print("Attemping to launch app....")
-            f = unpackLauncher(checkDir)
-            exec(f)
-        print("APP launched")
-            break
-        elif currentdir == STOP_PATH:
-            print("Fail to find launcher")
-            break
-
+while True:
+    checkDir = os.path.join(os.path.abspath('.'), RUN_FILE)
+    launcher = lookForLauncher(checkDir)
+    if launcher:
+        print("Attemping to launch app....")
+        f = unpackLauncher(checkDir)
+        exec(f)
+        break
+    elif currentdir == STOP_PATH:
+        print("Fail to find launcher")
+        break
         os.chdir('..')
         currentdir = os.path.abspath('.')
 
