@@ -38,8 +38,6 @@ class CanMessage:
 	def __disectFrame(self):
 		pass
 
-     def toBytes(self):
-        return bytes()
 
 if __name__ == '__main__':
 	cannmess = CanMessage(b'8543')
