@@ -14,6 +14,10 @@
 # extracting Node_ID and function ID
 #Returns None
 #
+#toBytes(self)
+# Pack the COB_ID, DLC, data into a byte representation
+#returns the byte representation of the frame
+#Note length must equal 16 bytes
 #
 #
 import struct
@@ -21,24 +25,21 @@ import struct
 class CanMessage:
 	def __init__(self, bytes):
 		hexarray = 0x8543
-		
+
 		can_frame = struct.Struct("BBBB")
 
 		print('0x'+str(hexarray)+'+'+str(bytes)+'='+str(can_frame.unpack(bytes)))
 		self.cobid = None
 		self.data = None
 		self.nodeid = None
-		
+
 
 
 	def __disectFrame(self):
 		pass
 
+     def toBytes(self):
+        return bytes()
+
 if __name__ == '__main__':
 	cannmess = CanMessage(b'8543')
-	
-
-
-
-
-
