@@ -19,21 +19,24 @@
 #returns the byte representation of the frame
 #Note length must equal 16 bytes
 #
-#
+# 0 1 2 3     4     5 6 7     8 9 10 11 12 13 14 15
+#CANID     datalen  padding
 import struct
 class CanMessage:
     def __init__(self, bytes):
-        self.cobid = None
-        self.data = None
-        self.nodeid = None
 
-        can_frame = struct.Struct('BBBBBBBBBBBBBBBB')
+        can_frame = struct.Struct('IB3x8B')
         self.indata = can_frame.unpack(bytes)
 
-    def getID(self):
-        return self.cobid
+        self.canid = self.indata[0]
+        self.datalen = self.indata[1]
+
+        self.data = self.indata[2:10]
+
 
     def __str__(self):
-        return "in:"+str(bytes)+": "+str(self.indata)
+        return "id:"+str(hex(self.canid))+" datalen: "+hex(self.datalen)+" ::data::" + str(self.data)
 
-
+#if __name__ == "__main__":
+#    canmess = CanMessage(b'0000000010000000')
+#    print(canmess)
