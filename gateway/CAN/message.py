@@ -21,23 +21,19 @@
 #
 #
 import struct
-
 class CanMessage:
-	def __init__(self, bytes):
-		hexarray = 0x8543
+    def __init__(self, bytes):
+        self.cobid = None
+        self.data = None
+        self.nodeid = None
 
-		can_frame = struct.Struct("BBBB")
+        can_frame = struct.Struct('BBBBBBBBBBBBBBBB')
+        self.indata = can_frame.unpack(bytes)
 
-		print('0x'+str(hexarray)+'+'+str(bytes)+'='+str(can_frame.unpack(bytes)))
-		self.cobid = None
-		self.data = None
-		self.nodeid = None
+    def getID(self):
+        return self.cobid
 
-
-
-	def __disectFrame(self):
-		pass
+    def __str__(self):
+        return "in:"+str(bytes)+": "+str(self.indata)
 
 
-if __name__ == '__main__':
-	cannmess = CanMessage(b'8543')
