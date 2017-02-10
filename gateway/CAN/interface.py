@@ -61,7 +61,8 @@ class Interface:
         return CanMessage(recieved)
 
     def write(self,canmessage):
-        return bytes()
+        sent = self.sock.send(canmessage.bytes())
+        return sent
 
     def launchNotifier(self):
         return Notifier()
@@ -73,6 +74,14 @@ if __name__ == "__main__":
     can0 = Interface()
     print(can0)
     can0.start("vcan0")
-    while True:
-        for mesg in can0:
-            print(mesg)
+
+
+    canmessage = CanMessage.create(2894, b'jdnsje75')
+    print("writing: "+str(canmessage))
+    sent = can0.write(canmessage)
+    print("sent: "+ str(sent))
+
+
+
+    for mesg in can0:
+        print(mesg)

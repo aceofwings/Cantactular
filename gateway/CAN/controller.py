@@ -2,9 +2,10 @@
 #
 #
 #
-# 
+#
 #
 #
 #
 #
 class Controller:
+    pass
