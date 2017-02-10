@@ -10,16 +10,29 @@
 from threading import Thread
 
 class Notifier:
-    def __init__(self,interface):
+    def __init__(self,interface, listeners):
         self.thread = None
+        self.listeners = listeners
+        self.interface = interface
+        self.daemonThread = Thread.thread(target=readloop)
+        self.daemonThread.setDaemon(True)
+        self._stop = threading.
 
-    def launchDaemon():
-        pass
+    def launchDaemon(self):
+        if self.daemonThread.isAlive():
+            self.daemonThread.start()
+        else:
+            raise threading.ThreadError("Daemon is alive anad running")
 
     def stopDaemon():
-        pass
+        self._stop.set()
     #Listen on interface and notify all listeners
     #
     # Returns None
-    def readloop(self, listeners):
-        pass
+    def readloop(self):
+        while True:
+            for mesg in self.interface:
+                for listener in self.listeners:
+                    listener.notify(mesg)
+                if self._stop.isSet():
+                    return 0
