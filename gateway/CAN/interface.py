@@ -36,28 +36,43 @@
 # reads from the socket and yields the can message
 #
 
-import Socket
+import socket
+import struct
+from gateway.CAN.message import CanMessage
+from gateway.CAN.notifier import Notifier
+DEFAULT_BUFFERSIZE = 16
+
 class Interface:
-        def __init__(self, controller, device):
-            self.notifier = None
-		    self.controller = controller
-		    self.device = device
-            self.sock = None
+    def __init__(self):
+        self.notifier = None
+        self.sock = socket.socket(socket.AF_CAN, socket.SOCK_RAW, socket.CAN_RAW)
 
-        def close(self):
-            pass
+    def __str__(self):
+        return str(self.sock.getsockname())
+## may want to do more checking on system state before we close.
+    def close(self):
+        self.sock.close()
 
-        def start(self):
-            pass
+    def start(self,address):
+        self.sock.bind((address,))
 
-        def read(self):
-            return CanMessage()
+    def read(self):
+        recieved = self.sock.recv(DEFAULT_BUFFERSIZE)
+        return CanMessage(recieved)
 
-        def write(self,canmessage):
-            return bytes()
+    def write(self,canmessage):
+        return bytes()
 
-        def launchNotifier(self):
-            return Notifier()
+    def launchNotifier(self):
+        return Notifier()
 
-        def __iter__():
-            yield self.read()
+    def __iter__(self):
+        yield self.read()
+
+if __name__ == "__main__":
+    can0 = Interface()
+    print(can0)
+    can0.start("vcan0")
+    while True:
+        for mesg in can0:
+            print(mesg)

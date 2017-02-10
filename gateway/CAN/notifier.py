@@ -7,7 +7,8 @@
 #
 #
 #
-import threading.Thread
+from threading import Thread
+
 class Notifier:
     def __init__(self,interface):
         self.thread = None
