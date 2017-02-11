@@ -16,7 +16,7 @@ class Notifier:
         self.interface = interface
         self.daemonThread = Thread.thread(target=readloop)
         self.daemonThread.setDaemon(True)
-        self._stop = threading.
+        self._stop = threading.Event()
 
     def launchDaemon(self):
         if self.daemonThread.isAlive():

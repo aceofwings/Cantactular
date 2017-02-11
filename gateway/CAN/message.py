@@ -47,8 +47,7 @@ class CanMessage:
     def bytes(self):
         return struct.pack(b'IB3x8B', self.canid, self.datalen, self.data[0], self.data[1], self.data[2], self.data[3], self.data[4], self.data[5], self.data[6], self.data[7])
 
-
-
-#if __name__ == "__main__":
-#    canmess = CanMessage(b'0000000010000000')
-#    print(canmess)
+    def getIDFunction(self):
+        pass
+    def getIDnode(self):
+        pass

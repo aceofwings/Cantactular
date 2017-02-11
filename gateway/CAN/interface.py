@@ -43,8 +43,9 @@ from gateway.CAN.notifier import Notifier
 DEFAULT_BUFFERSIZE = 16
 
 class Interface:
-    def __init__(self):
+    def __init__(self, address):
         self.notifier = None
+        self.address = address
         self.sock = socket.socket(socket.AF_CAN, socket.SOCK_RAW, socket.CAN_RAW)
 
     def __str__(self):
@@ -53,8 +54,13 @@ class Interface:
     def close(self):
         self.sock.close()
 
-    def start(self,address):
-        self.sock.bind((address,))
+    def start(self):
+        try:
+            self.sock.bind((self.address,))
+        except socket.error as e:
+            print("Socket error binding: "+e.mesg)
+            return False
+        return True
 
     def read(self):
         recieved = self.sock.recv(DEFAULT_BUFFERSIZE)
@@ -70,18 +76,3 @@ class Interface:
     def __iter__(self):
         yield self.read()
 
-if __name__ == "__main__":
-    can0 = Interface()
-    print(can0)
-    can0.start("vcan0")
-
-
-    canmessage = CanMessage.create(2894, b'jdnsje75')
-    print("writing: "+str(canmessage))
-    sent = can0.write(canmessage)
-    print("sent: "+ str(sent))
-
-
-
-    for mesg in can0:
-        print(mesg)
