@@ -1,14 +1,15 @@
 import os
-
+from gateway.utils.path import Path
 
 #
 # Paths to look for
 #
-common = {
-'tests' : None,
-'edsfiles' : None,
-'rootpath' : None
-}
+
+common = Path(
+tests=None,
+edsfiles=None,
+rootpath=None
+)
 
 class ProjectPath(object):
     def __init__(self,rootpath):
@@ -23,6 +24,3 @@ class ProjectPath(object):
             if  directory in common:
                 path = os.path.join(rootpath,directory)
                 common[directory] = path
-
-    def __getattr__(self,key):
-        return self.paths[key]
