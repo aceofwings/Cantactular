@@ -1,6 +1,10 @@
-import tests.objectdictionary.test as objtest
 import unittest
+import tests.objectdictionary.test as objtest
+from gateway.utils.testfinder import TestFinder
+
+finder = TestFinder
+finder.loadTestFiles()
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(objtest.TestObjectDictionary)
-unittest.TextTestRunner(verbosity=2).run(suite)
+def findTestModules():
+    pass
