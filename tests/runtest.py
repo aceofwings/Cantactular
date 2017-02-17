@@ -1,9 +1,7 @@
 import unittest
 import tests.objectdictionary.test as objtest
-from gateway.utils.testfinder import TestFinder
+import  gateway.utils.testfinder 
 
-finder = TestFinder
-finder.loadTestFiles()
 
 
 def findTestModules():

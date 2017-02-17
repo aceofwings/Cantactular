@@ -1,8 +1,8 @@
 import os
 from gateway.utils.path import Path
 
-#
-# Paths to look for
+#Author: Daniel Harrington
+#Paths to look for in project
 #
 
 common = Path(
@@ -12,11 +12,12 @@ rootpath=None
 )
 
 class ProjectPath(object):
-    def __init__(self,rootpath):
-        self.paths = None
-        self.buildProjectPaths(rootpath)
+
+    def __init__(self,rootpath=None):
+        if rootpath is not None:
+            self.__buildProjectPaths(rootpath)
     """docstring for ProjectPaths."""
-    def buildProjectPaths(self,rootpath):
+    def __buildProjectPaths(self,rootpath):
         if common['rootpath'] is None:
             common['rootpath'] = rootpath
         directorys = os.listdir(rootpath)
@@ -24,3 +25,7 @@ class ProjectPath(object):
             if  directory in common:
                 path = os.path.join(rootpath,directory)
                 common[directory] = path
+
+    @classmethod
+    def edsfile(fileName):
+        return os.path.join(common.edsfiles, fileName)

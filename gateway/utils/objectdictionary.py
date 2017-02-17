@@ -57,12 +57,7 @@ class ObjectDictionary(collections.Mapping):
 
         dic = ObjectDictionary()
         eds = configparser.ConfigParser()
-
-        if  self.edsFilePath is None:
-            eds.read(edsPath)
-        else:
-            eds.read(os.path.join(self.edsFilePath,edsPath))
-            
+        eds.read(edsPath)            
         for section in eds.sections():
             if len(section) is 4:
                 pn = eds.get(section, 'ParameterName')
