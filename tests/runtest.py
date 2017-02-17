@@ -1,8 +1,5 @@
 import unittest
-import tests.objectdictionary.test as objtest
-import  gateway.utils.testfinder 
+from gateway.utils import testfinder
 
 
-
-def findTestModules():
-    pass
+testfinder.startTestSequence()
