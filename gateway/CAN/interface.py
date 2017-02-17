@@ -38,18 +38,22 @@
 
 import socket
 import struct
+import threading
 from gateway.CAN.message import CanMessage
 from gateway.CAN.notifier import Notifier
 DEFAULT_BUFFERSIZE = 16
 
 class Interface:
-    def __init__(self, address):
+    def __init__(self, address, listeners):
+        self.listeners = listeners
         self.notifier = None
         self.address = address
         self.sock = socket.socket(socket.AF_CAN, socket.SOCK_RAW, socket.CAN_RAW)
+        self.canDump = []
 
     def __str__(self):
         return str(self.sock.getsockname())
+
 ## may want to do more checking on system state before we close.
     def close(self):
         self.sock.close()
@@ -57,22 +61,35 @@ class Interface:
     def start(self):
         try:
             self.sock.bind((self.address,))
+            self.readToBufferLoop()
+            self.launchNotifier()
         except socket.error as e:
             print("Socket error binding: "+e.mesg)
             return False
         return True
 
-    def read(self):
+    def readSocket(self):
         recieved = self.sock.recv(DEFAULT_BUFFERSIZE)
         return CanMessage(recieved)
 
     def write(self,canmessage):
         sent = self.sock.send(canmessage.bytes())
+        print('Writing: '+str(canmessage)+' bytes: '+str(sent))
         return sent
 
     def launchNotifier(self):
-        return Notifier()
+        Notifier(self).launchDaemon()
 
     def __iter__(self):
-        yield self.read()
+        for message in self.canDump:
+            yield message
+        self.canDump = []
 
+    def _readToBufferLoop(self):
+        while True:
+            inmessage = self.readSocket()
+            self.canDump.append(inmessage)
+            #print('recieved and buffered message '+str(inmessage))
+
+    def readToBufferLoop(self):
+        threading.Thread(target=self._readToBufferLoop).start()

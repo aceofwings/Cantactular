@@ -8,20 +8,24 @@
 #
 #
 from gateway.utils.objectdictionary import ObjectDictionary
-from interface import Interface
-from message import CanMessage
+from gateway.CAN.interface import Interface
+from gateway.CAN.message import CanMessage
 
 class Controller:
 
     def __init__(self):
         self.interfaces = []
+        self.listeners = []
+
+    def addListener(self, listener):
+        self.listeners.append(listener)
 
     ###############################
     #Accpets parameter for interface device address and creates a new Interface object
     #Returns the updated list of Interface objects in Controller
     def addInterface(self, address):
 
-        i = Interface(address)
+        i = Interface(address, self.listeners)
 
         self.interfaces.append(i)
 
@@ -41,22 +45,3 @@ class Controller:
                 success = interface.start()
                 if success == False:
                     return False
-
-
-if __name__ == "__main__":
-
-    kicktheCAN = Controller()
-    can0 = kicktheCAN.addInterface("vcan0")[0]
-    kicktheCAN.startInterface()
-    objdic = ObjectDictionary.initialize('../edsfiles/MotorController.eds')
-
-    canmessage = CanMessage.create(2894, b'jdnsje75')
-
-    print("writing: "+str(canmessage))
-    sent = can0.write(canmessage)
-    print("sent: "+ str(sent))
-
-
-
-    for mesg in can0:
-        print(mesg)

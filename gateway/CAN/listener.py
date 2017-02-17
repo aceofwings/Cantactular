@@ -17,4 +17,4 @@ class Listener:
 
 
     def notify(self,canmessage):
-        print("Listener recv: "+canmessage)
+        print("Listener recv: "+str(canmessage))

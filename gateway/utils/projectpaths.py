@@ -27,5 +27,5 @@ class ProjectPath(object):
                 common[directory] = path
 
     @classmethod
-    def edsfile(fileName):
+    def edsfile(self, fileName):
         return os.path.join(common.edsfiles, fileName)
