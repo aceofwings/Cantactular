@@ -43,10 +43,9 @@ def loadTestModules():
          testing.append(import_module('tests.' + module + TEST_MODULE))
     return testing
 
-#begin testing 
+#begin testing
 def startTestSequence():
     modules = loadTestModules()
-    print(modules)
     for module in modules:
         test = testLoader.loadTestsFromModule(module)
         testRunner.run(test)

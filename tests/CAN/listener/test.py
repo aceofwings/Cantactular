@@ -1,4 +1,4 @@
-from gateway.CAN.listener import Listener
+from gateway.can.listener import Listener
 import unittest
 
 class TestCanMessage(unittest.TestCase):

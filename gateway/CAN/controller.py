@@ -8,8 +8,8 @@
 #
 #
 from gateway.utils.objectdictionary import ObjectDictionary
-from gateway.CAN.interface import Interface
-from gateway.CAN.message import CanMessage
+from gateway.can.interface import Interface
+from gateway.can.message import CanMessage
 
 class Controller:
 

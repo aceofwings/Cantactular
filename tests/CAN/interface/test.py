@@ -1,4 +1,4 @@
-from gateway.CAN.interface import Interface
+from gateway.can.interface import Interface
 from sys import platform
 import unittest
 
@@ -13,7 +13,7 @@ class TestCanMessage(unittest.TestCase):
 		test_interface.start(self)
 	def test_closeSocket(self): #add assert cases **Need Linux
 		test_interface.close(self)
-    
+
 
 
 if __name__ == '__main__':
@@ -29,5 +29,3 @@ if __name__ == '__main__':
 		print(platform, "- Windows is unable to run this test. Requires linux.")
 	else:
 		print(platform, "is unable to run this test. Requires linux.")
-
-    

@@ -1,7 +1,7 @@
 #Authors: Nicholas Amatruda
 #
 #
-#Interface defines a virtual representation of the physical CAN interface
+#Interface defines a virtual representation of the physical can interface
 #These interfaces usually are defined by a CANIP or NIC name, eg CAN0
 #
 #
@@ -39,8 +39,8 @@
 import socket
 import struct
 import threading
-from gateway.CAN.message import CanMessage
-from gateway.CAN.notifier import Notifier
+from gateway.can.message import CanMessage
+from gateway.can.notifier import Notifier
 DEFAULT_BUFFERSIZE = 16
 
 class Interface:
