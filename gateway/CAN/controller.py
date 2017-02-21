@@ -25,11 +25,14 @@ class Controller:
     #Returns the updated list of Interface objects in Controller
     def addInterface(self, address):
 
-        i = Interface(address, self.listeners)
+        try:
+            i = Interface(address, self.listeners)
+        except:
+            pass
 
         self.interfaces.append(i)
 
-        return self.interfaces
+        return self.i #only returns interface created
 
     ##############################
     #Starts an Interface, i is index in list of Interfaces, if Not provided, all interfaces are started
@@ -43,5 +46,4 @@ class Controller:
                 return False
             for interface in self.interfaces:
                 success = interface.start()
-                if success == False:
-                    return False
+                return success

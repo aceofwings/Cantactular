@@ -30,8 +30,13 @@ class Notifier:
     # Returns None
     def readloop(self):
         while True:
-            for mesg in self.interface:
-                for listener in self.interface.listeners:
-                    listener.notify(mesg)
-                if self._stop.isSet():
-                    return 0
+            message = interface.read()
+            for listener in self.interface.listeners:
+                listener.notify(mesg)
+            if self._stop.isSet():
+                return 0
+
+#             for mesg in self.interface:
+#                 for listener in self.interface.listeners:
+#                     listener.notify(mesg)
+#
