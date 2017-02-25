@@ -1,4 +1,4 @@
-from gateway.CAN.notifier import Notifier
+from gateway.can.notifier import Notifier
 import unittest
 
 class TestCanMessage(unittest.TestCase):

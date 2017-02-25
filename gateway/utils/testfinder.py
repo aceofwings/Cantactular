@@ -43,6 +43,15 @@ def loadTestModules():
          testing.append(import_module('tests.' + module + TEST_MODULE))
     return testing
 
+def loadTestModulesfromArray(modules):
+    tests = []
+    suite = unittest.TestSuite()
+    for module in modules:
+        test =  testLoader.loadTestsFromModule(import_module(module))
+        suite.addTest(test)
+    return suite
+
+
 #begin testing
 def startTestSequence():
     modules = loadTestModules()
