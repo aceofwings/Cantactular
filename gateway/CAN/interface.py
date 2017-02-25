@@ -62,12 +62,11 @@ class Interface:
     def start(self):
         try:
             self.sock.bind((self.address,))
-            self.readToBufferLoop()
             self.launchNotifier()
+            return True
         except socket.error as e:
             print("Socket error binding: "+e.mesg)
             return False
-        return True
 
     def read(self):
         recieved = self.sock.recv(DEFAULT_BUFFERSIZE)

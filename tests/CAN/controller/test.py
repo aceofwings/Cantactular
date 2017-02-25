@@ -3,7 +3,9 @@ import unittest
 
 class TestCanMessage(unittest.TestCase):
 	def setUp(self):
-		pass
+		self.controller = Controller()
+        self.controller.addInterface("vcan0")
+
 	def tearDown(self):
 		pass
 
