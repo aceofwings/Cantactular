@@ -7,23 +7,23 @@ import socket
 class TestInterface(unittest.TestCase):
 	def setUp(self):
 		self.test_address = "vcan0"
-		self.test_interface = Interface(self.test_address)
+		self.test_interface = Interface(self.test_address, [])
 		self.test_message = CanMessage().create(43578,'Test can message for testing interface')
 
 	def tearDown(self):
 		self.test_interface.close()
 
 	def test_startSocket(self):
-		result = test_interface.start(self)
+		result = self.test_interface.start()
 		self.assertTrue(result)
 
 	#Should throw socket.error when interface name not present on device list
-		with self.assertRaise(socket.error):
-			err_interface = Interface('wuiheoigrog34')
+		with self.assertRaises(socket.error):
+			err_interface = Interface('wuiheoigrog34', [])
 			err_interface.start()
 
 	def test_write(self):
-		result = self.test_interface.write(test_message)
+		result = self.test_interface.write(self.test_message)
 		self.assertNotEqual(result, 0)
 
 
