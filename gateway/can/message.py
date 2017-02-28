@@ -35,13 +35,14 @@ class CanMessage:
 
 
     def __str__(self):
-        return "id:"+str(hex(self.canid))+" datalen: "+hex(self.datalen)+" ::data::" + str(self.data)
+        return "id:"+hex(self.canid)+" datalen: "+hex(self.datalen)+" ::data::" + str(self.data)
 
-    def create(canid, data):
+    def create(self, canid, data):
         msg = CanMessage()
         msg.canid = canid
         msg.data = data
         msg.datalen = len(data)
+
         return msg
 
     def bytes(self):

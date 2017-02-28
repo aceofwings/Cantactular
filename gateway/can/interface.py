@@ -49,7 +49,6 @@ class Interface:
         self.notifier = None
         self.address = address
         self.sock = socket.socket(socket.AF_CAN, socket.SOCK_RAW, socket.CAN_RAW)
-        self.sock.time
         self.canDump = []
 
     def __str__(self):
@@ -65,7 +64,7 @@ class Interface:
             self.launchNotifier()
             return True
         except socket.error as e:
-            print("Socket error binding: "+e.mesg)
+            #print("Socket error binding: "+str(e))
             return False
 
     def read(self):
