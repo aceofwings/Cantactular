@@ -3,7 +3,7 @@ import unittest
 
 class TestObjectDictionary(unittest.TestCase):
     def setUp(self):
-        self.obj = ObjectDictionary.initialize('edsfiles/MotorController.eds')
+        self.obj = ObjectDictionary.initialize('MotorController.eds')
     def tearDown(self):
         pass
     def test_ReadEdsFile(self):

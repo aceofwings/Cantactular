@@ -1,4 +1,5 @@
 import collections, configparser
+from gateway.utils.projectpaths import ProjectPath
 import os
 
 class DictionaryObject(collections.Mapping):
@@ -46,23 +47,21 @@ class DictionaryObject(collections.Mapping):
 
 
 class ObjectDictionary(collections.Mapping):
-    edsFilePath = None
+
 
     def __init__(self):
         self.names = {}
         self.ids = {}
+        self.edsFilePath = None
 
     @classmethod
-    def initialize(self, edsPath):
+    def initialize(self, edsFile):
 
         dic = ObjectDictionary()
         eds = configparser.ConfigParser()
 
-        if  self.edsFilePath is None:
-            eds.read(edsPath)
-        else:
-            eds.read(os.path.join(self.edsFilePath,edsPath))
-            
+        eds.read(ProjectPath.edsfile(edsFile))
+
         for section in eds.sections():
             if len(section) is 4:
                 pn = eds.get(section, 'ParameterName')
@@ -111,8 +110,4 @@ class ObjectDictionary(collections.Mapping):
     def __str__(self):
         return '\n'.join([str(obj) for obj in self.ids.values()])
 
-if __name__ == '__main__':
-    print("initializing motorController Dictionary")
-    dictionary = ObjectDictionary.initialize('../edsfiles/MotorController.eds')
 
-    print(dictionary[0x1018]['Serial number'])

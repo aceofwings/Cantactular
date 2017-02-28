@@ -1,6 +1,5 @@
-import tests.objectdictionary.test as objtest
 import unittest
+from gateway.utils import testfinder
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(objtest.TestObjectDictionary)
-unittest.TextTestRunner(verbosity=2).run(suite)
+testfinder.startTestSequence()

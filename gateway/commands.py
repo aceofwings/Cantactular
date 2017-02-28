@@ -1,6 +1,7 @@
 import argparse
+import os
 # Parse our arguments
-
+from gateway.utils.projectpaths import ProjectPath
 
 def test():
     import tests.runtest

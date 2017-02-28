@@ -26,3 +26,7 @@ Contributing is easy and must following our *guidelines*.
 ```
 python3 setup.py install
 ```
+To setup the testing interface run
+```
+cansetup
+```
