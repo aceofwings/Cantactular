@@ -5,28 +5,28 @@ import unittest
 import socket
 
 class TestInterface(unittest.TestCase):
-    def setUp(self):
-        self.test_address = "vcan0"
-        self.test_listeners = []
-        self.test_interface = Interface(self.test_address, self.test_listeners)
-        self.test_message = CanMessage().create(4759, '8F7D1A2B')
+	def setUp(self):
+		self.test_address = "vcan0"
+		self.test_interface = Interface(self.test_address)
+		self.test_message = CanMessage().create(43578,'Test can message for testing interface')
 
-    def tearDown(self):
-        self.test_interface.close()
+	def tearDown(self):
+		self.test_interface.close()
 
-    def test_startSocket(self):
-        result = self.test_interface.start()
-        self.assertTrue(result)
+	def test_startSocket(self):
+		result = test_interface.start(self)
+		self.assertTrue(result)
 
-#         #Should throw socket.error when interface name not present on device list
-        with self.assertRaises(socket.error):
-            err_interface = Interface('wuiheoigrog34', [])
-            err_interface.start()
-            #raise OSError('e')
+	#Should throw socket.error when interface name not present on device list
+		with self.assertRaise(socket.error):
+			err_interface = Interface('wuiheoigrog34')
+			err_interface.start()
 
-    def test_write(self):
-        result = self.test_interface.write(self.test_message)
-        self.assertNotEqual(result, 0)
+	def test_write(self):
+		result = self.test_interface.write(test_message)
+		self.assertNotEqual(result, 0)
+
+
 
 if __name__ == '__main__':
 	if platform == "linux" or platform == "linux2":
