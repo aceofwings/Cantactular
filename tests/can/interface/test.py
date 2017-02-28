@@ -1,14 +1,16 @@
 from gateway.can.interface import Interface
 from gateway.can.message import CanMessage
+from socket import error as socket_error
 from sys import platform
 import unittest
 import socket
+
 
 class TestInterface(unittest.TestCase):
 	def setUp(self):
 		self.test_address = "vcan0"
 		self.test_interface = Interface(self.test_address, [])
-		self.test_message = CanMessage().create(43578,'Test can message for testing interface')
+		self.test_message = CanMessage().create(1000,'DEADBEEF')
 
 	def tearDown(self):
 		self.test_interface.close()
@@ -18,11 +20,11 @@ class TestInterface(unittest.TestCase):
 		self.assertTrue(result)
 
 	#Should throw socket.error when interface name not present on device list
-		with self.assertRaises(socket.error):
-			err_interface = Interface('wuiheoigrog34', [])
-			err_interface.start()
-
+		with self.assertRaises(socket_error):
+		    err_interface = Interface('wuiheoigrog34', [])
+		    err_interface.start()
 	def test_write(self):
+		self.test_interface.start()
 		result = self.test_interface.write(self.test_message)
 		self.assertNotEqual(result, 0)
 

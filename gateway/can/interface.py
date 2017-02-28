@@ -59,21 +59,18 @@ class Interface:
         self.sock.close()
 
     def start(self):
-        try:
-            self.sock.bind((self.address,))
-            self.launchNotifier()
-            return True
-        except socket.error as e:
-            #print("Socket error binding: "+str(e))
-            return False
+        self.sock.bind((self.address,))
+        self.launchNotifier()
+        return True
 
     def read(self):
         recieved = self.sock.recv(DEFAULT_BUFFERSIZE)
         return CanMessage(recieved)
 
     def write(self,canmessage):
+        #print('\nWriting: '+str(canmessage)+' bytes: '+str(canmessage.bytes())+'On Device:'+self.address)
         sent = self.sock.send(canmessage.bytes())
-        print('Writing: '+str(canmessage)+' bytes: '+str(sent))
+
         return sent
 
     def launchNotifier(self):

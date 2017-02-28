@@ -25,7 +25,7 @@ import struct
 class CanMessage:
     def __init__(self, bytes=None):
         if bytes is not None:
-            can_frame = struct.Struct('IB3x8B')
+            can_frame = struct.Struct('>IB3x8B')
             self.indata = can_frame.unpack(bytes)
 
             self.canid = self.indata[0]
@@ -35,18 +35,18 @@ class CanMessage:
 
 
     def __str__(self):
-        return "id:"+hex(self.canid)+" datalen: "+hex(self.datalen)+" ::data::" + str(self.data)
+        return "id:"+str(self.canid)+" datalen: "+str(self.datalen)+" ::data::" + str(self.data)
 
-    def create(self, canid, data):
+    def create(self, canid, data): #data must be hexidecimal representation of bytes
         msg = CanMessage()
         msg.canid = canid
-        msg.data = data
+        msg.data = bytearray.fromhex(data)
         msg.datalen = len(data)
 
         return msg
 
     def bytes(self):
-        return struct.pack(b'IB3x8B', self.canid, self.datalen, self.data[0], self.data[1], self.data[2], self.data[3], self.data[4], self.data[5], self.data[6], self.data[7])
+        return struct.pack(b'>IB3x8s', self.canid, len(self.data), self.data)
 
     def getIDFunction(self):
         pass
