@@ -32,7 +32,7 @@ class Notifier:
         while True:
             message = self.interface.read()
             for listener in self.interface.listeners:
-                listener.notify(mesg)
+                listener.notify(message)
             if self._stop.isSet():
                 return 0
 

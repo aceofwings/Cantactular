@@ -70,7 +70,6 @@ class Interface:
     def write(self,canmessage):
         #print('\nWriting: '+str(canmessage)+' bytes: '+str(canmessage.bytes())+'On Device:'+self.address)
         sent = self.sock.send(canmessage.bytes())
-
         return sent
 
     def launchNotifier(self):
