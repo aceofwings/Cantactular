@@ -37,7 +37,8 @@ class CanMessage:
     def __str__(self):
         return "id:"+str(self.canid)+" datalen: "+str(self.datalen)+" ::data::" + str(self.data)
 
-    def create(self, canid, data): #data must be hexidecimal representation of bytes
+    @classmethod
+    def create(cls, canid, data): #data must be hexidecimal representation of bytes
         msg = CanMessage()
         msg.canid = canid
         msg.data = bytearray.fromhex(data)
