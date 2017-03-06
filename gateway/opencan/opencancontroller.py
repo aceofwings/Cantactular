@@ -24,12 +24,19 @@ class CanOpenController(Controller):
     def __removeDevice(device):
         pass
 
+#MotorController Listener
+#handlers are functions ready to recieve data and the canid
 class MotorControllerListener(Listener):
-    handlers = []
+    handlers = {}
     def addHandler(canid, handler):
-        pass
+        if canid in handlers:
+            handler[canid].append(handler)
+        else:
+            handler[canid] = []
+            handler[candid].append(handler)
+        
     def removeHandler(canid,handler):
         pass
     def notify(self,canmessage):
         for handler in handlers[canmessage.canid]
-            handler(canmessage)
+            handler(canmessage.canid,canmessage.data)

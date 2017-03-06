@@ -11,7 +11,7 @@ class CanOpenDevice:
         self.nmt = NMT(self.nodeID,controller)
         self.__buildListener(listener)
 
-    #Define and ad all cruial handlers to the listener.
+    #Define and ad all cruial internal handlers to the listener.
     #This gets called to add any device specific handlers.
-    def __buildListener(listener):
-        pass
+    def __buildListener(self,listener):
+        listener.addHandler(self.nodeID + 0x70, self.nmt.handleheartBeat)
