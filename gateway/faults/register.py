@@ -11,7 +11,7 @@ def setupMachineFaults():
     pass
 
 
-class RegistorFault(object):
+class Registor(object):
 
     def __init__(self,system):
         pass
@@ -25,14 +25,14 @@ class RegistorFault(object):
 
 
 class Fault(object):
-    def __init__(key='general', value):
-        self.key
-        self._value
+    def __init__(self,key='general', value):
+        self.key = key
+        self.__value = value
     @property
     def value(self):
         return self.__value
     @value.setter
-    def setValue(self,value)
+    def setValue(self,value):
         self.__value = value
         self._notify()
     def _notify(self):

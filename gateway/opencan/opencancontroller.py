@@ -30,11 +30,11 @@ class MotorControllerListener(Listener):
     handlers = {}
     def addHandler(canid, handler):
         if canid in handlers:
-            handler[canid].append(handler)
+            handlers[canid].append(handler)
         else:
-            handler[canid] = []
-            handler[candid].append(handler)
-        
+            handlers[canid] = []
+            handlers[candid].append(handler)
+
     def removeHandler(canid,handler):
         pass
     def notify(self,canmessage):
