@@ -6,45 +6,34 @@
 
 ## system crtical changes will be added here
 
-
-def setupMachineFaults():
-    pass
-
-
 class Registor(object):
 
     faultBases = {}
-    def __init__(self,system):
-        pass
 
-    def registerDevice():
-        return __addBase()
-
-    def __addBase(self,clsName,keys=None):
-        faultBases[clsName] = FaultBase()
+    def registerBase(self,faultBase):
+        keyName = faultBase.__class__.__name__
+        self.faultBases[keyName] = faultBase
         return faultBases[clsName]
 
-    def initalizeFaults(faultkeys):
-        faults = dict.fromkeys(faultkeys,[]) || {'general' : []}
+    def faultFire(self,fault):
+        print("Fault fired" + fault.__class__)
 
-    def trigger(fault):
-        for callback in faults[fault.key]
-            callback(fault.key, fault.value)
+    def initalizeFaults(faultkeys):
+        faultBases = dict.fromkeys(faultkeys,[]) || {'general' : []}
+
 
 class FaultBase(object):
-    faults = {}
+    def __init__(self,registor):
+        self.registor = registor
+        self.callbacks = {}
+
     def addSubscriber(key,callback):
         if key in faults
-            faults[key].append(callback)
+            callbacks[key].append(callback)
         else
-            faults[key] = []
-            faults[key].append(callback)
-    def removeRemove:
-        #del 
-
-
-
-def logError():
-    pass
-def logInfo():
-    pass
+            callbacks[key] = []
+            callbacks[key].append(callback)
+    def notify(key,value):
+        for callback in callbacks[key]
+            callback(value)
+            self.registor.faultFire(self)
