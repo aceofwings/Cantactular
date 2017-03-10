@@ -56,6 +56,7 @@ class NMT(object):
         if heartBeatToState[stateCode] == self.__state:
             self.__state = heartBeatToState[stateCode]
             #TODO forward statechange event
+
 #Handle a the nodes broadcasted Date.
     def handleNMT(self,nodeID, data):
         deviceID, state  = struct.unpack('BB',data)

@@ -75,6 +75,9 @@ class Interface:
     def launchNotifier(self):
         Notifier(self).launchDaemon()
 
+    def addListener(self, listener):
+        self.listeners.append(listener)
+
 
 #     def __iter__(self):
 #         while True:

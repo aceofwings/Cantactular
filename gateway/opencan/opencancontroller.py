@@ -5,7 +5,7 @@ from gateway.can.listener import Listener
 #protocol and contains only devices implemented with the protocol.
 #
 #
-class CanOpenController(Controller):
+class OpenCanController(Controller):
 
     def __init__(self):
         self.devices = []
@@ -19,24 +19,8 @@ class CanOpenController(Controller):
     def addDevice(self,device,listener):
         self.devices.append(device)
         self.addListener(listener)
-        device.setup(self,listener)
 
     def __removeDevice(device):
         pass
 
-#MotorController Listener
-#handlers are functions ready to recieve data and the canid
-class MotorControllerListener(Listener):
-    handlers = {}
-    def addHandler(canid, handler):
-        if canid in handlers:
-            handlers[canid].append(handler)
-        else:
-            handlers[canid] = []
-            handlers[candid].append(handler)
 
-    def removeHandler(canid,handler):
-        pass
-    def notify(self,canmessage):
-        for handler in handlers[canmessage.canid]
-            handler(canmessage.canid,canmessage.data)
