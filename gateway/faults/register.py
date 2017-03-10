@@ -13,30 +13,35 @@ def setupMachineFaults():
 
 class Registor(object):
 
+    faultBases = {}
     def __init__(self,system):
         pass
-    def addFaultListener(key='general',callback):
-        pass
-    def removefaultListener(key='general',callback):
-        pass
 
-    def registerFault(self,fault):
-        pass
+    def registerDevice():
+        return __addBase()
 
+    def __addBase(self,clsName,keys=None):
+        faultBases[clsName] = FaultBase()
+        return faultBases[clsName]
 
-class Fault(object):
-    def __init__(self,key='general', value):
-        self.key = key
-        self.__value = value
-    @property
-    def value(self):
-        return self.__value
-    @value.setter
-    def setValue(self,value):
-        self.__value = value
-        self._notify()
-    def _notify(self):
-        self.registerFault(self)
+    def initalizeFaults(faultkeys):
+        faults = dict.fromkeys(faultkeys,[]) || {'general' : []}
+
+    def trigger(fault):
+        for callback in faults[fault.key]
+            callback(fault.key, fault.value)
+
+class FaultBase(object):
+    faults = {}
+    def addSubscriber(key,callback):
+        if key in faults
+            faults[key].append(callback)
+        else
+            faults[key] = []
+            faults[key].append(callback)
+    def removeRemove:
+        #del 
+
 
 
 def logError():
