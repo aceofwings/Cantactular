@@ -20,9 +20,8 @@ class Controller:
     def addListener(self, listener):
         self.listeners.append(listener)
 
-    def createInterface(self, deviceAddress):
-        self.interface = Interface(deviceAddress, self.listeners)
-        self.interface.start()
+    def associateInterface(self, interface):
+        self.interface = interface
 
     def write(self, canmessage):
         sent = self.interface.write(canmessage)

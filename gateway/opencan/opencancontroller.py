@@ -38,5 +38,5 @@ class MotorControllerListener(Listener):
     def removeHandler(canid,handler):
         pass
     def notify(self,canmessage):
-        for handler in handlers[canmessage.canid]
+        for handler in handlers[canmessage.canid]:
             handler(canmessage.canid,canmessage.data)

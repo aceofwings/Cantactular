@@ -44,8 +44,11 @@ from gateway.can.notifier import Notifier
 DEFAULT_BUFFERSIZE = 16
 
 class Interface:
-    def __init__(self, address, listeners):
-        self.listeners = listeners
+    def __init__(self, address):
+        self.listeners = []
+        #controller Type
+        self.ct = None
+        #notifier share amongst the program
         self.notifier = None
         self.address = address
         self.sock = socket.socket(socket.AF_CAN, socket.SOCK_RAW, socket.CAN_RAW)
