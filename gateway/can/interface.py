@@ -61,6 +61,10 @@ class Interface:
     def close(self):
         self.sock.close()
 
+
+    def addListener(self,listener):
+        self.listeners.append(listener)
+
     def start(self):
         self.sock.bind((self.address,))
         self.launchNotifier()
@@ -77,20 +81,3 @@ class Interface:
 
     def launchNotifier(self):
         Notifier(self).launchDaemon()
-
-
-#     def __iter__(self):
-#         while True:
-#             self.readSocket()
-#         for message in self.canDump:
-#             yield message
-#         self.canDump = []
-
-#     def _readToBufferLoop(self):
-#         while True:
-#             inmessage = self.readSocket()
-#             self.canDump.append(inmessage)
-#             #print('recieved and buffered message '+str(inmessage))
-
-#     def readToBufferLoop(self):
-#         threading.Thread(target=self._readToBufferLoop).start()

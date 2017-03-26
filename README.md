@@ -6,7 +6,6 @@ A heaven for our RIT electric vehicle team code.
 
 ##Contributors and Team Members  
 * Daniel Harrington
-* Daniel Cox
 * Matt Monaco
 * Nick Amatruda
 

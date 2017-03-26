@@ -7,10 +7,11 @@
 #
 import os
 from gateway.utils.projectpaths import ProjectPath
-from gateway.settings.loader import loadInterfaces, Associator
+from gateway.settings.loader import  interfaces, superControllers
 #setup the project path
 ROOT_PATH = os.path.abspath('.')
 ProjectPath(ROOT_PATH)
-Associator(loadInterfaces())
+
+
 #import commands
 from . import commands

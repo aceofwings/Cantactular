@@ -1,16 +1,14 @@
 import argparse
 import os
+from  gateway.apps.terminal import Terminal
+
 # Parse our arguments
-from gateway.utils.projectpaths import ProjectPath
-from gateway.can.controller import Controller
-from gateway.can.message import CanMessage
-from gateway.can.listener import Listener
 
 def test():
     import tests.runtest
 
 def start():
-    print("starting CAN controller on vcan0")
+    Terminal().start()
 
 
 commands = ['start','test','logger']

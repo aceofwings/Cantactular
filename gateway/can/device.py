@@ -1,4 +1,6 @@
 from gateway.opencan.nmt import NMT
+from gateway.can.listener import Listener
+
 class CanOpenDevice:
     def __init__(self,nodeID,edsFile=None):
         self.nodeID = nodeID
@@ -7,11 +9,13 @@ class CanOpenDevice:
         self.nmt = None
 
     #crucial setup of listeners and functions
-    def setup(self,controller,listener):
+    def setup(self,controller):
         self.nmt = NMT(self.nodeID,controller)
-        self.__buildListener(listener)
+        return self.__buildListener(listener)
 
     #Define and ad all cruial internal handlers to the listener.
     #This gets called to add any device specific handlers.
     def __buildListener(self,listener):
+        listener = Listener()
         listener.addHandler(self.nodeID + 0x70, self.nmt.handleheartBeat)
+        return listener

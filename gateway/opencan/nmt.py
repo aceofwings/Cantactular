@@ -19,9 +19,9 @@ heartBeatStates ={
 states = {
 'operational': 0x01,
 'stop': 0x02,
-'preoperational':0x80 ,
-'reset' 0x81: ,
-'resetcom' 0x82:
+'preoperational':0x80,
+'reset' :0x81 ,
+'resetcom' : 0x82
 }
 #Some cases we are not responsible for setting state and a device may want to change
 #state. We retrieve the information by heartbeat but will want to translate to
