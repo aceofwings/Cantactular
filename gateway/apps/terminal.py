@@ -30,12 +30,14 @@ class Terminal(object):
 
 class TermOpenController(CanOpenController):
 
-
     def __init__(self):
         super().__init__()
+        self.controllerListener.addHandler(0x00,self.handleBroadCast)
+
+    def buildController(self):
+        print("mmose")
         self.motor = CanOpenDevice(0x01,"MotorController")
         self.addDevice(self.motor)
-        self.controllerListener.addHandler(0x00,self.handleBroadCast)
 
     def handleBroadCast(self,nodeID,value):
         print("Handle BroadCast")

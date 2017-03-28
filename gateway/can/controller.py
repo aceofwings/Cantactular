@@ -23,6 +23,10 @@ class Controller:
     def associateInterface(self, interface):
         self.interface = interface
 
+    #override for custom controller builds
+    def buildController(self):
+        pass
+        
     def write(self, canmessage):
         sent = self.interface.write(canmessage)
         return sent

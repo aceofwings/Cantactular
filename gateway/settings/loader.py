@@ -39,7 +39,14 @@ def associate(controller):
     for interface in interfaces:
         if issubclass(controller.__class__,interface.ct):
             controller.associateInterface(interface)
+            ## not so subtle fix will design for apropriate launch
+            controller.buildController()
             return
+
+
+
+
+    #from Configuration
 
 
 interfaces = loadInterfaces()

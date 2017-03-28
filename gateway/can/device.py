@@ -19,5 +19,5 @@ class CanOpenDevice:
     def __buildListener(self):
         listener = Listener()
         listener.addHandler(self.nodeID + 0x70, self.nmt.handleheartBeat)
-        listener.addHandler(0x000, self.nmt.handleNMT)
+        listener.addHandler(0x00, self.nmt.handleNMT)
         return listener

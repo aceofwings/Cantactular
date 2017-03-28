@@ -58,5 +58,5 @@ class NMT(object):
             #TODO forward statechange event
 #Handle a the nodes broadcasted Date.
     def handleNMT(self,nodeID, data):
-        deviceID, state  = struct.unpack('BB',data)
-        print("NMT recieved")
+        #deviceID, state  = struct.unpack('BB',data)
+        print(data)
