@@ -59,3 +59,4 @@ class NMT(object):
 #Handle a the nodes broadcasted Date.
     def handleNMT(self,nodeID, data):
         deviceID, state  = struct.unpack('BB',data)
+        print("NMT recieved")
