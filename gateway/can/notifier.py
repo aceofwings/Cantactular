@@ -21,7 +21,7 @@ class Notifier:
         if not self.daemonThread.isAlive():
             self.daemonThread.start()
         else:
-            raise threading.ThreadError("Daemon is alive anad running")
+            raise threading.ThreadError("Daemon is alive and running")
 
     def stopDaemon():
         self._stop.set()

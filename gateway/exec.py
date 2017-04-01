@@ -28,8 +28,6 @@ while True:
 
 
 
-
-
 # while True:
 #         checkDir = os.path.join(currentdir, RUN_FILE)
 #         launcher = lookForLauncher(checkDir)

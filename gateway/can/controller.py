@@ -17,6 +17,7 @@ class Controller:
         self.interface = None
         self.listeners = []
 
+
     def addListener(self, listener):
         self.listeners.append(listener)
 
@@ -25,12 +26,14 @@ class Controller:
 
     #override for custom controller builds
     def buildController(self):
-        pass
-        
+        return False
+
     def write(self, canmessage):
         sent = self.interface.write(canmessage)
         return sent
 
+    def __buildController(self):
+        pass
 
 
 

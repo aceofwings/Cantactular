@@ -5,6 +5,13 @@ from gateway.can.controller import Controller
 # Throws errors on whether it as sucessfully initialize all interfaces
 
 
+class Resource():
+    pass
+
+_resources = Resource()
+_resources.interfaces = None
+_resources.superControllers = None
+
 def loadInterfaces():
     interfaces = []
     faces = Configuration.interfaceNames
@@ -26,31 +33,38 @@ def loadInterfaces():
     if not interfaces:
         raise LoadableInterfaces("No interfaces could be found", None)
 
-    return interfaces
-
+    _resources.interfaces = interfaces
 
 ## these are the controllers our users inherit from to gain access to writing
 ## to an interface
 def associate(controller):
-    if interfaces is None:
+    if _resources.interfaces is None:
         return # should raise or log error
     if controller.interface is not None:
         return
-    for interface in interfaces:
+    for interface in _resources.interfaces:
         if issubclass(controller.__class__,interface.ct):
             controller.associateInterface(interface)
-            ## not so subtle fix will design for apropriate launch
-            controller.buildController()
             return
+# build the controller, if there is no interface associate one, then continue
+#to build the controller using helper method. prepareforStart will ready interfaces
+# to be luanched
+def buildController(controller):
+        if controller.interface is None:
+            associate(controller)
+        shouldstartInterface = controller.buildController()
+        if shouldstartInterface or Configuration.forceStartInterfaces:
+            controller.interface.start()
+
+
+def startInterfaces():
+    if not _resources.interfaces:
+         loadInterfaces()
+    for interface in _resources.interfaces:
+        interface.start()
 
 
 
-
-    #from Configuration
-
-
-interfaces = loadInterfaces()
-superControllers = [interface.ct for interface in interfaces]
 
 
 class LoadableInterfaces(Exception):

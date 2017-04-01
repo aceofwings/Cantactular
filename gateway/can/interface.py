@@ -48,6 +48,7 @@ class Interface:
         self.listeners = []
         #controller Type
         self.ct = None
+        self.active = False
         #notifier share amongst the program
         self.notifier = None
         self.address = address
@@ -68,7 +69,7 @@ class Interface:
     def start(self):
         self.sock.bind((self.address,))
         self.launchNotifier()
-        return True
+        self.active = True
 
     def read(self):
         recieved = self.sock.recv(DEFAULT_BUFFERSIZE)

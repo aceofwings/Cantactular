@@ -15,6 +15,7 @@ class CanOpenController(Controller):
     def sendMessage(self,canID, data):
         pass
 
+
     def setupListener(self):
         self.interface.addListener(self.controllerListener)
 
@@ -27,6 +28,10 @@ class CanOpenController(Controller):
     def addDevice(self,device):
         deviceListener = device.setup(self)
         self.__addListener(deviceListener)
+
+    def buildController(self):
+        self.setupListener()
+        return False
     #associate a device with the controller
 
 #MotorController Listener

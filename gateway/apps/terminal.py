@@ -4,7 +4,7 @@ from gateway.opencan.opencancontroller import CanOpenController
 from gateway.can.message import CanMessage
 from gateway.can.listener import Listener
 from gateway.can.device import CanOpenDevice
-from gateway.settings.loader import associate
+from gateway.settings.loader import buildController
 
 
 
@@ -15,14 +15,9 @@ class Terminal(object):
     def __init__(self):
         super()
         term = TermOpenController()
-        associate(term)
-        term.setupListener()
-        term.interface.start()
+        buildController(term)
         while True:
             pass
-
-
-
 
     def start(self):
         pass
@@ -35,7 +30,6 @@ class TermOpenController(CanOpenController):
         self.controllerListener.addHandler(0x00,self.handleBroadCast)
 
     def buildController(self):
-        print("mmose")
         self.motor = CanOpenDevice(0x01,"MotorController")
         self.addDevice(self.motor)
 

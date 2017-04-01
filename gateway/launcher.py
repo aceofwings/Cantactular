@@ -7,7 +7,7 @@
 #
 import os
 from gateway.utils.projectpaths import ProjectPath
-from gateway.settings.loader import  interfaces, superControllers
+import gateway.settings.loader 
 #setup the project path
 ROOT_PATH = os.path.abspath('.')
 ProjectPath(ROOT_PATH)
