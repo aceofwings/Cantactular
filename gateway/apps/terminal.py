@@ -32,6 +32,7 @@ class TermOpenController(CanOpenController):
     def buildController(self):
         self.motor = CanOpenDevice(0x01,"MotorController")
         self.addDevice(self.motor)
+        return True
 
     def handleBroadCast(self,nodeID,value):
         print("Handle BroadCast")

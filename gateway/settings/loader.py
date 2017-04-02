@@ -39,7 +39,7 @@ def loadInterfaces():
 ## to an interface
 def associate(controller):
     if _resources.interfaces is None:
-        return # should raise or log error
+        loadInterfaces()
     if controller.interface is not None:
         return
     for interface in _resources.interfaces:
