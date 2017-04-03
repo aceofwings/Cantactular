@@ -43,7 +43,7 @@ class CANDatabase:
         Arguments:
          - dbcPath: The file path to .dbc file.
         """
-        self._dbcPath = ProjectPath.edsFile(fileName)
+        self._dbcPath = ProjectPath().edsfile(fileName)
 
     def __iter__(self):
         """
@@ -92,7 +92,7 @@ class CANDatabase:
             elif line == "":
                 if building_message:
                     building_message = False
-                    self._messages += [can_msg]
+                    self._txNodes[can_msg._txNode] += [can_msg]
                     can_msg = None
 
             # elif line[0:3] == "CM_":
