@@ -1,5 +1,5 @@
 #! python3
-#Courtesy of Shane Firmware Team 
+#Courtesy of Shane Firmware Team
 """
     File:       dbcParser.py
     Created:    03/29/2017
@@ -16,6 +16,7 @@
 
 import re
 from enum import Enum
+from gateway.utils.projectpaths import ProjectPath
 
 __regex_pattern__ = re.compile(r""" SG_ (?P<name>.*) : (?P<start_bit>[0-9]{1,2})\|(?P<length>[0-9]{1,2})@(?P<format>[0-1])(?P<type>[+-]) \((?P<factor>.*),(?P<offset>.*)\) \[(?P<min>.*)\|(?P<max>.*)\] "(?P<unit>.*)" Vector__XXX""")
 
@@ -30,19 +31,19 @@ class CANDatabase:
     _dbcPath = ""
     _comment = ""
     _messages = list()
-    _txNodes = list()
+    _txNodes = dict()
     _extended = False
     _attributes = list()
     _iter_index = 0
 
-    def __init__(self, dbc_path):
+    def __init__(self, fileName):
         """
         Constructor for the CAN Database.
 
         Arguments:
          - dbcPath: The file path to .dbc file.
         """
-        self._dbcPath = dbc_path
+        self._dbcPath = ProjectPath.edsFile(fileName)
 
     def __iter__(self):
         """
@@ -170,8 +171,7 @@ class CANDatabase:
             if each == "BU_:":
                 pass
             else:
-                self._txNodes += [each]
-
+                _txNodes.setdefault(each, [])
         return
 
     def _parseMessageHeader(self, line):
