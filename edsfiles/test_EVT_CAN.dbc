@@ -1,0 +1,99 @@
+VERSION "HIPBNYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY/4/%%%/4/'%**4YYY///"
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+
+BS_:
+
+BU_: BMS IMU TMS GTW SPCG
+
+
+BO_ 32 IMU_data1: 8 IMU
+ SG_ Accel_X : 0|12@1- (1,0) [-2000|2000] "mG" Vector__XXX
+ SG_ Accel_Y : 12|12@1- (1,0) [-2000|2000] "mG" Vector__XXX
+ SG_ Pitch : 44|10@1- (1,0) [-180|180] "Degrees" Vector__XXX
+ SG_ Roll : 36|8@1- (1,0) [-90|90] "Degrees" Vector__XXX
+ SG_ Yaw : 54|10@1+ (1,0) [0|360] "Degrees" Vector__XXX
+ SG_ Accel_Z : 24|12@1- (1,0) [-2000|2000] "mG" Vector__XXX
+
+BO_ 34 IMU_errors: 1 IMU
+ SG_ Bar_read_error : 0|1@1+ (1,0) [0|1] "Bool" Vector__XXX
+ SG_ Bar_write_error : 1|1@1+ (1,0) [0|1] "Bool" Vector__XXX
+ SG_ Coprocessor_error : 2|4@1+ (1,0) [0|9] "State" Vector__XXX
+ SG_ Accel_error : 6|2@1+ (1,0) [0|4] "State" Vector__XXX
+
+BO_ 33 IMU_data2: 3 IMU
+ SG_ Altitude : 0|10@1- (1,0) [-512|512] "m" Vector__XXX
+ SG_ IMU_temp : 14|8@1- (1,0) [-100|100] "C" Vector__XXX
+ SG_ Heading : 10|10@1+ (1,0) [0|360] "Degrees" Vector__XXX
+ SG_ Shake_event_detection : 22|1@1+ (1,0) [0|1] "Bool" Vector__XXX
+
+BO_ 16 BMS_data1: 8 BMS
+ SG_ Cell_V1 : 8|8@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V2 : 16|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V3 : 32|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V4 : 48|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V0 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 11 BMS_data2: 8 BMS
+ SG_ Cell_V5 : 0|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V6 : 16|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V7 : 32|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V8 : 48|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+
+BO_ 18 BMS_data3: 8 BMS
+ SG_ Cell_V9 : 0|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V10 : 16|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V11 : 32|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V12 : 48|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+
+BO_ 19 BMS_data4: 8 BMS
+ SG_ Cell_V13 : 0|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V14 : 16|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V15 : 32|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+ SG_ Cell_V16 : 48|16@1+ (1,0) [0|5000] "mV" Vector__XXX
+
+
+CM_ "";
+CM_ BO_ 32 "";
+CM_ BO_ 34 "";
+CM_ BO_ 33 "1";
+CM_ SG_ 33 Heading "A";
+CM_ BO_ 16 "";
+CM_ BO_ 11 "";
+CM_ BO_ 18 "";
+CM_ BO_ 19 "";
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 1000000;
+BA_DEF_DEF_  "GenMsgCycleTime" 0;
+BA_ "GenMsgCycleTime" BO_ 32 100;
+BA_ "GenMsgCycleTime" BO_ 34 10;
+BA_ "GenMsgCycleTime" BO_ 33 100;
+BA_ "GenMsgCycleTime" BO_ 16 100;
+BA_ "GenMsgCycleTime" BO_ 11 100;
+BA_ "GenMsgCycleTime" BO_ 18 100;
+BA_ "GenMsgCycleTime" BO_ 19 100;
+VAL_ 34 Bar_read_error 0 "No Error" 1 "Error" ;
+VAL_ 34 Bar_write_error 0 "False" 1 "True" ;
+VAL_ 34 Coprocessor_error 0 "No Error" 1 "Coprocessor error1" 2 "Coprocessor error2" 3 "Coprocessor error3" 4 "Coprocessor error4" 5 "Coprocessor error5" 6 "Coprocessor error6" 7 "Coprocessor error7" 8 "Coprocessor error8" 9 "Coprocessor error9" 10 "Coprocessor Magnetometer error" ;
+VAL_ 34 Accel_error 0 "No Error" 1 "Accel Error1" 2 "Accel Error2" 3 "Accel Error3" ;
+VAL_ 33 Shake_event_detection 0 "Shake NOT Detected" 1 "Shake Detected" ;
