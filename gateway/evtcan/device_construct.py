@@ -32,4 +32,6 @@ class DeviceConstruct():
             __device.dbcDescriptor = CANDatabase(self.dbc)
             __device.dbcDescriptor.load()
 
-        return __device.dbcDescriptor._txNodes[deviceName]
+        deviceDescriptior = __device.dbcDescriptor._txNodes[deviceName]
+        
+        __device_cache[deviceName] = deviceDescriptior

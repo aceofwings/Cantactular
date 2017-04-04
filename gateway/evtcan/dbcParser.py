@@ -171,7 +171,7 @@ class CANDatabase:
             if each == "BU_:":
                 pass
             else:
-                _txNodes.setdefault(each, [])
+                self._txNodes.setdefault(each, [])
         return
 
     def _parseMessageHeader(self, line):

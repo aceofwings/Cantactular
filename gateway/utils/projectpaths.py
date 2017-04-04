@@ -26,6 +26,13 @@ class ProjectPath(object):
                 path = os.path.join(rootpath,directory)
                 common[directory] = path
 
+    """
+    if the resource is not properly loaded, it will just returned the fileName
+    or path specified
+    """
     @classmethod
     def edsfile(self, fileName):
-        return os.path.join(common.edsfiles, fileName)
+        if common.edsfiles is not None:
+            return os.path.join(common.edsfiles, fileName)
+        else:
+            return fileName
