@@ -4,21 +4,20 @@ from gateway.can.device import EvtCanDevice
 class DeviceCache(object):
     devices = {}
     dbcDescriptor = None
+
     def hasDevice(self,device):
-        return device in devices
+        return device in self.devices
 
     def __getattr__(self,key):
-        return devices[key]
+        return self.devices[key]
 
     # TODO: deinit the cache after all bindings and configurations are finalized
 """ cache file operations and device configurations """
-__device_cache = DeviceCache()
-
 
 class MessageBox(object):
-    def __init__(self):
+    def __init__(self,descriptor):
         self.messages = None
-
+        self.sigfs = self._buildSignals(descriptor)
 
     def __getattr__(self,value):
         pass
@@ -26,32 +25,37 @@ class MessageBox(object):
     def _buildSignals(self, messageDescriptor):
         sigfs = {}
         for messageDscription in messageDescriptor:
-                for signal in messageDscription:
+                for signal in messageDscription._signals:
                     f = lambda data :  (((data >> signal._startbit) & math.pow(2,signal._length)))
                     sigfs[signal._name] = f
         return sigfs
 
-class DeviceConstruct():
+class DeviceConstruct(object):
+
+    __device_cache = DeviceCache()
 
     def __init__(self,dbcfileName):
         self.dbc = dbcfileName
 
-    @classmethod
     def fetchDevice(self,deviceName):
-        if __device_cache.hasDevice(deviceName):
-            return getattr(__device_cache, deviceName)
+        if self.__device_cache.hasDevice(deviceName):
+            return getattr(self.__device_cache, deviceName)
         else:
-            self.constructDevice(deviceName)
-        return  getattr(__device_cache, deviceName)
+            evtd = self.constructDevice(deviceName)
+            self.__device_cache.devices[deviceName] = evtd
+
+        return  getattr(self.__device_cache, deviceName)
 
     def constructDevice(self,deviceName):
-        if __device_cache.dbcDescriptor is None:
-            __device.dbcDescriptor = CANDatabase(self.dbc)
-            __device.dbcDescriptor.load()
+        if self.__device_cache.dbcDescriptor is None:
+            self.__device_cache.dbcDescriptor = CANDatabase(self.dbc)
+            self.__device_cache.dbcDescriptor.Load()
 
-        deviceDescriptior = __device.dbcDescriptor._txNodes[deviceName]
+        deviceDescriptor = self.__device_cache.dbcDescriptor._txNodes[deviceName]
 
-        __device_cache[deviceName] = deviceDescriptior
-
-        deviceDescriptors = Descript
+        messageBox = MessageBox(deviceDescriptor)
         evtDevice = EvtCanDevice()
+        evtDevice.messageBox = messageBox
+
+
+        return evtDevice

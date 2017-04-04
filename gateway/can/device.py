@@ -5,7 +5,7 @@ from gateway.can.listener import Listener
 class Device(object):
     def __init__(self):
         self.controller = None
-
+        self.messageBox = None
     def setup(self,controller):
         self.controller = controller
 

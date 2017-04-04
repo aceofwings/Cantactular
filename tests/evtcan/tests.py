@@ -1,14 +1,15 @@
 from gateway.evtcan.device_construct import MessageBox, DeviceConstruct
 import unittest
 
-class TestObjectDictionary(unittest.TestCase):
+class TestDeviceConstruct(unittest.TestCase):
     def setUp(self):
-        construct = DeviceConstruct("test_EVT_CAN.dbc")
+        self.construct = DeviceConstruct("test_EVT_CAN.dbc")
     def tearDown(self):
         pass
-    def test_MessageBoxSignals(self):
-        print("HELLLO")
-        #self.assertNotEqual(self.obj, None)
+    def test_devices(self):
+        print("Fetching Device\n")
+        self.construct.fetchDevice('BMS')
+
     def test_index(self):
         pass
         #self.assertEqual(self.obj[0x1018].parametername, "Identity object")
