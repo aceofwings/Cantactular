@@ -1,5 +1,6 @@
 from gateway.evtcan.dbcParser import CANDatabase
 from gateway.can.device import EvtCanDevice
+import collections
 
 class DeviceCache(object):
     devices = {}
@@ -16,19 +17,21 @@ class DeviceCache(object):
 
 class MessageBox(object):
     def __init__(self,descriptor):
-        self.messages = None
-        self.sigfs = self._buildSignals(descriptor)
-
+        self.messages = {}
+        self._buildSignals(descriptor)
     def __getattr__(self,value):
         pass
     """IMPORT NOTE - Make sure is unpacked as little endian format"""
     def _buildSignals(self, messageDescriptor):
-        sigfs = {}
         for messageDscription in messageDescriptor:
-                for signal in messageDscription._signals:
-                    f = lambda data :  (((data >> signal._startbit) & math.pow(2,signal._length)))
-                    sigfs[signal._name] = f
-        return sigfs
+            sigfs = {}
+            self.messages[messageDscription._name] = None
+            for signal in messageDscription._signals:
+                f = lambda data :  (((data >> signal._startbit) & ~(0 << signal._length)))
+                sigfs[signal._name] = f
+
+            self.messages[messageDscription._name] = collections.namedtuple('signal',sigfs.keys())(**sigfs)
+
 
 class DeviceConstruct(object):
 
@@ -53,9 +56,9 @@ class DeviceConstruct(object):
 
         deviceDescriptor = self.__device_cache.dbcDescriptor._txNodes[deviceName]
 
-        messageBox = MessageBox(deviceDescriptor)
-        evtDevice = EvtCanDevice()
-        evtDevice.messageBox = messageBox
 
+        evtDevice = EvtCanDevice()
+        evtDevice.messageBox = MessageBox(deviceDescriptor)
+        self.__device_cache.devices[deviceName] = evtDevice
 
         return evtDevice
