@@ -21,16 +21,19 @@ class MessageBox(object):
         self._buildSignals(descriptor)
     def __getattr__(self,value):
         pass
+    def signalOp(self,startBit,length):
+        return lambda data :  (((data >> startBit) & ((1 << length) -1 )))
+
     """IMPORT NOTE - Make sure is unpacked as little endian format"""
     def _buildSignals(self, messageDescriptor):
         for messageDscription in messageDescriptor:
             sigfs = {}
             self.messages[messageDscription._name] = None
             for signal in messageDscription._signals:
-                f = lambda data :  (((data >> signal._startbit) & ~(0 << signal._length)))
-                sigfs[signal._name] = f
+                sigfs[signal._name] = self.signalOp(signal._startbit, signal._length)
 
             self.messages[messageDscription._name] = collections.namedtuple('signal',sigfs.keys())(**sigfs)
+
 
 
 class DeviceConstruct(object):

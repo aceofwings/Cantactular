@@ -17,13 +17,17 @@ class TestDeviceConstruct(unittest.TestCase):
         #0101 1000 0100 0110 0100 0101 0110 1000 1000 0101 0110 1101 0110 0010 0100 0100
         #101100001000110010001010110100010000101011011010110001001000100
         #
-        databyteRaw = b'\x56\x46\x45\x68\x85\x62\x64\x44'
-        databyteRaw = b'\x01\x00\x00\x00\x00\x00\x00\x00'
-        device = self.construct.fetchDevice('BMS')
+        #databyteRaw = b'\x56\x46\x45\x68\x85\x62\x64\x44
 
+        databyteRaw = b'\x01\x00\x02\x00\x01\x00\x01\x00'
+        device = self.construct.fetchDevice('BMS')
+        #
         message = EvtCanMessage(device.messageBox.messages['BMS_data3'], databyteRaw)
-        print("\ncells Voltage is " + str(message.Cell_V9))
-        print(bin(message.data))
+        self.assertEqual(message.Cell_V9,0x1)
+        self.assertEqual(message.Cell_V10,0x2)
+        self.assertEqual(message.Cell_V11,0x1)
+        self.assertEqual(message.Cell_V11,0x1)
+
 
 
 
