@@ -23,7 +23,6 @@ class MessageBox(object):
         pass
     def signalOp(self,startBit,length):
         return lambda data :  (((data >> startBit) & ((1 << length) -1 )))
-
     """IMPORT NOTE - Make sure is unpacked as little endian format"""
     def _buildSignals(self, messageDescriptor):
         for messageDscription in messageDescriptor:
@@ -33,8 +32,6 @@ class MessageBox(object):
                 sigfs[signal._name] = self.signalOp(signal._startbit, signal._length)
 
             self.messages[messageDscription._name] = collections.namedtuple('signal',sigfs.keys())(**sigfs)
-
-
 
 class DeviceConstruct(object):
 
@@ -47,10 +44,7 @@ class DeviceConstruct(object):
         if self.__device_cache.hasDevice(deviceName):
             return getattr(self.__device_cache, deviceName)
         else:
-            evtd = self.constructDevice(deviceName)
-            self.__device_cache.devices[deviceName] = evtd
-
-        return  getattr(self.__device_cache, deviceName)
+            return self.constructDevice(deviceName)
 
     def constructDevice(self,deviceName):
         if self.__device_cache.dbcDescriptor is None:

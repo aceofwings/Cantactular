@@ -53,3 +53,13 @@ class CanMessage:
         pass
     def getIDnode(self):
         pass
+
+
+class EvtCanMessage(object):
+
+    def __init__(self,signals,data):
+        self.signals = signals
+        self.data = struct.Struct('>Q').unpack(data)[0]
+
+    def __getattr__(self,value):
+         return getattr(self.signals, value)(self.data)
