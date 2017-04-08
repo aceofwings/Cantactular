@@ -1,21 +1,41 @@
 from gateway.settings.configurations import Configuration
+from gateway.evtcan.device_construct import DeviceConstruct
 from gateway.can.interface import Interface
 from gateway.can.controller import Controller
-#Load the interfaces defined in the Settings  class
-# Throws errors on whether it as sucessfully initialize all interfaces
 
-
+#Author Daniel Harrington
+#Date - 4/8/2017
+#Loader module is responsible for loading resources to be used the rest of the app
+#build process
+#
+#
+#The loader and its resources can be built customily with the use of
+#Configurations.py
+#
+#
+# Loads the interfaces and assigns the base controllers specified in configurations.py
+#
+# Builds the controller, and additional needed attributes upon start of interfaces
+#
+# Starts the interface based on the controller build function or the forceStartInterfacee
+# in Configurations.py
+#
 class Resource():
     pass
-
+#cached resources shared through the program build process
 _resources = Resource()
 _resources.interfaces = None
 _resources.superControllers = None
 
+def loadDevices():
+    pass
+
+
 def loadInterfaces():
     interfaces = []
     faces = Configuration.interfaceNames
-
+    #associate an interface name with a controllerType. This ultimately
+    #determines the protocol each interface will be using
     for faceName, controllerType in faces.items():
         interface = Interface(faceName)
 
@@ -35,8 +55,7 @@ def loadInterfaces():
 
     _resources.interfaces = interfaces
 
-## these are the controllers our users inherit from to gain access to writing
-## to an interface
+# associate a controller with the correct interface
 def associate(controller):
     if _resources.interfaces is None:
         loadInterfaces()

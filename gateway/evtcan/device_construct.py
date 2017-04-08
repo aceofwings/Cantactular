@@ -2,6 +2,21 @@ from gateway.evtcan.dbcParser import CANDatabase
 from gateway.can.device import EvtCanDevice
 import collections
 
+#Author: Daniel Harrington
+#Date: 4/8/2017
+#Module builds EVT devices and caches their characteristics for distruution between
+#controllers
+#
+#
+# fetchDevice - fetch the device. If device is not in cache construct it and
+# its attributes
+#
+####Device attributes###
+#
+#MessageBox- defines the messages and theirs signals. A signal operation has
+#been defined for each message to perform data extraction
+#
+
 class DeviceCache(object):
     devices = {}
     dbcDescriptor = None
