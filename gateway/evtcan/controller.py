@@ -11,10 +11,11 @@ class EvtCanController(Controller):
 
 class EvtCanListener(Listener):
     def __init__(self,messageDescriptor):
-        super.__init__()
-        self.messageDescriptor = messageDescriptor
+        super().__init__()
+        self.messages = messageDescriptor.messages
+
 
     def notify(self,canmessage):
-        message = EvtCanMessage(self.messageDescriptor[canmessage.canid],canmessage.data)
         for handler in self.handlers[canmessage.canid]:
+            message = EvtCanMessage(self.messages, canmessage.data)
             handler(canmessage.canid, message)

@@ -180,7 +180,7 @@ class CANDatabase:
         """
         items = line.split(' ')
         # converts to an integer from the hexadecimal number
-        msg_id = int(items[1], 16)
+        msg_id = int(items[1])
         msg_name = items[2].rstrip(':')
         msg_dlc = int(items[3])
         msg_tx = items[4].rstrip('\n')

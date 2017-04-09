@@ -39,12 +39,12 @@ class CanOpenDevice(Device):
 class EvtCanDevice(Device):
     def __init__(self):
         super().__init__()
-        self.deviceDescriptor = None
+        self.messageBox = None
 
     def setup(self,controller):
         self.controller = controller
         return self.__buildListener()
 
-    def buildListener(self):
-        listener = EvtCanListener(self.deviceDescriptor)
+    def __buildListener(self):
+        listener = EvtCanListener(self.messageBox)
         return listener

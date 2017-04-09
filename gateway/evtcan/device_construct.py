@@ -42,12 +42,12 @@ class MessageBox(object):
     def _buildSignals(self, messageDescriptor):
         for messageDscription in messageDescriptor:
             sigfs = {}
-            self.messages[messageDscription._name] = None
+
             for signal in messageDscription._signals:
                 sigfs[signal._name] = self.signalOp(signal._startbit, signal._length)
 
+            self.messages[messageDscription._canID] = collections.namedtuple('signal',sigfs.keys())(**sigfs)
             self.messages[messageDscription._name] = collections.namedtuple('signal',sigfs.keys())(**sigfs)
-
 class DeviceConstruct(object):
 
     __device_cache = DeviceCache()

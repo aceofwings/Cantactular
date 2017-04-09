@@ -17,8 +17,8 @@ class Controller:
         self.interface = None
         self.controllerListener = Listener()
 
-    def addListener(self, listener):
-        self.listeners.append(listener)
+    def __addListener(self, listener):
+        self.interface.addListener(listener)
 
     def associateInterface(self, interface):
         self.interface = interface
@@ -28,6 +28,10 @@ class Controller:
     #override for custom controller builds
     def buildController(self):
         return False
+
+    def addDevice(self,device):
+        deviceListener = device.setup(self)
+        self.__addListener(deviceListener)
 
     def write(self, canmessage):
         sent = self.interface.write(canmessage)

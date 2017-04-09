@@ -3,12 +3,6 @@ import logging
 #
 #
 #
-#
-#
-#
-#
-#
-#
 class Listener:
     def __init__(self):
         self.listening = {}
@@ -22,6 +16,12 @@ class Listener:
 
     def removeHandler(self,canid,handler):
         pass
+
+    def _notify(self,canmessage):
+        if not self.handlers or not canmessage.canid in self.handlers:
+            return
+        else:
+            self.notify(canmessage)
 
     def notify(self,canmessage):
         for handler in self.handlers[canmessage.canid]:
