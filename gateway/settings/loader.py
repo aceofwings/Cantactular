@@ -2,6 +2,7 @@ from gateway.settings.configurations import Configuration
 from gateway.evtcan.device_construct import DeviceConstruct
 from gateway.can.interface import Interface
 from gateway.can.controller import Controller
+import logging
 
 #Author Daniel Harrington
 #Date - 4/8/2017
@@ -27,8 +28,22 @@ _resources = Resource()
 _resources.interfaces = None
 _resources.superControllers = None
 
+
+def loadLogger():
+    logger = logging.getLogger('gateway')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    streamHandler = logging.StreamHandler()
+    streamHandler.setFormatter(formatter)
+    logger.addHandler(streamHandler)
+
+
+
 def loadDevices():
-    pass
+    if Configuration.imediateLoadDeivce is None:
+        return
+    deviceConstruct = DeviceConstruct
+    for deviceName in Configuration.imediateLoadDeivce:
+        deviceConstruct.constructDevice(deviceName)
 
 
 def loadInterfaces():

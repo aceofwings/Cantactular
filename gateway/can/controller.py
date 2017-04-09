@@ -10,13 +10,12 @@
 from gateway.utils.objectdictionary import ObjectDictionary
 from gateway.can.interface import Interface
 from gateway.can.message import CanMessage
-
+from gateway.can.listener import Listener
 class Controller:
 
     def __init__(self):
         self.interface = None
-        self.listeners = []
-
+        self.controllerListener = Listener()
 
     def addListener(self, listener):
         self.listeners.append(listener)
@@ -24,6 +23,8 @@ class Controller:
     def associateInterface(self, interface):
         self.interface = interface
 
+    def setupListener(self):
+        self.interface.addListener(self.controllerListener)
     #override for custom controller builds
     def buildController(self):
         return False

@@ -25,14 +25,8 @@ import struct
 class CanMessage:
     def __init__(self, bytes=None):
         if bytes is not None:
-            can_frame = struct.Struct('<IB3x8B')
-            self.indata = can_frame.unpack(bytes)
-
-            self.canid = self.indata[0]
-            self.datalen = self.indata[1]
-
-            self.data = self.indata[2:10]
-
+            can_frame = struct.Struct('<IB3x8s')
+            self.canid, self.datalen, self.data = can_frame.unpack(bytes)
 
     def __str__(self):
         return "id:"+str(self.canid)+" datalen: "+str(self.datalen)+" ::data::" + str(self.data)

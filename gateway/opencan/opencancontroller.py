@@ -1,5 +1,6 @@
 from gateway.can.controller import Controller
 from gateway.can.listener import Listener
+
 #
 #CanOpen Controller. responsible for all communication based on the CanOpen
 #protocol and contains only devices implemented with the protocol.

@@ -1,6 +1,7 @@
 
 from gateway.utils.projectpaths import ProjectPath
 from gateway.opencan.opencancontroller import CanOpenController
+from gateway.evtcan.controller import EvtCanController
 from gateway.can.message import CanMessage
 from gateway.can.listener import Listener
 from gateway.can.device import CanOpenDevice
@@ -14,7 +15,7 @@ class Terminal(object):
 
     def __init__(self):
         super()
-        term = TermOpenController()
+        term = TermEvtCanController()
         buildController(term)
         while True:
             pass
@@ -22,6 +23,10 @@ class Terminal(object):
     def start(self):
         pass
 
+class TermEvtCanController(EvtCanController):
+
+    def buildController(self):
+        return True
 
 class TermOpenController(CanOpenController):
 
