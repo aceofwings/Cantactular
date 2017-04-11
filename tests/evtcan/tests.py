@@ -28,10 +28,10 @@ class TestDeviceConstruct(unittest.TestCase):
         #
         message = EvtCanMessage(device.messageBox.messages['BMS_data3'], databyteRaw)
 
-        #self.assertEqual(message.Cell_V9,0x1)
-        #self.assertEqual(message.Cell_V10,0x2)
-        #self.assertEqual(message.Cell_V11,0x1)
-        #self.assertEqual(message.Cell_V11,0x1)
+        self.assertEqual(message.Cell_V9,0x1)
+        self.assertEqual(message.Cell_V10,0x2)
+        self.assertEqual(message.Cell_V11,0x3)
+        self.assertEqual(message.Cell_V12,0x4)
 
 
 

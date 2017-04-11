@@ -55,5 +55,8 @@ class EvtCanMessage(object):
         self.signals = signals
         self.data = struct.Struct('>Q').unpack(data)[0]
 
+    def __getitem__(self, i):
+        return self.signals[i](self.data)
+
     def __getattr__(self,value):
          return getattr(self.signals, value)(self.data)

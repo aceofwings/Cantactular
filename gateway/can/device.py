@@ -1,17 +1,20 @@
 from gateway.opencan.nmt import NMT
 from gateway.can.listener import Listener
-from gateway.evtcan.controller import EvtCanListener
+from gateway.evtcan.evt_listener import EvtCanListener
 
 
 class Device(object):
     def __init__(self):
         self.controller = None
         self.messageBox = None
+        self.listener = None
+
     def setup(self,controller):
         self.controller = controller
 
     def __buildListener(self):
-        return Listener()
+        self.listener = Listener()
+        return self.listener
 
 
 class CanOpenDevice(Device):
@@ -43,8 +46,8 @@ class EvtCanDevice(Device):
 
     def setup(self,controller):
         self.controller = controller
-        return self.__buildListener()
+        self.__buildListener()
 
     def __buildListener(self):
-        listener = EvtCanListener(self.messageBox)
-        return listener
+        self.listener = EvtCanListener()
+        self.listener.messages = self.messageBox.messages

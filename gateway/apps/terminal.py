@@ -6,7 +6,6 @@ from gateway.can.message import CanMessage
 from gateway.can.listener import Listener
 from gateway.can.device import CanOpenDevice
 from gateway.settings.loader import buildController
-from gateway.evtcan.device_construct import DeviceConstruct
 
 
 
@@ -15,7 +14,7 @@ class Terminal(object):
 
     def __init__(self):
         super()
-        term = TermEvtCanController()
+        term = TermEvtCanController("test_EVT_CAN.dbc")
         buildController(term)
         while True:
             pass
@@ -25,16 +24,20 @@ class Terminal(object):
 
 class TermEvtCanController(EvtCanController):
 
-    def __init__(self):
-        super().__init__()
-        self.bms = None
     def buildController(self):
         super().buildController()
-        construct = DeviceConstruct("test_EVT_CAN.dbc")
-        device = construct.fetchDevice("BMS")
-        self.addDevice(device)
+        self.setupListener()
+        bms = self.devices.fetchDevice("BMS")
+        self.addDevice(bms)
+        self.addDevice(self.devices.fetchDevice("IMU"))
+
+        self.controllerListener.addHandler('all',self.handleBroadCast)
 
         return True
+
+    def handleBroadCast(self,nodeID, evtMessage):
+
+        print(evtMessage[3])
 
 class TermOpenController(CanOpenController):
 

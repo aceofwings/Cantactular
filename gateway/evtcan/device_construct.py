@@ -61,6 +61,12 @@ class DeviceConstruct(object):
         else:
             return self.constructDevice(deviceName)
 
+    def fetchDatabase(self):
+        if self.__device_cache.dbcDescriptor is None:
+            self.__device_cache.dbcDescriptor = CANDatabase(self.dbc)
+            self.__device_cache.dbcDescriptor.Load()
+
+        return  self.__device_cache.dbcDescriptor
     def constructDevice(self,deviceName):
         if self.__device_cache.dbcDescriptor is None:
             self.__device_cache.dbcDescriptor = CANDatabase(self.dbc)
