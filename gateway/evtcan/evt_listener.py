@@ -15,7 +15,6 @@ class EvtCanListener(Listener):
 
 
     def notifyAll(self,canmessage):
-        for handler in self.handlers['all']:
-            if canmessage.canid in self.messages:
-                message = EvtCanMessage(self.messages[canmessage.canid], canmessage.data)
-                handler(canmessage.canid, message)
+        if canmessage.canid in self.messages:
+            message = EvtCanMessage(self.messages[canmessage.canid], canmessage.data)
+            super().notifyAll(message)
