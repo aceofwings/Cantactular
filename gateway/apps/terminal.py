@@ -14,7 +14,7 @@ class Terminal(object):
 
     def __init__(self):
         super()
-        term = TermEvtCanController("test_EVT_CAN.dbc")
+        term = TermEvtCanController("EVT_CAN.dbc")
         buildController(term)
         while True:
             pass
@@ -27,7 +27,7 @@ class TermEvtCanController(EvtCanController):
     def buildController(self):
         super().buildController()
         self.setupListener()
-        bms = self.devices.fetchDevice("BMS")
+        bms = self.devices.fetchDevice("BMS0")
         self.addDevice(bms)
         self.addDevice(self.devices.fetchDevice("IMU"))
 
@@ -36,8 +36,8 @@ class TermEvtCanController(EvtCanController):
         return True
 
     def handleBroadCast(self,nodeID, evtMessage):
+        evtMessage.cool()
 
-        print(evtMessage[3])
 
 class TermOpenController(CanOpenController):
 

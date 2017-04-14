@@ -32,8 +32,8 @@ class Listener:
 
     def notify(self,canmessage):
         for handler in self.handlers[canmessage.canid]:
-            handler(canmessage.canid,canmessage.data)
+            handler(canmessage.canid,canmessage)
 
     def notifyAll(self,canmessage):
         for handler in self.handlers['all']:
-            handler(canmessage.canid,canmessage.data)
+            handler(canmessage.canid,canmessage)

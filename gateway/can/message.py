@@ -54,6 +54,11 @@ class EvtCanMessage(object):
     def __init__(self,signals,data):
         self.signals = signals
         self.data = struct.Struct('>Q').unpack(data)[0]
+        self.canid = None
+
+    def cool(self):
+        for name, value in self.signals._asdict().items():
+            print(name + " value " + str(value(self.data)))
 
     def __getitem__(self, i):
         return self.signals[i](self.data)
