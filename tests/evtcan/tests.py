@@ -27,12 +27,19 @@ class TestDeviceConstruct(unittest.TestCase):
         device = self.construct.fetchDevice('BMS0')
 
         message = EvtCanMessage(device.messageBox.messages['BMS0_temp1'], databyteRaw)
-        print(message.data)
-        print(bin(message.data))
         self.assertEqual(message.Cell_temp1,0x1)
         self.assertEqual(message.Cell_temp2,0x2)
         self.assertEqual(message.Cell_temp3,0x3)
         self.assertEqual(message.Cell_temp4,0x4)
+
+    def test_SignalVoltages(self):
+        device = self.construct.fetchDevice('BMS0')
+        databyteRaw = b'\x00\x68\x00\x4E\xA6\xE1\x0F\xA0'
+        message = EvtCanMessage(device.messageBox.messages['BMS0_module_voltages1'], databyteRaw)
+        print(bin(message.data))
+        print(message.Module_V1)
+        print(message.Module_V2)
+
 
 
 
