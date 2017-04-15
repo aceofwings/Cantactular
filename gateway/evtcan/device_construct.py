@@ -37,7 +37,7 @@ class MessageBox(object):
     def __getattr__(self,value):
         pass
     def signalOp(self,startBit,length):
-        return lambda data :  (((data >> startBit) & ((1 << length) -1 )))
+        return lambda data :  (((data >> (63 - startBit)) & ((1 << length) -1 )))
     """IMPORT NOTE - Make sure is unpacked as little endian format"""
     def _buildSignals(self, messageDescriptor):
         for messageDscription in messageDescriptor:
