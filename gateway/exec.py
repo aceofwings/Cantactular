@@ -23,8 +23,8 @@ while True:
     elif currentdir == STOP_PATH:
         print("Fail to find launcher")
         break
-        os.chdir('..')
-        currentdir = os.path.abspath('.')
+    os.chdir('..')
+    currentdir = os.path.abspath('.')
 
 
 
