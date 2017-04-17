@@ -1,6 +1,7 @@
 from gateway.opencan.opencancontroller import CanOpenController
 from gateway.evtcan.controller import EvtCanController
 
+
 class Configuration(object):
     #define the interfaces and their base controller types
     interfaceNames = {'vcan0' : EvtCanController}
@@ -8,5 +9,7 @@ class Configuration(object):
     failureSilence = True
     #force start the interfaces at the earliest moment
     forceStartInterfaces = False
+
+    messageFormat  = "motorala"
     #load devices prior to any custom state change
     imediateLoadDeivce = ["BMS"]

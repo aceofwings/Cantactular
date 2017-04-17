@@ -36,10 +36,10 @@ class TestDeviceConstruct(unittest.TestCase):
         device = self.construct.fetchDevice('BMS0')
         databyteRaw = b'\x00\x68\x00\x4E\xA6\xE1\x0F\xA0'
         message = EvtCanMessage(device.messageBox.messages['BMS0_module_voltages1'], databyteRaw)
-        print(bin(message.data))
         print(message.Module_V1)
         print(message.Module_V2)
-
+        print(message.Module_V3)
+        print(message.Module_V4)
 
 
 
