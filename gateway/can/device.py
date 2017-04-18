@@ -24,11 +24,14 @@ class CanOpenDevice(Device):
         self.edsFile = edsFile
         self.controller = None
         self.nmt = None
+        self.sdo = None
 
     #crucial setup of listeners and functions
     def setup(self,controller):
         self.controller = controller
         self.nmt = NMT(self.nodeID,controller)
+        self.sdo = SDO(self)
+        self.controller.interface.addListener(sdo)
         return self.__buildListener()
 
     #Define and ad all cruial internal handlers to the listener.
