@@ -27,23 +27,24 @@ class Resource():
 _resources = Resource()
 _resources.interfaces = None
 _resources.superControllers = None
-
+_resources.deviceConstruct = None
 
 def loadLogger():
     logger = logging.getLogger('gateway')
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter(' %(levelname)s - %(message)s')
     streamHandler = logging.StreamHandler()
     streamHandler.setFormatter(formatter)
     logger.addHandler(streamHandler)
 
 
-
 def loadDevices():
     if Configuration.imediateLoadDeivce is None:
         return
-    deviceConstruct = DeviceConstruct
+    if _resources.deviceConstruct is None:
+        _resources.deviceConstruct = DeviceConstruct(Configuration.maindbcFile)
     for deviceName in Configuration.imediateLoadDeivce:
-        deviceConstruct.constructDevice(deviceName)
+        _resources.deviceConstruct.constructDevice(deviceName)
 
 
 def loadInterfaces():
@@ -96,10 +97,6 @@ def startInterfaces():
          loadInterfaces()
     for interface in _resources.interfaces:
         interface.start()
-
-
-
-
 
 class LoadableInterfaces(Exception):
     def __init__(self, message, errors):

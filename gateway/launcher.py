@@ -7,11 +7,13 @@
 #
 import os
 from gateway.utils.projectpaths import ProjectPath
-import gateway.settings.loader 
+from gateway.settings.loader  import loadLogger
+
 #setup the project path
 ROOT_PATH = os.path.abspath('.')
 ProjectPath(ROOT_PATH)
-
+loadLogger()
 
 #import commands
+import gateway.core.engine
 from . import commands

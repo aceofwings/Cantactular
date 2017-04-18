@@ -53,7 +53,7 @@ class EvtCanMessage(object):
 
     def __init__(self,signals,data):
         self.signals = signals
-        self.data = struct.Struct('>Q').unpack(data)[0]
+        self.data = struct.Struct('<Q').unpack(data)[0]
         self.canid = None
 
     def cool(self):
