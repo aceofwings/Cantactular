@@ -10,6 +10,6 @@ class Configuration(object):
     #force start the interfaces at the earliest moment
     forceStartInterfaces = False
 
-    messageFormat  = "motorala"
+    messageFormat  = "motorola"
     #load devices prior to any custom state change
     imediateLoadDeivce = ["BMS"]
