@@ -15,7 +15,7 @@ class Configuration(object):
 
     messageFormat  = "motorola"
     #load devices prior to any custom state change
-    imediateLoadDeivce = ["BMS0"]
+    imediateLoadDevice = ["BMS0", "BMS1", "BMS2", "BMS3", "BMS4", "BMS5", "BMS6"]
 
     #prints loading info
     verbosity = True

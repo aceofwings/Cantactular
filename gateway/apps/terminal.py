@@ -31,7 +31,7 @@ class TermEvtCanController(EvtCanController):
         return True
 
     def handleBroadCast(self,nodeID, evtMessage):
-        evtMessage.cool()
+        evtMessage.cotents()
 
 
 class TermOpenController(CanOpenController):

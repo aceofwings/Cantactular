@@ -2,8 +2,8 @@ from gateway.settings.configurations import Configuration
 from gateway.evtcan.device_construct import DeviceConstruct
 from gateway.can.interface import Interface
 from gateway.can.controller import Controller
+from gateway.core.systemlogger import logger
 import logging
-
 #Author Daniel Harrington
 #Date - 4/8/2017
 #Loader module is responsible for loading resources to be used the rest of the app
@@ -26,6 +26,7 @@ class Resource():
 #cached resources shared through the program build process
 _resources = Resource()
 _resources.interfaces = None
+_resources.busInterfaceNames = None
 _resources.superControllers = None
 _resources.deviceConstruct = None
 
@@ -38,17 +39,24 @@ def loadLogger():
     logger.addHandler(streamHandler)
 
 
+def devicesInfo():
+    logger.info("Configuring Device Mapping %s", Configuration.imediateLoadDevice)
+
 def loadDevices():
-    if Configuration.imediateLoadDeivce is None:
+    devicesInfo()
+    if Configuration.imediateLoadDevice is None:
         return
     if _resources.deviceConstruct is None:
         _resources.deviceConstruct = DeviceConstruct(Configuration.maindbcFile)
-    for deviceName in Configuration.imediateLoadDeivce:
+    for deviceName in Configuration.imediateLoadDevice:
         _resources.deviceConstruct.constructDevice(deviceName)
 
+def mapInterfaceNames():
+    _resources.busInterfaceNames = list(Configuration.interfaceNames.keys())
 
 def loadInterfaces():
     interfaces = []
+    mapInterfaceNames()
     faces = Configuration.interfaceNames
     #associate an interface name with a controllerType. This ultimately
     #determines the protocol each interface will be using
