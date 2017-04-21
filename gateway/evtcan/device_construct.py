@@ -38,19 +38,26 @@ class MessageBox(object):
         pass
     def signalOp(self,startBit,length):
         return lambda data :  (((data >> (63 - startBit)) & ((1 << length) - 1 )))
+
+    def signalOpIntel(self,startBit,length):
+        return lambda data :  (((data >> startBit) & ((1 << length) -1 )))
     """Build Signal for Motorola format"""
 
     def _buildSignals(self, messageDescriptor):
+        messageFormat = "intel"
         for messageDscription in messageDescriptor:
             sigfs = {}
             for signal in messageDscription._signals:
-# Motorala format is weird. Lets covert the starbit to an accepted start value
-                mod = ((signal._startbit + 1 ) % 8)
-                if mod is 0:
-                    mod = 8
-                msb = signal._startbit - (signal._startbit % 8) + 8 - mod
-                lsb =  msb + signal._length - 1
-                sigfs[signal._name] = self.signalOp(lsb, signal._length)
+#                Motorala format is weird. Lets covert the starbit to an appropriate value
+                if self.messageFormat == "motorola":
+                    mod = ((signal._startbit + 1 ) % 8)
+                    if mod is 0:
+                        mod = 8
+                    msb = signal._startbit - (signal._startbit % 8) + 8 - mod
+                    lsb =  msb + signal._length - 1
+                    sigfs[signal._name] = self.signalOp(lsb, signal._length)
+                else:
+                    sigfs[signal._name] = self.signalOpIntel(signal._startbit, signal._length)
 
             self.messages[messageDscription._canID] = collections.namedtuple('signal',sigfs.keys())(**sigfs)
             self.messages[messageDscription._name] = collections.namedtuple('signal',sigfs.keys())(**sigfs)

@@ -1,5 +1,5 @@
 #! python3
-
+#Courtesy of Shane Firmware Team
 """
     File:       dbcParser.py
     Created:    03/29/2017
@@ -15,8 +15,10 @@
 """
 
 import re
+from enum import Enum
 from gateway.utils.projectpaths import ProjectPath
-__regex_pattern__ = re.compile(r""" SG_ (?P<name>.*) : (?P<start_bit>[0-9]{1,2})\|(?P<length>[0-9]{1,2})@(?P<format>[0-1])(?P<type>[+-]) \((?P<factor>.*),(?P<offset>.*)\) \[(?P<min>.*)\|(?P<max>.*)\] "(?P<unit>.*)" (?P<rx_nodes>.*)""")
+
+__regex_pattern__ = re.compile(r""" SG_ (?P<name>.*) : (?P<start_bit>[0-9]{1,2})\|(?P<length>[0-9]{1,2})@(?P<format>[0-1])(?P<type>[+-]) \((?P<factor>.*),(?P<offset>.*)\) \[(?P<min>.*)\|(?P<max>.*)\] "(?P<unit>.*)" Vector__XXX""")
 
 
 class CANDatabase:
@@ -67,7 +69,6 @@ class CANDatabase:
             file = open(self._dbcPath)
         except OSError:
             print("Invalid file path specified.")
-            print(self._dbcPath)
             return
 
         building_message = False
@@ -146,23 +147,6 @@ class CANDatabase:
                         message.AddAttribute(new_attr)
                         break
 
-            elif line.startswith("CM_"):
-                components = line.split(' ')
-                if len(components) <= 2:
-                    break
-                for message in self:
-                    if message.CANID() == int(components[2]):
-                        for signal in message:
-                            if signal.Name() == components[3]:
-                                comment_str = ''
-                                for each in components[4:]:
-                                    comment_str += each
-                                signal.AddComment(comment_str)
-                                break
-                    break
-
-        self._iter_index = 0
-
         return self
 
     def Name(self):
@@ -188,7 +172,6 @@ class CANDatabase:
                 pass
             else:
                 self._txNodes.setdefault(each, [])
-
         return
 
     def _parseMessageHeader(self, line):
@@ -196,6 +179,7 @@ class CANDatabase:
         Creates a signal-less CANMessage object from the header line.
         """
         items = line.split(' ')
+        # converts to an integer from the hexadecimal number
         msg_id = int(items[1])
         msg_name = items[2].rstrip(':')
         msg_dlc = int(items[3])
@@ -263,10 +247,9 @@ class CANMessage:
         Defines the next CANSignal object to be returned in an iteration.
         """
         if self._iter_index == len(self._signals):
-            self._iter_index = 0
             raise StopIteration
         self._iter_index += 1
-        return self._signals[self._iter_index-1]
+        return self._signals[self._iter_index]
 
     def AddSignal(self, signal):
         """
@@ -326,15 +309,6 @@ class CANMessage:
         self._attributes = []
         return self
 
-    def Name(self):
-        return self._name
-
-    def TransmittingNode(self):
-        return self._txNode
-
-    def DLC(self):
-        return self._dlc
-
 
 class CANSignal:
     """
@@ -352,7 +326,6 @@ class CANSignal:
     _maxVal = 0
     _units = ""
     _values = list()
-    _comment = ""
 
     def __init__(self, name, sigtype, sigformat, startbit, length, offset, factor,
                  minVal, maxVal, unit):
@@ -370,9 +343,6 @@ class CANSignal:
         self._maxVal = maxVal
         self._units = unit
 
-    def __lt__(self, other):
-        return self._startbit < other._startbit
-
     def Name(self):
         """
         Gets the name of the CANSignal.
@@ -386,17 +356,32 @@ class CANSignal:
         self._values = values_lst
         return self
 
-    def Length(self):
-        return self._length
 
-    def SignType(self):
-        return self._type
+class Format(Enum):
+    """
+    Enumeration for the endianness of the signals.
+    """
+    Motorola = 0  # Big-Endian
+    Intel = 1  # Little-Endian
 
-    def AddComment(self, cm_str):
-        self._comment = cm_str
 
-    def ReadComment(self):
-        return self._comment
+class Type(Enum):
+    """
+    Enumeration for whether a signal is signed or unsigned.
+    """
+
+    Unsigned = '-'
+    Signed = '+'
+
+
+class IDType(Enum):
+    """
+    Enumeration containing whether a CAN ID is using an extended ID or standard
+    ID.
+    """
+
+    Standard = 0
+    Extended = 1
 
 
 def valueLineSplit(line):
@@ -422,7 +407,7 @@ def valueLineSplit(line):
     return components
 
 
-def checkMessageMemoryAlignment(message, word_size_in_bits=8):
+def checkMessageMemoryAlignment(message):
     """
     Examines a CANMessage object and checks that signals in the message are
     properly arranged so as to minimize padding in the struct bitfield. If a
@@ -438,9 +423,10 @@ def main():
     information to generate a C header file for the Network Manager
     application.
     """
-    file = "EVT_CAN.dbc"
+    file = "test_EVT_CAN.dbc"
     candb = CANDatabase(file)
     candb.Load()
+    input()
 
 if __name__ == "__main__":
     main()
