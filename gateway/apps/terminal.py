@@ -3,7 +3,7 @@ from gateway.opencan.opencancontroller import CanOpenController
 from gateway.evtcan.controller import EvtCanController
 from gateway.can.device import CanOpenDevice
 from gateway.settings.loader import buildController
-
+from gateway.core.systemlogger import logger
 
 
 #may want to inherit from our own custom code
@@ -31,7 +31,7 @@ class TermEvtCanController(EvtCanController):
         return True
 
     def handleBroadCast(self,nodeID, evtMessage):
-        evtMessage.cotents()
+        logger.info("%s",evtMessage)
 
 
 class TermOpenController(CanOpenController):

@@ -96,6 +96,9 @@ def associate(controller):
         if issubclass(controller.__class__,interface.ct):
             controller.associateInterface(interface)
             return
+
+        if controller.interface is None:
+            raise ImproperControllerDefinition("No defined interface for given controller type")
 # build the controller, if there is no interface associate one, then continue
 #to build the controller using helper method. prepareforStart will ready interfaces
 # to be luanched
@@ -114,10 +117,8 @@ def startInterfaces():
         interface.start()
 
 class LoadableInterfaces(Exception):
-    def __init__(self, message, errors):
+    def __init__(self, message):
         super(LoadableInterfaces, self).__init__(message)
-        self.errors = errors
 class ImproperControllerDefinition(Exception):
-    def __init__(self, message, errors):
+    def __init__(self, message):
         super(ImproperControllerDefinition, self).__init__(message)
-        self.errors = errors
