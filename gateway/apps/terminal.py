@@ -20,27 +20,33 @@ class Terminal(object):
         signal.signal(signal.SIGINT, self.close)
         number = 0
         curses.noecho()
-        self.temp = None
-        term.controllerListener.addHandler(0x82,self.tempValue)
-        while 1:
-            # c = screen.getch()
-            # if c == 113:
-            #     break
-            # if c == curses.KEY_LEFT:
-            #     number -= 1
-            # elif c == curses.KEY_RIGHT:
-            #     number += 1
 
-            if self.temp is not None:
-                screen.addstr(0, 0, "Cell temp 6 Value " + str(self.temp.Cell_temp6))
-                screen.refresh()
-            #screen.clrtoeol()
-        #    term.motor.sdo.write_values[0x2220] = number
+        self.temps = {}
+        term.controllerListener.addHandler(0x80,self.update)
+        term.controllerListener.addHandler(0x81,self.update)
+        term.controllerListener.addHandler(0x100,self.update)
+        term.controllerListener.addHandler(0x101,self.update)
+        term.controllerListener.addHandler(0x180,self.update)
+        term.controllerListener.addHandler(0x181,self.update)
+        term.controllerListener.addHandler(0x200,self.update)
+        term.controllerListener.addHandler(0x201,self.update)
+        while 1:
+            n = 0
+            for key in self.temps.keys():
+                for x in range(0, len(self.temps[key].signals)):
+                    screen.addstr(n, x*2+5, "Temps: " + str(self.temps[key]))
+                n+=1
+
+            screen.refresh()
+
+        #term.motor.sdo.write_values[0x2220] = number
 
     def start(self):
         pass
-    def tempValue(self,nodeid, evtMessage):
-        self.temp=evtMessage
+
+    def update(self,nodeid, evtMessage):
+        self.temps[nodeid] = evtMessage
+
     def close(self, signum, frame):
         curses.nocbreak()
         self.screen.keypad(0)

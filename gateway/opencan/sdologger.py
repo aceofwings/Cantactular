@@ -3,8 +3,12 @@ import time
 
 class SDOLog(object):
     readlog = {
+        0x6068:0x0, #Current
+        0x60FF:0x0, #Target Speed
+        0x2620:0x0, #Throttle value
         0x6077:0x0, #Torque
         0x6076:0x0, #Peak Torque
+        0x2721:0x0, #Vehicle Speed
         0x606B:0x0, #Velocity Demand
         0x606C:0x0, #Velocity
         0x6080:0x0, #Max motor speed
