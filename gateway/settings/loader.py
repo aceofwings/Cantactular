@@ -35,13 +35,16 @@ _resources.deviceConstruct = None
 
 def loadLogger():
     logger = logging.getLogger('gateway')
-    logger.setLevel(logging.INFO)
-
-    formatter = logging.Formatter(' %(levelname)s - %(message)s')
+    logger.setLevel(logging.DEBUG)
+    infoformatter = logging.Formatter('%(levelname)s - %(message)s')
+    fileformatter = logging.Formatter(' %(asctime)s - %(message)s')
 #    fileHandler = logging.FileHandler(common.log + "/track.log")
     fileHandler = RunRotatingtHandler(common.log + "/track.log", freshRun = Configuration.freshLogFileOnRun)
+    fileHandler.setLevel(logging.DEBUG)
+    fileHandler.setFormatter(fileformatter)
     streamHandler = logging.StreamHandler()
-    streamHandler.setFormatter(formatter)
+    streamHandler.setFormatter(infoformatter)
+    streamHandler.setLevel(logging.INFO)
     logger.addHandler(fileHandler)
     logger.addHandler(streamHandler)
 
@@ -96,6 +99,9 @@ def associate(controller):
         if issubclass(controller.__class__,interface.ct):
             controller.associateInterface(interface)
             return
+
+        if controller.interface is None:
+            raise ImproperControllerDefinition("No defined interface for given controller type")
 # build the controller, if there is no interface associate one, then continue
 #to build the controller using helper method. prepareforStart will ready interfaces
 # to be luanched
@@ -114,10 +120,8 @@ def startInterfaces():
         interface.start()
 
 class LoadableInterfaces(Exception):
-    def __init__(self, message, errors):
+    def __init__(self, message):
         super(LoadableInterfaces, self).__init__(message)
-        self.errors = errors
 class ImproperControllerDefinition(Exception):
-    def __init__(self, message, errors):
+    def __init__(self, message):
         super(ImproperControllerDefinition, self).__init__(message)
-        self.errors = errors
