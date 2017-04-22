@@ -1,7 +1,8 @@
 from gateway.core.systemlogger import logger
+import time
 
 class SDOLog(object):
-    loglist = {
+    readlog = {
         0x6077:0x0, #Torque
         0x6076:0x0, #Peak Torque
         0x606B:0x0, #Velocity Demand
@@ -11,13 +12,19 @@ class SDOLog(object):
         0x608D:0x0, #Acceleration notation index
         0x608e:0x0 #Acceleration dimension index
     }
+    writelog = {
+        0x2220:0x00 #Throttle input voltage
+
+        }
 
     def __init__(self, sdo):
         self.sdo = sdo
-        for key in self.loglist.keys():
-            sdo.read(self.handle, key, self.loglist[key])
+        for key in self.readlog.keys():
+            sdo.read(self.readhandle, key, self.readlog[key])
+        for key in self.writelog.keys():
+            sdo.write(self.writehandle, self.sdo.writevalues[key], key, self.writelog[key])
 
-    def handle(self, message):
+    def readhandle(self, message):
         log = 'ID['+str(hex(message.canid))+'] '
         index = message.data[2]*256+message.data[1]
         log += 'index['+str(hex(index))+'] '
@@ -33,4 +40,12 @@ class SDOLog(object):
         logger.debug(log)
         print(log)
 
-        self.sdo.read(self.handle, index, sub)
+        self.sdo.read(self.readhandle, index, sub)
+
+    def writehandle(self, message):
+        #check if last was sucess!
+        index = message.data[2]*256+message.data[1]
+        print(str(message.data)+"  index: "+str(index))
+        time.sleep(1)
+        self.sdo.write(self.writehandle, self.sdo.writevalues[index], index, self.writelog[index])
+        print("wrote: "+str(self.sdo.writevalues[index])+" to "+str(index))
