@@ -24,14 +24,15 @@ class TermEvtCanController(EvtCanController):
     def buildController(self):
         super().buildController()
         self.setupListener()
-        bms = self.devices.fetchDevice("BMS0")
-        self.addDevice(bms)
-        self.addDevice(self.devices.fetchDevice("IMU"))
+        self.addDevice(self.devices.fetchDevice("BMS0"))
+        self.addDevice(self.devices.fetchDevice("BMS1"))
+        self.addDevice(self.devices.fetchDevice("BMS2"))
+        self.addDevice(self.devices.fetchDevice("BMS3"))
         self.controllerListener.addHandler('all',self.handleBroadCast)
         return True
 
     def handleBroadCast(self,nodeID, evtMessage):
-        logger.info("%s",evtMessage)
+        logger.debug("%s",evtMessage)
 
 
 class TermOpenController(CanOpenController):
