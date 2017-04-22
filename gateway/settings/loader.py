@@ -3,7 +3,10 @@ from gateway.evtcan.device_construct import DeviceConstruct
 from gateway.can.interface import Interface
 from gateway.can.controller import Controller
 from gateway.core.systemlogger import logger
+from gateway.utils.projectpaths import common
+from gateway.core.systemlogger import RunRotatingtHandler
 import logging
+import logging.handlers
 #Author Daniel Harrington
 #Date - 4/8/2017
 #Loader module is responsible for loading resources to be used the rest of the app
@@ -33,9 +36,13 @@ _resources.deviceConstruct = None
 def loadLogger():
     logger = logging.getLogger('gateway')
     logger.setLevel(logging.INFO)
+
     formatter = logging.Formatter(' %(levelname)s - %(message)s')
+#    fileHandler = logging.FileHandler(common.log + "/track.log")
+    fileHandler = RunRotatingtHandler(common.log + "/track.log", freshRun = Configuration.freshLogFileOnRun)
     streamHandler = logging.StreamHandler()
     streamHandler.setFormatter(formatter)
+    logger.addHandler(fileHandler)
     logger.addHandler(streamHandler)
 
 

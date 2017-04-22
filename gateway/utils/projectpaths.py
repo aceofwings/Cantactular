@@ -8,7 +8,8 @@ from gateway.utils.path import Path
 common = Path(
 tests=None,
 edsfiles=None,
-rootpath=None
+rootpath=None,
+log=None
 )
 
 class ProjectPath(object):

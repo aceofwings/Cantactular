@@ -18,6 +18,8 @@ import re
 from gateway.utils.projectpaths import ProjectPath
 __regex_pattern__ = re.compile(r""" SG_ (?P<name>.*) : (?P<start_bit>[0-9]{1,2})\|(?P<length>[0-9]{1,2})@(?P<format>[0-1])(?P<type>[+-]) \((?P<factor>.*),(?P<offset>.*)\) \[(?P<min>.*)\|(?P<max>.*)\] "(?P<unit>.*)" (?P<rx_nodes>.*)""")
 
+MOTOROLA = 0
+INTEL = 1
 
 class CANDatabase:
     """

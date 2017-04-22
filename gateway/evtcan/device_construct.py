@@ -1,5 +1,6 @@
 from gateway.evtcan.dbcParser import CANDatabase
 from gateway.can.device import EvtCanDevice
+from gateway.evtcan.dbcParser import INTEL, MOTOROLA
 import collections
 
 #Author: Daniel Harrington
@@ -44,12 +45,11 @@ class MessageBox(object):
     """Build Signal for Motorola format"""
 
     def _buildSignals(self, messageDescriptor):
-        messageFormat = "intel"
         for messageDscription in messageDescriptor:
             sigfs = {}
             for signal in messageDscription._signals:
 #                Motorala format is weird. Lets covert the starbit to an appropriate value
-                if self.messageFormat == "motorola":
+                if signal._format == MOTOROLA:
                     mod = ((signal._startbit + 1 ) % 8)
                     if mod is 0:
                         mod = 8
@@ -84,10 +84,7 @@ class DeviceConstruct(object):
         if self.__device_cache.dbcDescriptor is None:
             self.__device_cache.dbcDescriptor = CANDatabase(self.dbc)
             self.__device_cache.dbcDescriptor.Load()
-
         deviceDescriptor = self.__device_cache.dbcDescriptor._txNodes[deviceName]
-
-
         evtDevice = EvtCanDevice()
         evtDevice.messageBox = MessageBox(deviceDescriptor)
         self.__device_cache.devices[deviceName] = evtDevice

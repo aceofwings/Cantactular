@@ -1,7 +1,7 @@
 from gateway.opencan.nmt import NMT
 from gateway.can.listener import Listener
 from gateway.evtcan.evt_listener import EvtCanListener
-
+from gateway.opencan.sdo import SDO
 
 class Device(object):
     def __init__(self):
@@ -31,7 +31,7 @@ class CanOpenDevice(Device):
         self.controller = controller
         self.nmt = NMT(self.nodeID,controller)
         self.sdo = SDO(self)
-        self.controller.interface.addListener(sdo)
+        self.controller.interface.addListener(self.sdo)
         return self.__buildListener()
 
     #Define and ad all cruial internal handlers to the listener.

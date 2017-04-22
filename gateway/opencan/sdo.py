@@ -32,7 +32,7 @@ class SDO(Listener):
         address = (index&255)**16 + (index>>8)**8 + subindex
         self.notifyhandlers[address] = handler
         message = CanMessage.create(canid, data)
-        #self.controller.write(message)
+        self.controller.write(message)
 
     def write(self, handler, data, index, subindex=0x0):
         canid = self.receivingID + self.nodeID
@@ -47,9 +47,9 @@ class SDO(Listener):
         address = (index&255)**16 + (index>>8)**8 + subindex
         self.notifyhandlers[address] = handler
         message = CanMessage.create(canid, data)
-        #self.controller.write(message)
+        self.controller.write(message)
 
-    def _receiveResponse(self, message):
+    def _receiveResponse(self, canid, message):
         if message.canid>>4 == self.transmittingID>>4 :
             cmdbyte = message.data[0]
             address = message.data[1]**16+message.data[2]**8+message.data[3]

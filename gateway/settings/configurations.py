@@ -4,7 +4,7 @@ from gateway.evtcan.controller import EvtCanController
 
 class Configuration(object):
     #define the interfaces and their base controller types
-    interfaceNames = {'vcan0' : EvtCanController}
+    interfaceNames = {'vcan0' : CanOpenController}
     #silence any error on loading user customizable controllers
 
     maindbcFile = "INTEL_EVT_CAN.dbc"
@@ -12,6 +12,8 @@ class Configuration(object):
     failureSilence = True
     #force start the interfaces at the earliest moment
     forceStartInterfaces = False
+
+    freshLogFileOnRun = False
 
     messageFormat  = "motorola"
     #load devices prior to any custom state change

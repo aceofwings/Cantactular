@@ -42,7 +42,8 @@ class TestDeviceConstruct(unittest.TestCase):
 
         message = EvtCanMessage(device.messageBox.messages['BMS0_module_discharge'], databyteRaw)
 
-
-
-if __name__ == '__main__':
-    unittest.main()
+    def test_unsignedSingal(self):
+        pass
+        #282
+        #19 00 85 00 DF FF
+        # Yaw Y -33
