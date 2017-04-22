@@ -11,7 +11,8 @@ class Terminal(object):
 
     def __init__(self):
         super()
-        term = TermEvtCanController("INTEL_EVT_CAN.dbc")
+        #term = TermEvtCanController("INTEL_EVT_CAN.dbc")
+        term = TermOpenController()
         buildController(term)
         while True:
             pass

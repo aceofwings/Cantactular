@@ -1,7 +1,7 @@
 from gateway.core.systemlogger import logger
 
 class SDOLog(object):
-    log = {
+    loglist = {
         0x6077:0x0, #Torque
         0x6076:0x0, #Peak Torque
         0x606B:0x0, #Velocity Demand
@@ -10,18 +10,14 @@ class SDOLog(object):
         0x6083:0x0, #Max accel rate
         0x608D:0x0, #Acceleration notation index
         0x608e:0x0 #Acceleration dimension index
-
-
-
-
     }
 
     def __init__(self, sdo):
         self.sdo = sdo
-        for key in log.keys():
-            sdo.read(handle, key, log[key])
+        for key in self.loglist.keys():
+            sdo.read(self.handle, key, self.loglist[key])
 
-    def handle(s, message):
+    def handle(self, message):
         log = 'ID['+str(hex(message.canid))+'] '
         index = message.data[2]*256+message.data[1]
         log += 'index['+str(hex(index))+'] '
@@ -35,5 +31,6 @@ class SDOLog(object):
         log += '='+str(value)
 
         logger.debug(log)
+        print(log)
 
-        self.sdo.read(handle, index, sub)
+        self.sdo.read(self.handle, index, sub)

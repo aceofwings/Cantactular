@@ -25,7 +25,7 @@ class SDO(Listener):
         self.objectDictionary = ObjectDictionary().initialize(device.edsFile)
         self.addHandler(self.transmittingID+self.nodeID, self._receiveResponse)
         self.notifyhandlers = {}
-        self.SDOLog(self)
+        self.log = SDOLog(self)
 
     def read(self, handler, index, subindex=0x0):
         canid = self.receivingID + self.nodeID
