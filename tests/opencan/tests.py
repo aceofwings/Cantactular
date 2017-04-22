@@ -3,6 +3,7 @@ from gateway.opencan.sdo import SDO
 from gateway.can.device import CanOpenDevice
 from gateway.can.message import CanMessage
 from gateway.settings.loader import buildController
+from gateway.opencan.sdologger import SDOLog
 from tests.opencan.canopentestcontroller import TestController
 import time
 
@@ -11,6 +12,7 @@ class TestSDO(unittest.TestCase):
     def setUp(self):
         self.controller = TestController()
         buildController(self.controller)
+        self.log = SDOLog()
         #self.device = CanOpenDevice(2, 'MotorController')
         #self.sdo = SDO(self.device)
     # def tearDown(self):
@@ -28,8 +30,7 @@ class TestSDO(unittest.TestCase):
     #     m = CanMessage.create(0x582, ''.join('%02x' % x for x in d))
     #     self.sdo._receiveResponse(m)
 
-    def test_sdo_write(self):
-        self.controller.motor.sdo.write(lambda m:print('handled: '+str(m)), 0xABCD69, 0x1018, 4)
-        #self.controller.motor.sdo.read(lambda m:print('handled: '+str(m)), 0x1801, 4)
-        time.sleep(60)
+    def test_sdo_log(self):
+        self.controller.motor.sdo.read(self.log.handle, 0x2511, 5)
+        time.sleep(30)
 #cansend 581#6018100400000000

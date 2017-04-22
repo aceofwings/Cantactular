@@ -18,10 +18,22 @@ class SDOLog(object):
 
     def __init__(self, sdo):
         self.sdo = sdo
-        ping()
+        for key in log.keys():
+            sdo.read(handle, key, log[key])
 
-    def log(data):
-        logger.info(hex(data[x:x+2])+' ' for x in range(0, len(data), 2))
-        ping(Index)
+    def handle(s, message):
+        log = 'ID['+str(hex(message.canid))+'] '
+        index = message.data[2]*256+message.data[1]
+        log += 'index['+str(hex(index))+'] '
+        sub = message.data[3]
+        log += 'sub['+str(hex(sub))+'] '
+        log += 'cb['+ str(hex(message.data[0])) +'] '
+        value = 0x0
+        for x in range(4, 8):
+            log += str(hex(message.data[x]))[2:4]+" "
+            value += message.data[x]
+        log += '='+str(value)
 
-    def ping(index):
+        logger.debug(log)
+
+        self.sdo.read(handle, index, sub)

@@ -4,6 +4,7 @@ import sys
 from gateway.utils.objectdictionary import ObjectDictionary
 from gateway.can.listener import Listener
 from gateway.can.message import CanMessage
+from gateway.opencan.sdologger import SDOLog
 
 class SDO(Listener):
     receivingID = 0x600 #sending request to node
@@ -24,12 +25,13 @@ class SDO(Listener):
         self.objectDictionary = ObjectDictionary().initialize(device.edsFile)
         self.addHandler(self.transmittingID+self.nodeID, self._receiveResponse)
         self.notifyhandlers = {}
+        self.SDOLog(self)
 
     def read(self, handler, index, subindex=0x0):
         canid = self.receivingID + self.nodeID
         d = [self.read_command, index&255, index>>8, subindex, 0x00, 0x00, 0x00, 0x00]
         data = ''.join('%02x' % x for x in d)
-        address = (index&255)**16 + (index>>8)**8 + subindex
+        address = (index&255)**8 + (index>>8)**16 + subindex
         self.notifyhandlers[address] = handler
         message = CanMessage.create(canid, data)
         self.controller.write(message)
@@ -44,16 +46,19 @@ class SDO(Listener):
             if x == 0: n+=1
         d[0] += (n<<2)+3
         data = ''.join('%02x' % x for x in d)
-        address = (index&255)**16 + (index>>8)**8 + subindex
+        address = (index&255)**8 + (index>>8)**16 + subindex
         self.notifyhandlers[address] = handler
         message = CanMessage.create(canid, data)
         self.controller.write(message)
+        #print(data)
 
     def _receiveResponse(self, canid, message):
         if message.canid>>4 == self.transmittingID>>4 :
             cmdbyte = message.data[0]
-            address = message.data[1]**16+message.data[2]**8+message.data[3]
-            self.notifyhandlers[address](''.join('%02x'%x for x in message.data[4:8]))
-
+            address = message.data[2]**16+message.data[1]**8+message.data[3]
+            try:
+                self.notifyhandlers[address](message)#''.join('%02x'%x for x in message.data[4:8]))
+            except KeyError:
+                print('SDOError!! received index:sub pair incorrectly? ['+str(hex(message.data[2]*256+message.data[1]))+']['+str(hex(message.data[3]))+']')
         else:
             print('received response that did not match proper canid:: expected 0x580+nodid')
