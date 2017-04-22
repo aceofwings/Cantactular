@@ -26,7 +26,7 @@ class SDOLog(object):
         for key in self.readlog.keys():
             sdo.read(self.readhandle, key, self.readlog[key])
         for key in self.writelog.keys():
-            sdo.write(self.writehandle, self.sdo.writevalues[key], key, self.writelog[key])
+            sdo.write(self.writehandle, self.sdo.write_values[key], key, self.writelog[key])
 
     def readhandle(self, message):
         log = 'ID['+str(hex(message.canid))+'] '
@@ -49,7 +49,6 @@ class SDOLog(object):
     def writehandle(self, message):
         #check if last was sucess!
         index = message.data[2]*256+message.data[1]
-        print(str(message.data)+"  index: "+str(index))
-        time.sleep(1)
-        self.sdo.write(self.writehandle, self.sdo.writevalues[index], index, self.writelog[index])
-        print("wrote: "+str(self.sdo.writevalues[index])+" to "+str(index))
+        #print(str(message.data)+"  index: "+str(index))
+        time.sleep(0.3)
+        self.sdo.write(self.writehandle, self.sdo.write_values[index], index, self.writelog[index])
