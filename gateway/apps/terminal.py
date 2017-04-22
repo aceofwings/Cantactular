@@ -4,21 +4,39 @@ from gateway.evtcan.controller import EvtCanController
 from gateway.can.device import CanOpenDevice
 from gateway.settings.loader import buildController
 from gateway.core.systemlogger import logger
-
-
+import curses
 #may want to inherit from our own custom code
 class Terminal(object):
 
     def __init__(self):
         super()
-        #term = TermEvtCanController("INTEL_EVT_CAN.dbc")
-        term = TermOpenController()
+        term = TermEvtCanController("INTEL_EVT_CAN.dbc")
+        #term = TermOpenController()
         buildController(term)
-        while True:
-            pass
-
+        screen = curses.initscr()
+        screen.keypad(1)
+        number = 0
+        curses.noecho()
+        self.temp = None
+        term.controllerListener.addHandler(0x80,self.tempValue)
+        while 1:
+            # c = screen.getch()
+            # if c == 113:
+            #     break
+            # if c == curses.KEY_LEFT:
+            #     number -= 1
+            # elif c == curses.KEY_RIGHT:
+            #     number += 1
+            if self.temp is not None:
+                screen.addstr(0, 0, "Cell temp 6 Value " + str(self.temp.Cell_temp6))
+                screen.refresh()
+            #screen.clrtoeol()
+        #    term.motor.sdo.write_values[0x2220] = number
+        curses.endwin()
     def start(self):
         pass
+    def tempValue(self,nodeid, evtMessage):
+        self.temp=evtMessage
 
 class TermEvtCanController(EvtCanController):
 
