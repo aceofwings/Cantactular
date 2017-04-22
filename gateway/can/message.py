@@ -66,7 +66,7 @@ class EvtCanMessage(object):
     def __str__(self):
         message = ""
         for name, value in self.signals._asdict().items():
-            message = message + name +  " " + str(value(self.data)) + " , "
+            message = message + name +  " " + str(value(self.data)) + ","
         return message
 
     def __getitem__(self, i):

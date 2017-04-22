@@ -21,7 +21,7 @@ class Terminal(object):
         number = 0
         curses.noecho()
         self.temp = None
-        term.controllerListener.addHandler(0x80,self.tempValue)
+        term.controllerListener.addHandler(0x82,self.tempValue)
         while 1:
             # c = screen.getch()
             # if c == 113:

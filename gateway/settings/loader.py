@@ -98,10 +98,9 @@ def associate(controller):
     for interface in _resources.interfaces:
         if issubclass(controller.__class__,interface.ct):
             controller.associateInterface(interface)
-            return
 
-        if controller.interface is None:
-            raise ImproperControllerDefinition("No defined interface for given controller type")
+    if controller.interface is None:
+        raise ImproperControllerDefinition("No defined interface for given controller type")
 # build the controller, if there is no interface associate one, then continue
 #to build the controller using helper method. prepareforStart will ready interfaces
 # to be luanched

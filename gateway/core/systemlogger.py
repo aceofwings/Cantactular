@@ -14,6 +14,7 @@ class RunRotatingtHandler(RotatingFileHandler):
     def __init__(self,filename, mode='a',encoding=None,delay=False, freshRun = False):
         if freshRun:
             filename = self.generateFileName(filename)
+            print(filename)
         super().__init__(filename=filename)
     def rotation_filename(self,defaultName):
         super().rotation_filename(defaultName)
@@ -22,9 +23,9 @@ class RunRotatingtHandler(RotatingFileHandler):
         return  os.path.exists(os.path.join(common.log, filename))
 
     def generateFileName(self,filename,number=0):
-        temp = filename
         basename = os.path.splitext(filename)[0]
-        if self.logfileExists(filename):
+        if self.logfileExists(basename + str(number) + self.extension):
             number += 1
-            temp = self.generateFileName(basename + str(number) + self.extension, number)
-        return temp
+            return self.generateFileName(basename, number)
+            
+        return basename + str(number) + self.extension
