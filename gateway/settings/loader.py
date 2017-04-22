@@ -35,8 +35,8 @@ _resources.deviceConstruct = None
 
 def loadLogger():
     logger = logging.getLogger('gateway')
-    logger.setLevel(logging.INFO)
-    infoformatter = logging.Formatter(' %(asctime)s  %(levelname)s - %(message)s')
+    logger.setLevel(logging.DEBUG)
+    infoformatter = logging.Formatter('%(levelname)s - %(message)s')
     fileformatter = logging.Formatter(' %(asctime)s - %(message)s')
 #    fileHandler = logging.FileHandler(common.log + "/track.log")
     fileHandler = RunRotatingtHandler(common.log + "/track.log", freshRun = Configuration.freshLogFileOnRun)
