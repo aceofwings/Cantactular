@@ -34,10 +34,10 @@ class Terminal(object):
             n = 0
             for key in self.temps.keys():
                 for x in range(0, len(self.temps[key].signals)):
-                    screen.addstr(n, x*2+5, "Temps: " + str(self.temps[key]))
+                    self.screen.addstr(n, x*2+5, "Temps: " + str(self.temps[key]))
                 n+=1
 
-            screen.refresh()
+            self.screen.refresh()
 
         #term.motor.sdo.write_values[0x2220] = number
 

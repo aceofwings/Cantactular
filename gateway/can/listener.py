@@ -30,10 +30,10 @@ class Listener:
             for handler in self.handlers['all']:
                 self.notifyAll(canmessage)
 
-    def notify(self,canmessage):
+    def notify(self,canmessage,**KWARGS):
         for handler in self.handlers[canmessage.canid]:
-            handler(canmessage.canid,canmessage)
+            handler(canid=canmessage.canid, message=canmessage, **KWARGS)
 
-    def notifyAll(self,canmessage):
+    def notifyAll(self,canmessage,**KWARGS):
         for handler in self.handlers['all']:
-            handler(canmessage.canid,canmessage)
+            handler(canid=canmessage.canid,message=canmessage, **KWARGS)

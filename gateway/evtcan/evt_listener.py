@@ -9,12 +9,11 @@ class EvtCanListener(Listener):
 #TODO arguments of handlers are going to be KWARGS
 
     def notify(self,canmessage):
-        for handler in self.handlers[canmessage.canid]:
-            message = EvtCanMessage(self.messages[canmessage.canid], canmessage.data)
-            handler(canmessage.canid, message)
+        message = EvtCanMessage(self.messages[canmessage.canid], canmessage.data)
+        super().notify(canmessage, evtmessage=message)
 
 
     def notifyAll(self,canmessage):
         if canmessage.canid in self.messages:
             message = EvtCanMessage(self.messages[canmessage.canid], canmessage.data)
-            super().notifyAll(message)
+            super().notifyAll(canmessage, evtmessage=message)
