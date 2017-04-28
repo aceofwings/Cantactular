@@ -42,7 +42,7 @@ class SDOLog(object):
         log += '='+str(value)
 
         logger.debug(log)
-        print(log)
+        print(self.sdo.objectDictionary[index][sub].parametername+" "+value)
 
         self.sdo.read(self.readhandle, index, sub)
 
