@@ -60,7 +60,7 @@ class TermOpenController(CanOpenController):
 
     def buildController(self):
         super().buildController()
-        self.motor = CanOpenDevice(0x01,"MotorController")
+        self.motor = CanOpenDevice(0x01,"MotorController.eds")
         self.addDevice(self.motor)
         return True
 
