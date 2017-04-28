@@ -30,7 +30,7 @@ class Terminal(object):
             for key in values.keys():
                 log = key+' : '+str(values[key])
                 self.screen.addstr(0, row, log)
-                n= n+1
+                row = row + 1
 
         #canopen.motor.sdo.write_values[0x2220] = number
 
