@@ -25,11 +25,16 @@ class Terminal(object):
         signal.signal(signal.SIGINT, self.close)
         curses.noecho()
 
+        key_press = -1
+
         while True:
 
             values = canopen.motor.values.copy()
 
-            values['key_press'] = self.screen.getch()
+            new_press = self.screen.getch()
+            if new_press != key_press:
+                values['key_press'] = new_press
+                key_press = new_press
 
             self.screen.clear()
             row = 0
