@@ -25,7 +25,7 @@ class SDO(Listener):
         super().__init__()
         self.nodeID = device.nodeID
         self.controller = device.controller
-        self.objectDictionary = ObjectDictionary().initialize(device.edsFile)
+        self.objectDictionary = ObjectDictionary.initialize(device.edsFile)
         self.addHandler(self.transmittingID+self.nodeID, self._receiveResponse)
         self.notifyhandlers = {}
         self.log = SDOLog(self)
@@ -38,7 +38,6 @@ class SDO(Listener):
         self.notifyhandlers[address] = handler
         message = CanMessage.create(canid, data)
         self.controller.write(message)
-        print('sent with address: '+str(address))
 
     def write(self, handler, data, index, subindex=0x0):
         canid = self.receivingID + self.nodeID
@@ -64,6 +63,6 @@ class SDO(Listener):
             try:
                 self.notifyhandlers[address](message)#''.join('%02x'%x for x in message.data[4:8]))
             except KeyError:
-                print('SDOError!! received index:sub pair incorrectly? ['+str(address)+' , '+str(hex(message.data[2]*256+message.data[1]))+']['+str(hex(message.data[3]))+']')
+                print('SDOError!! received index:sub pair incorrectly? ['+str(hex(message.data[2]*256+message.data[1]))+']['+str(hex(message.data[3]))+']')
         else:
             print('received response that did not match proper canid:: expected 0x580+nodid')
