@@ -19,7 +19,7 @@ class DictionaryObject(collections.Mapping):
                     if sub.parametername in key:
                         return sub
         else:
-            return None
+            return self
 
     def __getattr__(self, item):
         return self.attributeDictionary[item]
