@@ -17,7 +17,7 @@ class SDOLog(object):
         0x608e:0x0 #Acceleration dimension index
     }
     writelog = {
-        0x2220:0x00 #Throttle input voltage
+        #0x2220:0x00 #Throttle input voltage
 
         }
 
