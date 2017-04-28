@@ -27,6 +27,7 @@ class Terminal(object):
         while True:
             self.screen.clear()
             values = canopen.motor.values.copy()
+            values['key_press'] = self.screen.getkey()
             row = 0
             for key in values.keys():
                 log = str(key)+' : '+str(values[key])
