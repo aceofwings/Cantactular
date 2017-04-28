@@ -40,10 +40,8 @@ class SDOLog(object):
             log += str(hex(message.data[x]))[2:4]+" "
             value += message.data[x]
         log += '='+str(value)
-
         logger.debug(log)
         print(self.sdo.objectDictionary[index][sub].parametername+" "+value)
-
         self.sdo.read(self.readhandle, index, sub)
 
     def writehandle(self, message):
