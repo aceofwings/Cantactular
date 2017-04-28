@@ -6,15 +6,10 @@ class SDOLog(object):
         0x6068:0x0, #Current
         0x60FF:0x0, #Target Speed
         0x2620:0x0, #Throttle value
+        0x2220:0x0, #Throttle input voltage
         0x6077:0x0, #Torque
-        0x6076:0x0, #Peak Torque
         0x2721:0x0, #Vehicle Speed
-        0x606B:0x0, #Velocity Demand
         0x606C:0x0, #Velocity
-        0x6080:0x0, #Max motor speed
-        0x6083:0x0, #Max accel rate
-        0x608D:0x0, #Acceleration notation index
-        0x608e:0x0 #Acceleration dimension index
     }
     writelog = {
         #0x2220:0x00 #Throttle input voltage
