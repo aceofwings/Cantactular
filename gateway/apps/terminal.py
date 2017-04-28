@@ -18,16 +18,24 @@ class Terminal(object):
         #term = TermOpenController()
         buildController(term)
         buildController(canopen)
-        while True:
-            pass
 
-        #term.motor.sdo.write_values[0x2220] = number
+        self.screen = curses.initscr()
+        self.screen.keypad(1)
+        signal.signal(signal.SIGINT, self.close)
+        curses.noecho()
+
+        while True:
+            values = self.canopen.motor.values
+            row = 0
+            for key in values.keys():
+                log = key+' : '+str(values[key])
+                self.screen.addstr(0, row, log)
+                n= n+1
+
+        #canopen.motor.sdo.write_values[0x2220] = number
 
     def start(self):
         pass
-
-    def update(self,nodeid, evtMessage):
-        self.temps[nodeid] = evtMessage
 
     def close(self, signum, frame):
         curses.nocbreak()

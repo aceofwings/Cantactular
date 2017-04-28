@@ -41,7 +41,9 @@ class SDOLog(object):
             value += message.data[x]
         log += '='+str(value)
         logger.debug(log)
-        print(self.sdo.objectDictionary[index][sub].parametername+" : "+str(value))
+        pname = self.sdo.objectDictionary[index][sub].parametername
+        self.sdo.device.values[pname] = value
+
         self.sdo.read(self.readhandle, index, sub)
 
     def writehandle(self, message):

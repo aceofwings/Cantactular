@@ -25,6 +25,7 @@ class CanOpenDevice(Device):
         self.controller = None
         self.nmt = None
         self.sdo = None
+        self.values = {} #pname : value
 
     #crucial setup of listeners and functions
     def setup(self,controller):

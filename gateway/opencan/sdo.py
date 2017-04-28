@@ -23,6 +23,7 @@ class SDO(Listener):
 #print(str(data&255)+': '+bin(data)+hex(data))
     def __init__(self, device):
         super().__init__()
+        self.device = device
         self.nodeID = device.nodeID
         self.controller = device.controller
         self.objectDictionary = ObjectDictionary.initialize(device.edsFile)
