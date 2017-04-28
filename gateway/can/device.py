@@ -1,7 +1,7 @@
-from gateway.opencan.nmt import NMT
+from gateway.canopen.nmt import NMT
 from gateway.can.listener import Listener
 from gateway.evtcan.evt_listener import EvtCanListener
-from gateway.opencan.sdo import SDO
+from gateway.canopen.sdo import SDO
 
 class Device(object):
     def __init__(self):

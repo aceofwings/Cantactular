@@ -1,4 +1,4 @@
-from gateway.opencan.opencancontroller import CanOpenController
+from gateway.canopen.opencancontroller import CanOpenController
 from gateway.evtcan.controller import EvtCanController
 
 

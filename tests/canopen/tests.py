@@ -1,10 +1,10 @@
 import unittest
-from gateway.opencan.sdo import SDO
+from gateway.canopen.sdo import SDO
 from gateway.can.device import CanOpenDevice
 from gateway.can.message import CanMessage
 from gateway.settings.loader import buildController
-from gateway.opencan.sdologger import SDOLog
-from tests.opencan.canopentestcontroller import TestController
+from gateway.canopen.sdologger import SDOLog
+from tests.canopen.canopentestcontroller import TestController
 import time
 
 

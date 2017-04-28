@@ -1,5 +1,5 @@
 
-from gateway.opencan.opencancontroller import CanOpenController
+from gateway.canopen.opencancontroller import CanOpenController
 from gateway.evtcan.controller import EvtCanController
 from gateway.can.device import CanOpenDevice
 from gateway.settings.loader import buildController

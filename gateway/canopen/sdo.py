@@ -4,7 +4,7 @@ import sys
 from gateway.utils.objectdictionary import ObjectDictionary
 from gateway.can.listener import Listener
 from gateway.can.message import CanMessage
-from gateway.opencan.sdologger import SDOLog
+from gateway.canopen.sdologger import SDOLog
 
 class SDO(Listener):
     receivingID = 0x600 #sending request to node
