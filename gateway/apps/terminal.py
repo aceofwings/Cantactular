@@ -21,13 +21,17 @@ class Terminal(object):
 
         self.screen = curses.initscr()
         self.screen.keypad(1)
+        self.screen.nodelay(1)
         signal.signal(signal.SIGINT, self.close)
         curses.noecho()
 
         while True:
-            self.screen.clear()
+
             values = canopen.motor.values.copy()
-            values['key_press'] = self.screen.getkey()
+
+            values['key_press'] = self.screen.getch()
+
+            self.screen.clear()
             row = 0
             for key in values.keys():
                 log = str(key)+' : '+str(values[key])
