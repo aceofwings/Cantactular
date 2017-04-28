@@ -28,9 +28,10 @@ class Terminal(object):
             values = canopen.motor.values.copy()
             row = 0
             for key in values.keys():
-                log = key+' : '+str(values[key])
-                self.screen.addstr(0, row, log)
+                log = str(key)+' : '+str(values[key])
+                self.screen.addstr(0, row, str(key))
                 row = row + 1
+            self.screen.refresh()
 
         #canopen.motor.sdo.write_values[0x2220] = number
 
