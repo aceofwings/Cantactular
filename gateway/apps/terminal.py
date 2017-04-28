@@ -25,6 +25,7 @@ class Terminal(object):
         curses.noecho()
 
         while True:
+            self.screen.clear()
             values = canopen.motor.values.copy()
             row = 0
             for key in values.keys():
