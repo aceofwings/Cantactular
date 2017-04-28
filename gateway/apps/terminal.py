@@ -25,7 +25,7 @@ class Terminal(object):
         curses.noecho()
 
         while True:
-            values = self.canopen.motor.values
+            values = canopen.motor.values.copy()
             row = 0
             for key in values.keys():
                 log = key+' : '+str(values[key])
