@@ -43,7 +43,8 @@ class Terminal(object):
             values['write_response'] = self.data
             values['write_value'] = write_value
             if write_value != old_value:
-                canopen.motor.sdo.write(self.handleWrite, write_value, 0x2220)
+                canopen.motor.sdo.write_values[0x2220] = write_value
+                #canopen.motor.sdo.write(self.handleWrite, write_value, 0x2220)
                 old_value = write_value
 
             self.screen.clear()
