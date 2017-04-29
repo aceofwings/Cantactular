@@ -52,7 +52,7 @@ class Terminal(object):
             row = 0
             for key in values.keys():
                 log = str(key)+' : '+str(values[key])
-                self.screen.addstr(row, 0, str(key)+' : '+values[key]+' ='+str(int(values[key], 16))
+                self.screen.addstr(row, 0, str(key)+' : '+values[key]+' ='+str(int(values[key], 16)))
                 row = row + 1
             self.screen.refresh()
 
