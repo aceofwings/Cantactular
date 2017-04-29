@@ -29,7 +29,6 @@ class Terminal(object):
         key_press = 0
 
         while True:
-            self.screen.clear()
 
             values = canopen.motor.values.copy()
 
@@ -39,8 +38,7 @@ class Terminal(object):
                 key_press = new_press
             else values['key_press'] = key_press
 
-            key_press = new_press
-
+            self.screen.clear()
             row = 0
             for key in values.keys():
                 log = str(key)+' : '+str(values[key])
