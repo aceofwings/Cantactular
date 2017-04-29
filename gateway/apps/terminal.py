@@ -84,8 +84,8 @@ class TermEvtCanController(EvtCanController):
         self.controllerListener.addHandler('all',self.handleBroadCast)
         return True
 
-    def handleBroadCast(self,nodeID, message, **kwargs):
-        logger.debug("%s",evtMessage)
+    def handleBroadCast(self, canid, message, **kwargs):
+        logger.debug("%s", kwargs['evtmessage'])
 
 
 class TermOpenController(CanOpenController):
