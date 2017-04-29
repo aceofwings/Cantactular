@@ -14,6 +14,7 @@ class SDO(Listener):
     read_command = 0x40
 
     write_values = {0x2220:0x0}
+    write_times = 0
 
 #sdo_struct = struct.Struct('>BH5B')
 #request_timeout = 5 #ms

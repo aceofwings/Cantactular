@@ -44,5 +44,5 @@ class SDOLog(object):
         #check if last was sucess!
         index = message.data[2]*256+message.data[1]
         #print(str(message.data)+"  index: "+str(index))
-        time.sleep(0.3)
+        write_times += 1
         self.sdo.write(self.writehandle, self.sdo.write_values[index], index, self.writelog[index])
