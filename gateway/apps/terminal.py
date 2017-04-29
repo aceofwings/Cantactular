@@ -39,6 +39,7 @@ class Terminal(object):
                 write_value -= 1
 
             values['write_value'] = write_value
+            canopen.motor.sdo.write((), write_value, 0x2220)
 
             self.screen.clear()
             row = 0
