@@ -13,8 +13,7 @@ class Configuration(object):
     #force start the interfaces at the earliest moment
     forceStartInterfaces = False
 
-    freshLogFileOnRun = False
-
+    freshLogFileOnRun = True
     messageFormat  = "motorola"
     #load devices prior to any custom state change
     imediateLoadDevice = ["BMS0", "BMS1", "BMS2", "BMS3", "BMS4", "BMS5", "BMS6"]
