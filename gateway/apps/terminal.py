@@ -100,5 +100,5 @@ class TermOpenController(CanOpenController):
         self.addDevice(self.motor)
         return True
 
-    def handleBroadCast(self, message):
-        print("Handle BroadCast "+message.data)
+    def handleBroadCast(self, **kwargs):
+        print("Handle BroadCast "+kwargs['message'].data)
