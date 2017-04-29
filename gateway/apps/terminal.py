@@ -27,6 +27,8 @@ class Terminal(object):
         curses.cbreak()
 
         write_value = 0
+        old_value = 0
+        self.data = 0
 
         while True:
 
@@ -38,8 +40,11 @@ class Terminal(object):
             if new_press == 260:#258 down
                 write_value -= 1
 
+            values['write_response'] = self.data
             values['write_value'] = write_value
-            canopen.motor.sdo.write((), write_value, 0x2220)
+            if write_value != old_value:
+                canopen.motor.sdo.write(handleWrite(), write_value, 0x2220)
+                old_value = write_value
 
             self.screen.clear()
             row = 0
@@ -53,6 +58,10 @@ class Terminal(object):
 
     def start(self):
         pass
+
+    def handleWrite(**kwargs):
+        message = kwargs['message']
+        self.data = message.data
 
     def close(self, signum, frame):
         curses.nocbreak()
