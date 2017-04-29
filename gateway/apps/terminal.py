@@ -43,7 +43,7 @@ class Terminal(object):
             values['write_response'] = self.data
             values['write_value'] = write_value
             if write_value != old_value:
-                canopen.motor.sdo.write(handleWrite(), write_value, 0x2220)
+                canopen.motor.sdo.write(self.handleWrite, write_value, 0x2220)
                 old_value = write_value
 
             self.screen.clear()
@@ -59,7 +59,7 @@ class Terminal(object):
     def start(self):
         pass
 
-    def handleWrite(**kwargs):
+    def handleWrite(self, **kwargs):
         message = kwargs['message']
         self.data = message.data
 
