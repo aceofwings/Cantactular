@@ -84,7 +84,7 @@ class TermEvtCanController(EvtCanController):
         self.controllerListener.addHandler('all',self.handleBroadCast)
         return True
 
-    def handleBroadCast(self,nodeID, evtMessage):
+    def handleBroadCast(self,nodeID, message, **kwargs):
         logger.debug("%s",evtMessage)
 
 
