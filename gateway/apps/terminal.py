@@ -21,7 +21,7 @@ class Terminal(object):
 
         self.screen = curses.initscr()
         self.screen.keypad(1)
-        #self.screen.nodelay(1)
+        self.screen.nodelay(1)
         signal.signal(signal.SIGINT, self.close)
         curses.noecho()
         curses.cbreak()
@@ -37,6 +37,7 @@ class Terminal(object):
             if new_press != key_press:
                 values['key_press'] = new_press
                 key_press = new_press
+            else values['key_press'] = key_press
 
             key_press = new_press
 
