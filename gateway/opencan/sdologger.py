@@ -12,7 +12,7 @@ class SDOLog(object):
         0x606C:0x0, #Velocity
     }
     writelog = {
-        0x2220:0x0 #Throttle input voltage
+        #0x2220:0x0 #Throttle input voltage
         }
 
     def __init__(self, sdo):
