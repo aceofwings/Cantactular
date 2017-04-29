@@ -23,12 +23,12 @@ class SDOLog(object):
             sdo.write(self.writehandle, self.sdo.write_values[key], key, self.writelog[key])
 
     def readhandle(self, message):
-        log = 'ID['+str(hex(message.canid))+'] '
+        log = str(hex(message.canid))+' : '
         index = message.data[2]*256+message.data[1]
-        log += 'index['+str(hex(index))+'] '
+        log += '['+str(hex(index))+'] '
         sub = message.data[3]
-        log += 'sub['+str(hex(sub))+'] '
-        log += 'cb['+ str(hex(message.data[0])) +'] '
+        log += '['+str(hex(sub))+'] '
+        log += '('+ str(hex(message.data[0])) +') '
         value = 0x0
         for x in range(4, 8):
             log += str(hex(message.data[x]))[2:4]+" "
