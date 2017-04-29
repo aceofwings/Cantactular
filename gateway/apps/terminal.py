@@ -26,7 +26,7 @@ class Terminal(object):
         curses.noecho()
         curses.cbreak()
 
-        key_press = 0
+        write_value = 0
 
         while True:
 
@@ -34,10 +34,9 @@ class Terminal(object):
 
             new_press = self.screen.getch()
             if new_press != -1:
-                values['key_press'] = new_press
-                key_press = new_press
-            else:
-                values['key_press'] = key_press
+                write_value += 1
+
+            values['write_value'] = write_value
 
             self.screen.clear()
             row = 0
