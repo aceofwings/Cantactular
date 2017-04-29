@@ -92,13 +92,10 @@ class TermOpenController(CanOpenController):
 
     def __init__(self):
         super().__init__()
-        self.controllerListener.addHandler(0x00,self.handleBroadCast)
+        #self.controllerListener.addHandler(0x00,self.handleBroadCast)
 
     def buildController(self):
         super().buildController()
         self.motor = CanOpenDevice(0x01,"MotorController.eds")
         self.addDevice(self.motor)
         return True
-
-    def handleBroadCast(self, **kwargs):
-        print("Handle BroadCast "+kwargs['message'].data)
