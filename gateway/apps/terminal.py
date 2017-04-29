@@ -36,7 +36,8 @@ class Terminal(object):
             if new_press != key_press:
                 values['key_press'] = new_press
                 key_press = new_press
-            else values['key_press'] = key_press
+            else:
+                values['key_press'] = key_press
 
             self.screen.clear()
             row = 0
