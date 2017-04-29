@@ -33,7 +33,7 @@ class Terminal(object):
             values = canopen.motor.values.copy()
 
             new_press = self.screen.getch()
-            if new_press != key_press:
+            if new_press != -1:
                 values['key_press'] = new_press
                 key_press = new_press
             else:
