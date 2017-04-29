@@ -37,6 +37,7 @@ class Terminal(object):
                 write_value += 1
 
             values['write_value'] = write_value
+            values['key_press'] = new_press
 
             self.screen.clear()
             row = 0
