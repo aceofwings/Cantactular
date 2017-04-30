@@ -3,7 +3,7 @@ import struct
 import sys
 from gateway.utils.objectdictionary import ObjectDictionary
 from gateway.can.listener import Listener
-from gateway.can.message import CanMessage
+from gateway.can.message import SDOReponse,CanMessage
 from gateway.opencan.sdologger import SDOLog
 
 class SDO(Listener):
@@ -58,7 +58,7 @@ class SDO(Listener):
         #print(data)
 
     def _receiveResponse(self, **kwargs):
-        message = kwargs['message']
+        message = SDOReponse.fromMessage(kwargs['message'])
         if message.canid>>4 == self.transmittingID>>4 :
             cmdbyte = message.data[0]
             address = message.data[2]**16+message.data[1]**8+message.data[3]
