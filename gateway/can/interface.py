@@ -69,16 +69,20 @@ class Interface:
     def start(self):
         self.sock.bind((self.address,))
         self.launchNotifier()
-        self.active = True
 
     def read(self):
         recieved = self.sock.recv(DEFAULT_BUFFERSIZE)
+        self.active = True
         return CanMessage(recieved)
 
     def write(self,canmessage):
         #print('\nWriting: '+str(canmessage)+' bytes: '+str(canmessage.bytes())+'On Device:'+self.address)
-        sent = self.sock.send(canmessage.bytes())
-        return sent
+        if self.active:
+            sent = self.sock.send(canmessage.bytes())
+            return sent
+        else:
+            print('Message not sent because the interface is not active')
+            return 0
 
     def launchNotifier(self):
         Notifier(self).launchDaemon()
