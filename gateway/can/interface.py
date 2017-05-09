@@ -88,5 +88,5 @@ class Interface:
         Notifier(self).launchDaemon()
 
 class InterfaceError(Exception):
-    __init__(self):
+    def __init__(self):
         print('Interface not active!')
