@@ -64,10 +64,9 @@ class Terminal(object):
         row = 0
         for key in values.keys():
             self.screen.addstr(row, 0, str(key)+' = '+str(values[key])
-            row = row + 1
+            row += 1
 
         self.screen.refresh()
-
 
 
 
