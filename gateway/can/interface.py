@@ -81,8 +81,12 @@ class Interface:
             sent = self.sock.send(canmessage.bytes())
             return sent
         else:
-            print('Message not sent because the interface is not active')
+            raise InterfaceError()
             return 0
 
     def launchNotifier(self):
         Notifier(self).launchDaemon()
+
+class InterfaceError(Exception):
+    __init__(self):
+        print('Interface not active!')

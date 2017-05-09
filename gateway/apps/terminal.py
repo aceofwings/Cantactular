@@ -4,6 +4,7 @@ from gateway.evtcan.controller import EvtCanController
 from gateway.can.device import CanOpenDevice
 from gateway.settings.loader import buildController
 from gateway.core.systemlogger import logger
+from gateway.can.interface import InterfaceError
 import curses
 import signal
 import sys
@@ -96,6 +97,13 @@ class TermOpenController(CanOpenController):
 
     def buildController(self):
         super().buildController()
-        self.motor = CanOpenDevice(0x01,"MotorController.eds")
-        self.addDevice(self.motor)
+        success = False
+        print('Attempting motorcontroller setup with sdo log active')
+        while(not success):
+            try:
+                self.motor = CanOpenDevice(0x01,"MotorController.eds")
+                self.addDevice(self.motor)
+                success = True
+            except InterfaceError:
+                success = False
         return True
