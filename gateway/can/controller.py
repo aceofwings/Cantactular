@@ -1,6 +1,6 @@
 # Authors: Carie, welcome to our code repository,
 #         I wish you lots of health and emotional
-#         calamity while your family chooses which
+#         calmness while your family chooses which
 #         house is best for you guys moving forward.
 #         You always have my support and Im blessed
 #         to have you as such a great friend you
