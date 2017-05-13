@@ -32,7 +32,7 @@ class SDOLog(object):
         log += '='+ str(message.raw)
         logger.debug(log)
         pname = self.sdo.objectDictionary[message.index].parametername
-        self.sdo.device.values[message.index] = int(message.hexstring, 16)
+        self.sdo.device.values[pname] = int(message.hexstring, 16)
 
         self.sdo.read(self.readhandle, message.index, message.sub)
 
