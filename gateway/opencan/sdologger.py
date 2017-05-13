@@ -34,7 +34,7 @@ class SDOLog(object):
         pname = self.sdo.objectDictionary[message.index].parametername
         self.sdo.device.values[pname] = int(message.hexstring, 16)
         if(pname == 'Velocity') :
-            self.sdo.device.values['Calculated MPH'] = int(message.hexstring, 16) * 100 / 16896
+            self.sdo.device.values['Calculated MPH'] = int(message.hexstring, 16) * 0.01859371
 
         self.sdo.read(self.readhandle, message.index, message.sub)
 
