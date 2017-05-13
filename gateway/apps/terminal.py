@@ -61,10 +61,10 @@ class Terminal(object):
 
         self.screen.clear()
 
-        row = 0
+        r = 0
         for key in values.keys():
-            self.screen.addstr(row, 0, str(key)+' = '+str(values[key])
-            row = row + 1
+            self.screen.addstr(r, 0, str(key)+' = '+str(values[key])
+            r = r + 1
 
         self.screen.refresh()
 
