@@ -29,16 +29,16 @@ class SDOLog(object):
         log += '['+str(hex(message.index))+'] '
         log += '['+str(hex(message.sub))+'] '
         log += '('+ str(hex(message.data[0])) +') '
-        log += '='+ message.raw
+        log += '='+ str(message.raw)
         logger.debug(log)
-        pname = self.sdo.objectDictionary[index].parametername
-        self.sdo.device.values[index] = int(value, 16)
+        pname = self.sdo.objectDictionary[message.index].parametername
+        self.sdo.device.values[message.index] = int(message.hexstring, 16)
 
-        self.sdo.read(self.readhandle, index, sub)
+        self.sdo.read(self.readhandle, message.index, message.sub)
 
     def writehandle(self, message):
         #check if last was sucess!
         index = message.data[2]*256+message.data[1]
         #print(str(message.data)+"  index: "+str(index))
         self.sdo.write_times += 1
-        self.sdo.write(self.writehandle, self.sdo.write_values[index], index, self.writelog[index])
+        self.sdo.write(self.writehandle, self.sdo.write_values[message.index], index, self.writelog[message.index])

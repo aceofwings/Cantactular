@@ -18,6 +18,7 @@ class Listener:
         pass
 
     def _notify(self,canmessage):
+        print(canmessage)
         self._notifyAll(canmessage)
         if not self.handlers or not canmessage.canid in self.handlers:
             return

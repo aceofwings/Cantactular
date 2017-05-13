@@ -35,7 +35,7 @@ class CanMessage:
     def create(cls, canid, data): #data must be hexidecimal representation of bytes
         msg = CanMessage()
         msg.canid = canid
-        msg.data = bytearray.fromhex(data)
+        msg.data = data
         msg.datalen = len(data)
 
         return msg
@@ -88,7 +88,9 @@ class SDOReponse(CanMessage):
         return self._data
     @data.setter
     def data(self,value):
-        self._data = bytearray.fromhex(value)
+        self._data = value
+        if type(value) is str:
+            self._data = bytearray.fromhex(value)
         self.index = self._data[2]*256+self._data[1]
         self.sub = self._data[3]
         self.datalen = len(value)
