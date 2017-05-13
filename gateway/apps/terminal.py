@@ -44,7 +44,7 @@ class Terminal(object):
         sys.exit(1)
 
     def update(self):
-        values = self.canopen.motor.values.copy()
+        values = self.openterm.motor.values.copy()
 
         new_press = self.screen.getch()
         if new_press == 261:#259 up
