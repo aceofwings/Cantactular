@@ -12,12 +12,12 @@ class Terminal(object):
 
     def __init__(self):
         super()
-        term = TermEvtCanController("INTEL_EVT_CAN.dbc")
-        canopen = TermOpenController()
+        self.evtterm = EVTTerminalController("INTEL_EVT_CAN.dbc")
+        self.openterm = OPENTerminalController()
 
         #term = TermOpenController()
-        buildController(term)
-        buildController(canopen)
+        buildController(self.term)
+        buildController(self.canopen)
 
         self.screen = curses.initscr()
         self.screen.keypad(1)
@@ -26,44 +26,15 @@ class Terminal(object):
         curses.noecho()
         curses.cbreak()
 
-        write_value = 0
-        old_value = 0
-        self.data = 0
-
-        while True:
-
-            values = canopen.motor.values.copy()
-
-            new_press = self.screen.getch()
-            if new_press == 261:#259 up
-                write_value += 1
-            if new_press == 260:#258 down
-                write_value -= 1
-
-            values['write_response'] = self.data
-            values['write_value'] = write_value
-            values['write_times'] = canopen.motor.sdo.write_times
-            if write_value != old_value:
-                canopen.motor.sdo.write_values[0x2220] = write_value
-                #canopen.motor.sdo.write(self.handleWrite, write_value, 0x2220)
-                old_value = write_value
-
-            self.screen.clear()
-            row = 0
-            for key in values.keys():
-                log = str(key)+' : '+str(values[key])
-                self.screen.addstr(row, 0, str(key)+' : '+str(values[key]))
-                row = row + 1
-            self.screen.refresh()
-
-        #canopen.motor.sdo.write_values[0x2220] = number
+        self.start()
 
     def start(self):
-        pass
+        self.throttle_write_value = 0
+        self.old_throttle_value = 0
+        self.throttle_index = 0x2220
 
-    def handleWrite(self, **kwargs):
-        message = kwargs['message']
-        self.data = message.data
+        while True:
+            self.update()
 
     def close(self, signum, frame):
         curses.nocbreak()
@@ -72,7 +43,34 @@ class Terminal(object):
         curses.endwin()
         sys.exit(1)
 
-class TermEvtCanController(EvtCanController):
+    def update(self):
+        values = self.canopen.motor.values.copy()
+
+        new_press = self.screen.getch()
+        if new_press == 261:#259 up
+            self.throttle_write_value += 1
+        if new_press == 260:#258 down
+            self.throttle_write_value -= 1
+
+        #values['throttle_write_value'] = self.throttle_write_value
+        #values['throttle_write_times'] = self.canopen.motor.sdo.throttle_write_times
+
+        if self.throttle_write_value != self.old_throttle_value:
+            self.canopen.motor.sdo.write_values[self.throttle_index] = self.throttle_write_value
+            self.old_throttle_value = self.throttle_write_value
+
+        self.screen.clear()
+
+        row = 0
+        for key in values.keys():
+            self.screen.addstr(row, 0, str(key)+' = '+str(values[key]))
+            row += 1
+
+        self.screen.refresh()
+
+
+
+class EVTTerminalController(EvtCanController):
 
     def buildController(self):
         super().buildController()
@@ -88,11 +86,7 @@ class TermEvtCanController(EvtCanController):
         logger.debug("%s", kwargs['evtmessage'])
 
 
-class TermOpenController(CanOpenController):
-
-    def __init__(self):
-        super().__init__()
-        #self.controllerListener.addHandler(0x00,self.handleBroadCast)
+class OpenTerminalController(CanOpenController):
 
     def buildController(self):
         super().buildController()
