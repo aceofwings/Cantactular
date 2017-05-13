@@ -38,7 +38,7 @@ class SDO(Listener):
         data = ''.join('%02x' % x for x in d)
         address = (index&255)**8 + (index>>8)**16 + subindex
         self.notifyhandlers[address] = handler
-        message = CanMessage.create(canid, data)
+        message = CanMessage.SDOReponse(canid, data)
         self.controller.write(message)
 
     def write(self, handler, data, index, subindex=0x0):
@@ -53,12 +53,11 @@ class SDO(Listener):
         data = ''.join('%02x' % x for x in d)
         address = (index&255)**8 + (index>>8)**16 + subindex
         self.notifyhandlers[address] = handler
-        message = CanMessage.create(canid, data)
+        message = CanMessage.SDOReponse(canid, data)
         self.controller.write(message)
-        #print(data)
 
     def _receiveResponse(self, **kwargs):
-        message = SDOReponse.fromMessage(kwargs['message'])
+        message = CanMessage.SDOReponse(kwargs['message'].canid, kwargs['message'].data)
         if message.canid>>4 == self.transmittingID>>4 :
             cmdbyte = message.data[0]
             address = message.data[2]**16+message.data[1]**8+message.data[3]
