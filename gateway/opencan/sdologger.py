@@ -17,7 +17,7 @@ class SDOLog(object):
 
     def __init__(self, sdo):
         self.sdo = sdo
-        self.sdo.device.values = dict.fromkeys(self.readlog.keys())
+        #self.sdo.device.values = dict.fromkeys(self.readlog.keys())
 
         for key in self.readlog.keys():
             sdo.read(self.readhandle, key, self.readlog[key])
