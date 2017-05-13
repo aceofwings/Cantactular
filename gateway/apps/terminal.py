@@ -12,12 +12,12 @@ class Terminal(object):
 
     def __init__(self):
         super()
-        self.term = TermEvtCanController("INTEL_EVT_CAN.dbc")
-        self.canopen = TermOpenController()
+        self.evtterm = EvtTerminalControl("INTEL_EVT_CAN.dbc")
+        self.openterm = OpenTerminalControl()
 
         #term = TermOpenController()
-        buildController(self.term)
-        buildController(self.canopen)
+        buildController(self.evtterm)
+        buildController(self.openterm)
 
         self.screen = curses.initscr()
         self.screen.keypad(1)
@@ -52,11 +52,11 @@ class Terminal(object):
         if new_press == 260:#258 down
             self.throttle_write_value -= 1
 
-        values['throttle_write_value'] = self.throttle_write_value
-        values['throttle_write_times'] = self.canopen.motor.sdo.throttle_write_times
+        #values['throttle_write_value'] = self.throttle_write_value
+        #values['throttle_write_times'] = self.canopen.motor.sdo.throttle_write_times
 
         if self.throttle_write_value != self.old_throttle_value:
-            self.canopen.motor.sdo.write_values[self.throttle_index] = self.throttle_write_value
+            self.openterm.motor.sdo.write_values[self.throttle_index] = self.throttle_write_value
             self.old_throttle_value = self.throttle_write_value
 
         self.screen.clear()
@@ -71,7 +71,7 @@ class Terminal(object):
 
 
 
-class TermEvtCanController(EvtCanController):
+class EvtTerminalControl(EvtCanController):
 
     def buildController(self):
         super().buildController()
@@ -87,7 +87,7 @@ class TermEvtCanController(EvtCanController):
         logger.debug("%s", kwargs['evtmessage'])
 
 
-class TermOpenController(CanOpenController):
+class OpenTerminalControl(CanOpenController):
 
     def __init__(self):
         super().__init__()
