@@ -5,9 +5,7 @@
 #         You always have my support and Im blessed
 #         to have you as such a great friend you
 #         always answers me and has time to talk :)
-#
-#
-#
+
 from gateway.can.interface import Interface
 from gateway.can.message import CanMessage
 from gateway.can.listener import Listener
