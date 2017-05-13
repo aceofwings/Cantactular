@@ -1,6 +1,6 @@
 import logging
 from logging.handlers import RotatingFileHandler
-from gateway.utils.projectpaths import common
+from gateway.utils.projectpaths import common, ProjectPath
 import os.path
 
 
@@ -12,6 +12,11 @@ class RunRotatingtHandler(RotatingFileHandler):
     extension = ".log"
 
     def __init__(self,filename, mode='a',encoding=None,delay=False, freshRun = False):
+        print(common.log)
+        if  common.log is None:
+            os.mkdir(common.rootpath + "/log")
+            ProjectPath()
+
         if freshRun:
             filename = self.generateFileName(filename)
             print(filename)
@@ -24,8 +29,8 @@ class RunRotatingtHandler(RotatingFileHandler):
 
     def generateFileName(self,filename,number=0):
         basename = os.path.splitext(filename)[0]
-        if self.logfileExists(basename + str(number) + self.extension):
+        if self.logfileExists(common.log + basename + str(number) + self.extension):
             number += 1
             return self.generateFileName(basename, number)
-            
-        return basename + str(number) + self.extension
+
+        return common.log  + basename + str(number) + self.extension

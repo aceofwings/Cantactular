@@ -39,7 +39,12 @@ class CanMessage:
         msg.datalen = len(data)
 
         return msg
-
+    @classmethod
+    def SDOReponse(cls,canid,data):
+        sdomsg = SDOReponse()
+        sdomsg.data = data
+        sdomsg.canid = canid
+        return sdomsg
     def bytes(self):
         return struct.pack(b'<IB3x8s', self.canid, len(self.data), self.data)
 
@@ -74,3 +79,21 @@ class EvtCanMessage(object):
 
     def __getattr__(self,value):
          return getattr(self.signals, value)(self.data)
+
+class SDOReponse(CanMessage):
+    def __init__(self):
+        super().__init__()
+    @property
+    def data(self):
+        return self._data
+    @data.setter
+    def data(self,value):
+        self._data = bytearray.fromhex(value)
+        self.index = self._data[2]*256+self._data[1]
+        self.sub = self._data[3]
+        self.datalen = len(value)
+        value = ""
+        for x in range(4, 8):
+            value = str(hex(self._data[x]))[2:4] + value
+        self.raw = int(value,16)
+        self.hexstring = value
