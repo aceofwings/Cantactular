@@ -22,6 +22,7 @@
 # 0 1 2 3     4     5 6 7     8 9 10 11 12 13 14 15
 #CANID     datalen  padding
 import struct
+import time
 class CanMessage:
     def __init__(self, bytes=None):
         if bytes is not None:
@@ -60,13 +61,13 @@ class EvtCanMessage(object):
         self.signals = signals
         self.data = struct.Struct('<Q').unpack(data)[0]
         self.canid = None
+        self.messagedata = {'time': time.time()};
 
 
-    def cotents(self):
-        messagedata= {}
+    def contents(self):
         for name, value in self.signals._asdict().items():
-            messagedata[name] = value(self.data)
-        print(messagedata)
+            self.messagedata[name] = value(self.data)
+        return self.messagedata
 
     def __str__(self):
         message = ""
