@@ -19,42 +19,8 @@ class Terminal(object):
         buildController(term)
         buildController(canopen)
 
-        self.screen = curses.initscr()
-        self.screen.keypad(1)
-        self.screen.nodelay(1)
-        signal.signal(signal.SIGINT, self.close)
-        curses.noecho()
-        curses.cbreak()
-
-        write_value = 0
-        old_value = 0
-        self.data = 0
-
         while True:
-
-            values = canopen.motor.values.copy()
-
-            new_press = self.screen.getch()
-            if new_press == 261:#259 up
-                write_value += 1
-            if new_press == 260:#258 down
-                write_value -= 1
-
-            values['write_response'] = self.data
-            values['write_value'] = write_value
-            values['write_times'] = canopen.motor.sdo.write_times
-            if write_value != old_value:
-                canopen.motor.sdo.write_values[0x2220] = write_value
-                #canopen.motor.sdo.write(self.handleWrite, write_value, 0x2220)
-                old_value = write_value
-
-            self.screen.clear()
-            row = 0
-            for key in values.keys():
-                log = str(key)+' : '+str(values[key])
-                self.screen.addstr(row, 0, str(key)+' : '+str(values[key]))
-                row = row + 1
-            self.screen.refresh()
+            pass
 
         #canopen.motor.sdo.write_values[0x2220] = number
 

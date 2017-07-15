@@ -23,6 +23,7 @@
 #CANID     datalen  padding
 import struct
 import time
+import json
 class CanMessage:
     def __init__(self, bytes=None):
         if bytes is not None:
@@ -84,9 +85,13 @@ class EvtCanMessage(object):
 class SDOReponse(CanMessage):
     def __init__(self):
         super().__init__()
+        self.messagedata = {'time': time.time()}
     @property
     def data(self):
         return self._data
+    def contents(self):
+        return json.dumps({'index': self.index,'sub' : self.sub , 'raw' : self.raw, 'hex': self.hexstring})
+
     @data.setter
     def data(self,value):
         self._data = value
