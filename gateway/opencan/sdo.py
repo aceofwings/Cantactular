@@ -57,6 +57,7 @@ class SDO(Listener):
         self.controller.write(message)
 
     def _receiveResponse(self, **kwargs):
+        print("Care")
         message = CanMessage.SDOReponse(kwargs['message'].canid, kwargs['message'].data)
         if message.canid>>4 == self.transmittingID>>4 :
             cmdbyte = message.data[0]

@@ -30,10 +30,10 @@ class SDOLog(object):
         log += '['+str(hex(message.sub))+'] '
         log += '('+ str(hex(message.data[0])) +') '
         log += '='+ str(message.raw)
-        logger.debug(message.contents)
+        logger.debug("cow")
+        logger.debug(message.contents())
         pname = self.sdo.objectDictionary[message.index].parametername
         self.sdo.device.values[message.index] = int(message.hexstring, 16)
-
         self.sdo.read(self.readhandle, message.index, message.sub)
 
     def writehandle(self, message):

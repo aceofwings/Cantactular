@@ -90,7 +90,7 @@ class SDOReponse(CanMessage):
     def data(self):
         return self._data
     def contents(self):
-        return json.dumps({'index': self.index,'sub' : self.sub , 'raw' : self.raw, 'hex': self.hexstring})
+        return json.dumps({'time': self.messagedata['time'],'index': self.index,'sub' : self.sub , 'raw' : self.raw, 'hex': self.hexstring})
 
     @data.setter
     def data(self,value):
