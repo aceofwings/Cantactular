@@ -10,6 +10,7 @@ class SDOLog(object):
         0x6077:0x0, #Torque
         0x2721:0x0, #Vehicle Speed
         0x606C:0x0, #Velocity
+        0x5000:0x02 #battery Current
     }
     writelog = {
         0x2220:0x0 #Throttle input voltage

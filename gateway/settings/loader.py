@@ -37,7 +37,7 @@ def loadLogger():
     logger = logging.getLogger('gateway')
     logger.setLevel(logging.DEBUG)
     infoformatter = logging.Formatter('%(levelname)s - %(message)s')
-    fileformatter = logging.Formatter(' %(asctime)s - %(message)s')
+    fileformatter = logging.Formatter('%(message)s')
 #    fileHandler = logging.FileHandler(common.log + "/track.log")
     fileHandler = RunRotatingtHandler("/track.log", freshRun = Configuration.freshLogFileOnRun)
     fileHandler.setLevel(logging.DEBUG)
