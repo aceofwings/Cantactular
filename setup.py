@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 setup(name='evtgateway',
       version='0.2',
       description='Gateway for RIT REV1 Sport Bike',
-      url='https://github.com/aceofwings/Evt-Gateway',
+      url='https://bitbucket.org/evt/gateway-applications',
       author='EVT RIT',
       author_email='EVT@RIT.EDU',
       packages=find_packages(),
