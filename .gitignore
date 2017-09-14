@@ -1,2 +1,19 @@
-# No compiled Python files
-*.py[cod]
+#ignore installer generated files
+*.egg-info
+*.pot
+
+#ignore python compiled files
+*.py[co]
+.DS_Store
+.tox/
+__pycache__
+MANIFEST
+dist/
+docs/_build/
+docs/locale/
+node_modules/
+tests/coverage_html/
+tests/.coverage
+build/
+tests/report/
+*.log
