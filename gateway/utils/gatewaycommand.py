@@ -9,11 +9,13 @@ class GatewayCommand(object):
 
     #commands alias
     alias = None
+    description = None
     arguments = None
-    __parser = argparse.ArgumentParser()
+
 
     def __init__(self,args):
         self.arguments = args
+        self.__parser = argparse.ArgumentParser(description=self.description)
 
 
     def __parseArguments(self):

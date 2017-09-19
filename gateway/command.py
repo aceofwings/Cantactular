@@ -13,7 +13,7 @@ DESCRIPTION = "Collects and Recieves and Analyzes Data"
 parser = argparse.ArgumentParser(description=DESCRIPTION, add_help=False)
 
 parser.add_argument('--commands', action='help', default=argparse.SUPPRESS,
-                    help='list the commands available')
+                   help='list the commands available')
 listOfCommands = {}
 
 

@@ -1,11 +1,13 @@
 from gateway.utils.gatewaycommand import GatewayCommand
 
-class StartCommand(GatewayCommand):
+class TestCommand(GatewayCommand):
 
-    alias = 's'
+    alias = 't'
+    description = "begins the test routine"
 
-    def __init__(self,arguments):
-        super().__init__(self,arguments)
 
-    def run(self):
+    def __init__(self,args):
+        super().__init__(arguments)
+
+    def run(self,arguments):
         print("starting gateway")
