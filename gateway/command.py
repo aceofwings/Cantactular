@@ -10,7 +10,10 @@ PACKAGE = "gateway.commands"
 
 DESCRIPTION = "Collects and Recieves and Analyzes Data"
 
-parser = argparse.ArgumentParser(description=DESCRIPTION)
+parser = argparse.ArgumentParser(description=DESCRIPTION, add_help=False)
+
+parser.add_argument('--commands', action='help', default=argparse.SUPPRESS,
+                    help='list the commands available')
 listOfCommands = {}
 
 
@@ -20,31 +23,33 @@ def loadCommandModules():
         listOfCommands[module[1]] = import_module('.' + module[1], PACKAGE)
 
     parser.add_argument('service', choices=listOfCommands.keys())
+
     try:
         executeCommand()
     except ClassNonExistent as e:
         print(str(e) + " " + e.errors)
 
-#loadCC - load Command content
+#TODO load command content such as aliases for commands and aliases assigned
+#to bundle commands
 def loadCC():
     pass
 
 def executeCommand():
-    args = parser.parse_args()
-
-    if args.service not in listOfCommands:
+    arg, options = parser.parse_known_args()
+    if arg.service not in listOfCommands:
         parser.print_help()
         parser.exit()
 
-    commandModule = listOfCommands[args.service]
+    commandModule = listOfCommands[arg.service]
     members = inspect.getmembers(commandModule, inspect.isclass)
-    commandclass = list(filter(lambda name: name[0].upper() == args.service.upper() + "COMMAND" , members))
+    commandclass = list(filter(lambda name: name[0].upper() == arg.service.upper() + "COMMAND" , members))
+
     if not commandclass:
-        raise ClassNonExistent("Could not find the command class", args.service.capitalize() + "Command")
+        raise ClassNonExistent("Could not find the command class", arg.service.capitalize() + "Command")
 
     commandClass = getattr(commandModule, commandclass[0][0])
-    print(commandclass)
-    commandClass().run()
+    commandClass(options).execute()
+
 class ClassNonExistent(Exception):
     def __init__(self, message, errors):
         super().__init__(message)
