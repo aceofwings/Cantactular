@@ -7,7 +7,7 @@ class TestCommand(GatewayCommand):
 
 
     def __init__(self,args):
-        super().__init__(arguments)
+        super().__init__(args)
 
     def run(self,arguments):
         print("starting gateway")
