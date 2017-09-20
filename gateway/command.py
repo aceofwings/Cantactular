@@ -17,7 +17,13 @@ parser.add_argument('--commands', action='help', default=argparse.SUPPRESS,
 listOfCommands = {}
 
 
-def gatewayCL():
+
+def gatewayCommandLine():
+    '''
+    Loads all available command namespaces from the commands directory.
+    After loading all modules it will take the first argument and match it with
+    a namspace.
+    '''
     modules = pkgutil.iter_modules([os.path.dirname(commands.__file__)])
     for module in modules:
         listOfCommands[module[1]] = import_module('.' + module[1], PACKAGE)
@@ -29,10 +35,7 @@ def gatewayCL():
     except ClassNonExistent as e:
         print(str(e) + " " + e.errors)
 
-#TODO load command content such as aliases for commands and aliases assigned
-#to bundle commands
-def loadCC():
-    pass
+
 
 def executeCommand():
     arg, options = parser.parse_known_args()
@@ -40,15 +43,16 @@ def executeCommand():
         parser.print_help()
         parser.exit()
 
-    commandModule = listOfCommands[arg.service]
-    members = inspect.getmembers(commandModule, inspect.isclass)
-    commandclass = list(filter(lambda name: name[0].upper() == arg.service.upper() + "COMMAND" , members))
+    commandNamespace = listOfCommands[arg.service]
+    members = inspect.getmembers(commandNamespace, inspect.isclass)
+    #Attempt to find the class definition
+    commandDefiniton = list(filter(lambda name: name[0].upper() == arg.service.upper() + "COMMAND" , members))
 
-    if not commandclass:
+    if not commandDefiniton:
         raise ClassNonExistent("Could not find the command class", arg.service.capitalize() + "Command")
-
-    commandClass = getattr(commandModule, commandclass[0][0])
-    commandClass(options).execute()
+    
+    command = getattr(commandNamespace, commandDefiniton[0][0])
+    command(options).execute()
 
 class ClassNonExistent(Exception):
     def __init__(self, message, errors):

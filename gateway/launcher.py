@@ -9,15 +9,6 @@ shared resources used between commands.
 #Shared resource code would benefit if done in the launcher.
 #
 import os
-from gateway.command import gatewayCL
-#from gateway.utils.projectpaths import ProjectPath
-#from gateway.settings.loader  import loadLogger
-
-#setup the project path
+from gateway.command import gatewayCommandLine
 ROOT_PATH = os.path.abspath('.')
-#ProjectPath(ROOT_PATH)
-#loadLogger()
-#import gateway.core.engine
-
-#launch the gateway command line and parse command line args
-gatewayCL()
+gatewayCommandLine()

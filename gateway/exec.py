@@ -15,7 +15,7 @@ be at the top level of this project, gateway-applications.
 """
 import os
 import sys
-RUN_FILE = 'gateway/launcher.py'
+RUN_FILE = os.path.join('gateway', 'launcher.py')
 LAUNCHER_FILE = 'launcher.py'
 CALL_PATH = os.path.abspath('.')
 currentdir = CALL_PATH
