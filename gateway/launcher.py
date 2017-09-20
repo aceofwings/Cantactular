@@ -1,11 +1,15 @@
-#Use project paths as root path and configuration.
-#Do not import this file directory
+"""
+Launcher.py
+Responsible for mapping out project resources and intializing any other
+shared resources used between commands.
 
+"""
 #Preconfiguration Code goes here
 #Do not put code for specific applications here.
 #Shared resource code would benefit if done in the launcher.
 #
 import os
+from gateway.command import gatewayCL
 #from gateway.utils.projectpaths import ProjectPath
 #from gateway.settings.loader  import loadLogger
 
@@ -13,6 +17,7 @@ import os
 ROOT_PATH = os.path.abspath('.')
 #ProjectPath(ROOT_PATH)
 #loadLogger()
-#import commands
 #import gateway.core.engine
-from . import command
+
+#launch the gateway command line and parse command line args
+gatewayCL()

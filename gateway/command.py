@@ -17,7 +17,7 @@ parser.add_argument('--commands', action='help', default=argparse.SUPPRESS,
 listOfCommands = {}
 
 
-def loadCommandModules():
+def gatewayCL():
     modules = pkgutil.iter_modules([os.path.dirname(commands.__file__)])
     for module in modules:
         listOfCommands[module[1]] = import_module('.' + module[1], PACKAGE)
@@ -54,7 +54,3 @@ class ClassNonExistent(Exception):
     def __init__(self, message, errors):
         super().__init__(message)
         self.errors = errors
-
-
-
-loadCommandModules()
