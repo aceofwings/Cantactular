@@ -2,6 +2,7 @@ import argparse
 import os
 import pkgutil
 import inspect
+import gateway
 from . import commands
 from  importlib import import_module
 
@@ -10,10 +11,13 @@ PACKAGE = "gateway.commands"
 
 DESCRIPTION = "Collects and Recieves and Analyzes Data"
 
-parser = argparse.ArgumentParser(description=DESCRIPTION, add_help=False)
+parser = argparse.ArgumentParser(prog='Gateway',description=DESCRIPTION, add_help=False)
 
 parser.add_argument('--commands', action='help', default=argparse.SUPPRESS,
                    help='list the commands available')
+
+parser.add_argument('--version', action='version', version='%(prog)s ' + gateway.__version__)
+
 listOfCommands = {}
 
 
@@ -50,7 +54,7 @@ def executeCommand():
 
     if not commandDefiniton:
         raise ClassNonExistent("Could not find the command class", arg.service.capitalize() + "Command")
-    
+
     command = getattr(commandNamespace, commandDefiniton[0][0])
     command(options).execute()
 

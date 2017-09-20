@@ -32,7 +32,6 @@ def main_func_gateway():
         checkDir = os.path.join(os.path.abspath('.'), RUN_FILE)
         launcher = lookForLauncher(checkDir)
         if launcher:
-            print("Attemping to launch app....")
             f = unpackLauncher(checkDir)
             exec(f)
             break
