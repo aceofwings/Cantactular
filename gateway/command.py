@@ -20,6 +20,8 @@ def buildCommandParser():
     for module in modules:
         parser.listOfCommands[module[1]] = import_module('.' + module[1], parser.PACKAGE)
 
+    parser.add_argument('service', choices=parser.listOfCommands.keys())
+
     return parser
 
 
@@ -30,8 +32,6 @@ def gatewayCommandLine():
     a namspace.
     '''
     parser = buildCommandParser()
-    parser.add_argument('service', choices=parser.listOfCommands.keys())
-
     arg, options = parser.parse_known_args()
     commandNamespace = parser.listOfCommands[arg.service]
 
