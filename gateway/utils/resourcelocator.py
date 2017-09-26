@@ -1,9 +1,8 @@
 import os
 import logging
 """
-Resource locator helps locates files and other resources.
-
-cls.ROOT_PATH get set in the locator file
+Resource locator helps locates files and other resources within project
+cls.ROOT_PATH get set in the locator file.
 """
 logger = logging.getLogger(__name__)
 
@@ -14,9 +13,7 @@ class ResourceLocator(object):
         self.ROOT_PATH = root_path
 
     def fetch_file_path(self,filename):
-        path = self.ROOT_PATH
-        if relative_path is not None:
-            path = os.path.join(path,relative_path)
+        path = os.path.join(self.ROOT_PATH,filename)
         return os.path.join(path,filename)
 
     def fetch_file(self,filename,mode):
@@ -27,6 +24,7 @@ class ResourceLocator(object):
         """
         get_locator - returns a resource locator within the project directory
         :param relative_path: specify a path relative to the projects ROOT_PATH
+        can also be an absolute path.
         """
         path = relative_path
         if cls.ROOT_PATH is None:
