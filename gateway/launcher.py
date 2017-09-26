@@ -14,6 +14,5 @@ from gateway.command import gatewayCommandLine
 from gateway.utils.resourcelocator import ResourceLocator
 
 ROOT_PATH = os.path.abspath('.')
-ResourceLocator(ROOT_PATH).fetch_file("Hello.py")
-
+ResourceLocator.ROOT_PATH = ROOT_PATH
 gatewayCommandLine()

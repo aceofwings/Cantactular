@@ -9,19 +9,19 @@ logger = logging.getLogger(__name__)
 
 class ResourceLocator(object):
 
-    def __init__(self,root_path,mode='r'):
+    def __init__(self,root_path):
         super().__init__()
         self.ROOT_PATH = root_path
-        self.mode = mode
 
-    def fetch_file_path(self,filename,relative_path=None):
+    def fetch_file_path(self,filename):
         path = self.ROOT_PATH
         if relative_path is not None:
             path = os.path.join(path,relative_path)
         return os.path.join(path,filename)
 
-    def fetch_file(self,filename,relative_path=None):
-        file_resource = open(self.fetch_file_path(filename,relative_path=relative_path),self.mode)
+    def fetch_file(self,filename,mode):
+        file_resource = open(self.fetch_file_path(filename),mode)
+        return file_resource
     @classmethod
     def get_locator(cls,relative_path=""):
         """
