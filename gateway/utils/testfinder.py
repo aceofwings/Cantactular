@@ -4,9 +4,7 @@ from gateway.utils.resourcelocator import ResourceLocator
 from unittest import TestLoader
 
 TEST_PATH = "tests"
-
 verbosity = 1
-
 test_loader = unittest.defaultTestLoader
 
 
@@ -16,7 +14,13 @@ def find_test_modules(test_modules=None):
     return test_suite
 
 def run_tests(test_classes=None):
+    """
+    run_tests - runs a test suite with specified paramters
+    :param test_classes: list of tests classnames to only test
+    :return int: -1 for failure or 0 for success
+    """
     test_runner = unittest.TextTestRunner(verbosity=verbosity)
+
     if test_classes:
         suite = load_test_from_classes(test_classes)
         if not suite.countTestCases():
@@ -25,14 +29,16 @@ def run_tests(test_classes=None):
             test_runner.run(suite)
             return 0
 
-
     tests = find_test_modules(test_modules)
     test_runner.run(tests)
     return 0
 
 def load_test_from_classes(class_names):
-    test_locator = ResourceLocator.get_locator(TEST_PATH)
-    test_suite = test_loader.discover(test_locator.ROOT_PATH)
+    """
+    load_test_from_classes - returns a suite with specified class_names
+    :param class_names: list of tests classnames to add to the suite
+    """
+    test_suite = find_test_modules()
     temp_ts = unittest.TestSuite()
     for test in test_suite:
         suite = test.__dict__["_tests"]
@@ -41,7 +47,3 @@ def load_test_from_classes(class_names):
                 if case.__dict__["_tests"][0].__class__.__name__ in class_names:
                     temp_ts.addTest(case)
     return temp_ts
-
-
-def load_module_test_case(module_name):
-    return test_loader.loadTestsFromName(module_name)
