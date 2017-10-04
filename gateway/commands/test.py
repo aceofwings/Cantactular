@@ -12,9 +12,13 @@ class TestCommand(GatewayCommand):
 
     def run(self,arguments):
         if(arguments.verbose):
-            testfinder.run_tests(verbose=arguments.verbose)
+            testfinder.verbosity = arguments.verbose
+
+        if testfinder.run_tests(arguments.classes) == -1:
+            print("Could not find test cases")
+
 
 
     def extendArgparse(self,parser):
         parser.add_argument('--verbose', '-v', default="1",help='verbosity of tests',type=int)
-        parser.add_argument('--modules','-m',default=None, help='specify modules to tests')
+        parser.add_argument('--classes','-c',default=None, nargs='*', help='specify class to test')
