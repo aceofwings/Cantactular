@@ -11,10 +11,10 @@ class TestResourceLocator(unittest.TestCase):
         pass
 
     def test_resourceLocatorRootPath(self):
-        """Test to see if class locaor ROOT_PATH is set"""
+        """Test if class locator ROOT_PATH is set"""
         self.assertIsNotNone(self.locator.ROOT_PATH, msg="root_path does not exist")
 
     def test_relative_path(self):
-        """Test to see if a relative path can be defined correctly"""
+        """Test  if a relative path can be defined correctly"""
         absolute_path = os.path.join(self.locator.ROOT_PATH, 'gateway')
         self.assertEqual(absolute_path, self.relative_locator.ROOT_PATH, msg="Paths are not equal")
