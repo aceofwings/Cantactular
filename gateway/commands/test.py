@@ -1,4 +1,5 @@
 from gateway.utils.gatewaycommand import GatewayCommand
+from gateway.utils import testfinder
 
 class TestCommand(GatewayCommand):
 
@@ -10,4 +11,14 @@ class TestCommand(GatewayCommand):
         super().__init__(args)
 
     def run(self,arguments):
-        print("starting gateway")
+        if(arguments.verbose):
+            testfinder.verbosity = arguments.verbose
+
+        if testfinder.run_tests(arguments.classes) == -1:
+            print("Could not find test cases")
+
+
+
+    def extendArgparse(self,parser):
+        parser.add_argument('--verbose', '-v', default="1",help='verbosity of tests',type=int)
+        parser.add_argument('--classes','-c',default=None, nargs='*', help='specify class to test')
