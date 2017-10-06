@@ -21,7 +21,7 @@ def run_tests(test_classes=None):
     """
     test_runner = unittest.TextTestRunner(verbosity=verbosity)
 
-    if test_classes:
+    if test_classes is not None:
         suite = load_test_from_classes(test_classes)
         if not suite.countTestCases():
             return -1
