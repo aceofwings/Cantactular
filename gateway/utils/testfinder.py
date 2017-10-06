@@ -8,9 +8,9 @@ verbosity = 1
 test_loader = unittest.defaultTestLoader
 
 
-def find_test_modules(test_modules=None):
+def find_test_modules(file_pattern='test*.py'):
     test_locator = ResourceLocator.get_locator(TEST_PATH)
-    test_suite = test_loader.discover(test_locator.ROOT_PATH)
+    test_suite = test_loader.discover(test_locator.ROOT_PATH, pattern=file_pattern)
     return test_suite
 
 def run_tests(test_classes=None):
@@ -29,7 +29,7 @@ def run_tests(test_classes=None):
             test_runner.run(suite)
             return 0
 
-    tests = find_test_modules(test_modules)
+    tests = find_test_modules()
     test_runner.run(tests)
     return 0
 
