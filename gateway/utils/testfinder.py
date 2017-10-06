@@ -24,14 +24,14 @@ def run_tests(test_classes=None):
     if test_classes is not None:
         suite = load_test_from_classes(test_classes)
         if not suite.countTestCases():
-            return -1
+            return False
         else:
             test_runner.run(suite)
-            return 0
+            return True
 
     tests = find_test_modules()
     test_runner.run(tests)
-    return 0
+    return True
 
 def load_test_from_classes(class_names):
     """

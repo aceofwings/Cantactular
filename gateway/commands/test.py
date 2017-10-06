@@ -14,7 +14,7 @@ class TestCommand(GatewayCommand):
         if(arguments.verbose):
             testfinder.verbosity = arguments.verbose
 
-        if testfinder.run_tests(arguments.classes) == -1:
+        if not testfinder.run_tests(arguments.classes):
             print("Could not find test cases")
 
 
