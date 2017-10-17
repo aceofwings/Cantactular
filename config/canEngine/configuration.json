@@ -1,0 +1,26 @@
+
+{ "environments" :
+  {
+    "production":{
+      "can": {
+        "interfaces": {
+          "can0" : "EVTCAN",
+          "can1" : "CANOPEN"
+        }
+      },
+    },
+    "development":{
+      "can":{
+        "interfaces":{
+          "vcan0": "EVTCAN",
+          "vcan1": "CANOPEN"
+        }
+      }
+    },
+    "shared" : {
+      "core":{
+        "address": "temp/evt.gateway.core.sock"
+      }
+    }
+  }
+}
