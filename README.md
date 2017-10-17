@@ -1,4 +1,7 @@
 # Evt-Gateway
+We have moved to Bit Bucket.
+
+https://bitbucket.org/evt/gateway-applications/overview
 
 A heaven for our RIT electric vehicle team code.  
 
