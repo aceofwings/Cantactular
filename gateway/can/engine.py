@@ -14,7 +14,6 @@ Amatruda and Rueda
 
 default_addresses = ['evt.gateway.core.sock', 'canOPEN', 'canEVT']
 sockets = []
-Configuration()
 #Incoming messages to the Gateway
 incomin_buffer = []
 #Outgoing messages to CAN BUS
