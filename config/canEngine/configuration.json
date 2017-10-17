@@ -7,7 +7,7 @@
           "can0" : "EVTCAN",
           "can1" : "CANOPEN"
         }
-      },
+      }
     },
     "development":{
       "can":{

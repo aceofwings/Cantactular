@@ -14,7 +14,7 @@ class ResourceLocator(object):
 
     def fetch_file_path(self,filename):
         path = os.path.join(self.ROOT_PATH,filename)
-        return os.path.join(path,filename)
+        return path
 
     def fetch_file(self,filename,mode):
         file_resource = open(self.fetch_file_path(filename),mode)

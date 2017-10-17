@@ -10,6 +10,7 @@ class StartCommand(GatewayCommand):
 
     def run(self,arguments):
         print("starting gateway")
+        import gateway.can.engine
 
     def extendArgparse(self,parser):
         pass
