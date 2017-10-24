@@ -1,9 +1,11 @@
 from gateway.can.forwarders.canopenout import CanOpenOutlet
 from gateway.can.forwarders.evtout import EvtCanOutlet
 from gateway.can.forwarders.canout import CanOutlet
-
 from gateway.can.configuration import Configuration
 from gateway.can.traffic.reciever import Receiver
+from gateway.utils.resourcelocator import ResourceLocator
+import socket
+
 """
 CAN Engine|
 -----------
@@ -22,28 +24,50 @@ class Engine(object):
     receivers = []
     outlets = []
 
+    self.core_socket =  socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+
+    conf = None
+
     def __init__(self):
         super().__init__()
 
-
-        def loadEngine():
-            conf = Configuration()
+        def load_engine():
+            self.conf = Configuration()
             conf_interfaces = conf.interfaces()
             if conf_interfaces is None:
                 raise EnvironmentError
-
             for address, interfaceType in conf_interfaces.items():
                 if interfaceType in self.avaiable_outlets():
-                    outlet = self.avaiable_outlets()[interfaceType]
+                    outlet = self.avaiable_outlets()[interfaceType](self)
                     self.outlets.append(outlet)
                     reciever = Receiver(address, outlet.forward)
                     self.receiver.append(reciever)
+                else:
+                    outlet = self.avaiable_outlets()["DEFAULT"](self, message_type=interfaceType)
+                    self.outlets.append(outlet)
+                    reciever = Receiver(address, outlet.forward)
+
+
+        def establish_core():
+            if self.conf is None:
+                self.conf = Configuration()
+            tempfolder = ResourceLocator.get_locator(relative_path="temp")
+            if self.conf.core_socket_address() is None:
+                pass
+            full_path = tempfolder.fetch_file_path(self.conf.core_socket_address())
+
+            try:
+                self.core_socket_address.bind(full_path)
+            except socket.error as msg:
+                self.core_socket_address.close()
+                self.core_socket = None
 
         def start_recievers(self):
             for receiver in self.receivers:
                 receiver.start()
 
-        loadEngine()
+        load_engine()
+        establish_core()
         start_recievers()
 
     def avaiable_outlets(self):
