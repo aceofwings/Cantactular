@@ -68,6 +68,8 @@ class Engine(object):
         load_engine()
         establish_core()
         start_recievers()
+        while True:
+            pass
 
     def avaiable_outlets(self):
         return {"CANOPEN" : CanOpenOutlet, "EVTCAN" : EvtCanOutlet, "DEFAULT" : CanOutlet}
@@ -113,8 +115,8 @@ class Engine(object):
     """
     Daemon sends messages from incoming_buffer to core
     """
-    def COREsend(sock):
-        pass
+    def COREsend(self,message):
+        print(message)
 
     """
     Daemon polls the core socket for messages in JSON

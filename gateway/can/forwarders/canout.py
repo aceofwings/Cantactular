@@ -22,11 +22,11 @@ class CanOutlet():
         return {'message' : {'canid' : canid, 'dlc' : dlc, 'data' : data}}
 
     def validate(self,can_d):
-        return true
+        return True
 
     def __validate_and_send(self,can_d):
         if self.validate(can_d):
-            self.__engine.send(can_d)
+            self.__engine.COREsend(can_d)
 
     def forward(self,message):
         can_d = self.deconstruct_can_message(message)

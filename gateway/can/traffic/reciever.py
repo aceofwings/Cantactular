@@ -26,6 +26,11 @@ class Receiver(object):
 
     def start(self):
         if not self.daemonThread.isAlive():
+            try:
+                self.canSocket.bind()
+            except socket.error as msg:
+                print(msg)
+                return 0
             self.daemonThread.start()
 
     def stop(self):
@@ -42,7 +47,7 @@ class CanSocket(object):
 
     def __init__(self,address):
         self.socket = socket.socket(socket.AF_CAN, socket.SOCK_RAW, socket.CAN_RAW)
-        self.address
+        self.address = address
 
     def __iter__(self):
         while True:
