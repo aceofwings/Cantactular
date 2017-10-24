@@ -24,8 +24,7 @@ class Engine(object):
     receivers = []
     outlets = []
 
-    self.core_socket =  socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-
+    core_socket =  socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     conf = None
 
     def __init__(self):
@@ -33,7 +32,7 @@ class Engine(object):
 
         def load_engine():
             self.conf = Configuration()
-            conf_interfaces = conf.interfaces()
+            conf_interfaces = self.conf.interfaces()
             if conf_interfaces is None:
                 raise EnvironmentError
             for address, interfaceType in conf_interfaces.items():
@@ -41,7 +40,7 @@ class Engine(object):
                     outlet = self.avaiable_outlets()[interfaceType](self)
                     self.outlets.append(outlet)
                     reciever = Receiver(address, outlet.forward)
-                    self.receiver.append(reciever)
+                    self.receivers.append(reciever)
                 else:
                     outlet = self.avaiable_outlets()["DEFAULT"](self, message_type=interfaceType)
                     self.outlets.append(outlet)
@@ -57,12 +56,12 @@ class Engine(object):
             full_path = tempfolder.fetch_file_path(self.conf.core_socket_address())
 
             try:
-                self.core_socket_address.bind(full_path)
+                self.core_socket.bind(full_path)
             except socket.error as msg:
-                self.core_socket_address.close()
+                self.core_socket.close()
                 self.core_socket = None
 
-        def start_recievers(self):
+        def start_recievers():
             for receiver in self.receivers:
                 receiver.start()
 

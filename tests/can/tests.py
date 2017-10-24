@@ -5,5 +5,5 @@ class TestEngine(unittest.TestCase):
     def setUp(self):
         Engine()
 
-    def test_life():
+    def test_life(self):
         pass
