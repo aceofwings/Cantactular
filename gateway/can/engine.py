@@ -1,5 +1,9 @@
-from gateway.can.configuration import Configuration
+from gateway.can.forwarders.canopenout import CanOpenOutlet
+from gateway.can.forwarders.evtout import EvtCanOutlet
+from gateway.can.forwarders.canout import CanOutlet
 
+from gateway.can.configuration import Configuration
+from gateway.can.traffic.reciever import Receiver
 """
 CAN Engine|
 -----------
@@ -12,11 +16,38 @@ Amatruda and Rueda
 
 """
 
-default_addresses = ['evt.gateway.core.sock', 'canOPEN', 'canEVT']
-sockets = []
 
 class Engine(object):
 
+    receivers = []
+    outlets = []
+
+    def __init__(self):
+        super().__init__()
+
+
+        def loadEngine():
+            conf = Configuration()
+            conf_interfaces = conf.interfaces()
+            if conf_interfaces is None:
+                raise EnvironmentError
+
+            for address, interfaceType in conf_interfaces.items():
+                if interfaceType in self.avaiable_outlets():
+                    outlet = self.avaiable_outlets()[interfaceType]
+                    self.outlets.append(outlet)
+                    reciever = Receiver(address, outlet.forward)
+                    self.receiver.append(reciever)
+
+        def start_recievers(self):
+            for receiver in self.receivers:
+                receiver.start()
+
+        loadEngine()
+        start_recievers()
+
+    def avaiable_outlets(self):
+        return {"CANOPEN" : CanOpenOutlet, "EVTCAN" : EvtCanOutlet, "DEFAULT" : CanOutlet}
     """
     Takes Can Packet as list of 16 bytes
     bytes: list of integers, length should be 16

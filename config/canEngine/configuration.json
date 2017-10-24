@@ -20,7 +20,8 @@
     "shared" : {
       "core":{
         "address": "temp/evt.gateway.core.sock"
-      }
+      },
+      "interfaceTypes" : ["EVTCAN","CANOPEN"]
     }
   }
 }

@@ -7,7 +7,7 @@ Note: Reievers are not responsible for processing data.
 
 from threading import Thread
 from socket import socket
-class Reciever(Thread):
+class Receiver(Thread):
 
     def init(self):
         """
@@ -32,7 +32,7 @@ class Reciever(Thread):
         while not self.stopped:
             self.forward(self.canSocket.read())
 
-class CanSocket(object)
+class CanSocket(object):
 
     DEFAULT_BUFFERSIZE = 16
 
