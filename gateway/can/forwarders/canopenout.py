@@ -7,5 +7,4 @@ class CanOpenOutlet(CanOutlet):
 
     def deconstruct_can_message(self,message):
         d = super().deconstruct_can_message(message)
-        d['type'] = self.base
         return d

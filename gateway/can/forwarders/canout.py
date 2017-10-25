@@ -1,5 +1,5 @@
 import struct
-
+import time
 class CanOutlet():
     """
     Base Outlet responsible for filtering and fowarding messages to the Engine
@@ -25,7 +25,11 @@ class CanOutlet():
         returns a dictionary representing the canmessage
         """
         canid, dlc, data = struct.unpack(self.can_frame_fmt,message)
-        return {'message' : {'canid' : canid, 'dlc' : dlc, 'data' : data}}
+        return {'message' : {'canid' : canid, 'dlc' : dlc, 'data' : data}, 'recieved' : time.time()
+                    'type': self.base}
+
+    def deconstruct_error_message(self,message):
+        pass
 
 
     def validate(self,can_d):
@@ -52,3 +56,5 @@ class CanOutlet():
         """
         can_d = self.deconstruct_can_message(message)
         self.__validate_and_send(can_d)
+
+    def forward

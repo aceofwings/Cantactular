@@ -68,6 +68,7 @@ class Engine(object):
         load_engine()
         establish_core()
         start_recievers()
+
         while True:
             pass
 
@@ -94,28 +95,29 @@ class Engine(object):
     Creates and binds the sockets of the CAN engine to the default_addresses list.
     Returns with GLOBAL list of socket objects instantiated
     """
-    def bindsockets():
+    def bindsockets(self):
         pass
 
     """
     Daemon reads the CAN Bus specified by socket connection input
     Messages recieved are converted to JSON and placed into incoming_buffer
     """
-    def CANread(sock):
+    def CANread(self):
         pass
 
     """
     Daemon takes messages from the outgoing_buffer
     JSON string is converted to bytes and sent across CAN socket
     """
-    def CANsend(sock):
+    def CANsend(self):
         pass
 
 
-    """
-    Daemon sends messages from incoming_buffer to core
-    """
+
     def COREsend(self,message):
+        """
+        Daemon sends messages from incoming_buffer to core
+        """
         print(message)
 
     """
@@ -123,5 +125,5 @@ class Engine(object):
     Places core messages in outgoing_buffer if message type is CAN
     Handles other events as necessary
     """
-    def COREreceive(sock):
+    def COREreceive(self):
         pass
