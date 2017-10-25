@@ -10,7 +10,7 @@ import socket
 
 class Receiver(object):
 
-    def __init__(self,address,forwards):
+    def __init__(self,address,outlet):
         """
         Initialize a reciever with a function that will handle incoming data and
         a socket address
@@ -18,7 +18,7 @@ class Receiver(object):
         """
         super().__init__()
         self.stopped = False
-        self.forward = forwards
+        self.outlet = outlet
         self.canSocket = CanSocket(address)
         self.daemonThread = threading.Thread(target=self.recieve_and_forward)
         self.daemonThread.setDaemon(True)
@@ -29,7 +29,8 @@ class Receiver(object):
             try:
                 self.canSocket.bind()
             except socket.error as msg:
-                print(msg)
+                self.outlet.forward_error(socket.error,msg)
+                
                 return 0
             self.daemonThread.start()
 
@@ -37,8 +38,16 @@ class Receiver(object):
         self._stop.set()
 
     def recieve_and_forward(self):
-        while not self._stop.isSet():
-            self.forward(self.canSocket.read())
+        self.canSocket.socket.settimeout(5)
+
+        try:
+            while not self._stop.isSet():
+                self.forward(self.canSocket.read())
+        except socket.timeout, msg:
+            self.outlet.forward_error(socket.timeout, msg)
+
+    def attempt_recovery():
+        pass
 
 class CanSocket(object):
 

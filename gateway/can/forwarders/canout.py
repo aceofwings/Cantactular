@@ -13,7 +13,7 @@ class CanOutlet():
 
     def init(self,engine,message_type=None):
         self.base = message_type
-        self.__engine = engine
+        self._engine = engine
 
     def deconstruct_can_message(self,message):
         """
@@ -45,9 +45,9 @@ class CanOutlet():
         """
         return True
 
-    def __validate_and_send(self,can_d):
+    def _validate_and_send(self,can_d):
         if self.validate(can_d):
-            self.__engine.COREsend(can_d)
+            self._engine.COREsend(can_d)
 
     def forward(self,message):
         """
@@ -55,6 +55,10 @@ class CanOutlet():
         whether for send the message to the engine for further processing.
         """
         can_d = self.deconstruct_can_message(message)
-        self.__validate_and_send(can_d)
+        self._validate_and_send(can_d)
 
-    def forward
+    def forward_error(self,error,message):
+        """
+        will take in the except and determine whether to handle and forward to engine
+        """
+        self._engine.forwardError(message)

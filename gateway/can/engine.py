@@ -39,12 +39,12 @@ class Engine(object):
                 if interfaceType in self.avaiable_outlets():
                     outlet = self.avaiable_outlets()[interfaceType](self)
                     self.outlets.append(outlet)
-                    reciever = Receiver(address, outlet.forward)
+                    reciever = Receiver(address, outlet)
                     self.receivers.append(reciever)
                 else:
                     outlet = self.avaiable_outlets()["DEFAULT"](self, message_type=interfaceType)
                     self.outlets.append(outlet)
-                    reciever = Receiver(address, outlet.forward)
+                    reciever = Receiver(address, outlet)
 
 
         def establish_core():
@@ -120,10 +120,16 @@ class Engine(object):
         """
         print(message)
 
-    """
-    Daemon polls the core socket for messages in JSON
-    Places core messages in outgoing_buffer if message type is CAN
-    Handles other events as necessary
-    """
+    def COREerror(self,message):
+        """
+        Daemon sends error messages from incoming_buffer to core
+        """
+
+
     def COREreceive(self):
+        """
+        Daemon polls the core socket for messages in JSON
+        Places core messages in outgoing_buffer if message type is CAN
+        Handles other events as necessary
+        """
         pass
