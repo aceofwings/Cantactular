@@ -24,8 +24,9 @@ class CanOutlet():
 
         returns a dictionary representing the canmessage
         """
+        print(message)
         canid, dlc, data = struct.unpack(self.can_frame_fmt,message)
-        return {'message' : {'canid' : canid, 'dlc' : dlc, 'data' : data}, 'recieved' : time.time()
+        return {'message' : {'canid' : canid, 'dlc' : dlc, 'data' : data}, 'recieved' : time.time(),
                     'type': self.base}
 
     def deconstruct_error_message(self,message):
@@ -61,4 +62,4 @@ class CanOutlet():
         """
         will take in the except and determine whether to handle and forward to engine
         """
-        self._engine.forwardError(message)
+        self._engine.COREerror(message)

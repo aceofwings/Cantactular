@@ -124,7 +124,7 @@ class Engine(object):
         """
         Daemon sends error messages from incoming_buffer to core
         """
-
+        print(message)
 
     def COREreceive(self):
         """
