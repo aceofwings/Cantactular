@@ -1,3 +1,7 @@
+import json
+import struct
+import time
+
 """
 Takes Can Packet as list of 16 bytes
 Also takes the endian of the data as a string ex."little","big"
