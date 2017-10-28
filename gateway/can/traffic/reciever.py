@@ -11,7 +11,7 @@ import ctypes
 import fcntl
 import array
 import struct
-
+import time
 SIOCGSTAMP = 0x8906
 SO_TIMESTAMPNS = 35
 
@@ -36,6 +36,8 @@ class Receiver(object):
         self._stop = threading.Event()
         self.time_buffer = array.array('B', [0] * 8)
 
+        #Setting the SO_TIMESTAMPNS option will allow the frame to  be recieved with additional ancillary data.
+        #The time stamp is now generated  when the interupt is recieved to read from the socket.``
         self.canSocket.socket.setsockopt(socket.SOL_SOCKET, SO_TIMESTAMPNS,1)
 
     def start(self):
@@ -80,11 +82,8 @@ class CanSocket(object):
 
     def read(self):
         #return self.socket.recv(self.DEFAULT_BUFFERSIZE)
-        test = self.socket.recvmsg(self.DEFAULT_BUFFERSIZE,200)
-        print(struct.unpack('@LL', test[1][0][2]))
-        print(self.socket.fileno())
-
-        return test[0]
+        msg = self.socket.recvmsg(self.DEFAULT_BUFFERSIZE,32)
+        return (msg[0], msg[1][0][2])
 
     def bind(self):
         self.socket.bind((self.address,))
