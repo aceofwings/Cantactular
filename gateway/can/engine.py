@@ -5,6 +5,9 @@ from gateway.can.configuration import Configuration
 from gateway.can.traffic.reciever import Receiver
 from gateway.utils.resourcelocator import ResourceLocator
 import socket
+import time
+import struct
+import json
 
 """
 CAN Engine|
@@ -75,20 +78,44 @@ class Engine(object):
     def avaiable_outlets(self):
         return {"CANOPEN" : CanOpenOutlet, "EVTCAN" : EvtCanOutlet, "DEFAULT" : CanOutlet}
     """
-    Takes Can Packet as list of 16 bytes
+    Takes Can Packet as list of 16 bytes, the network, type and endian of data
     bytes: list of integers, length should be 16
     CAN Frame: CANID (4) , DataLen (1) , Padding (3) , Data (0 - 8)(Big Endian)
     Returns JSON string
     """
-    def to_JSON(bytes):
-        pass
+    def to_JSON(self,bytes,network,type,endian):
+        messagedata = {'time': time.time()}
+        messagedata['canid'] = -1
+        messagedata['datalen'] = -1
+        messagedata['data'] = -1
+        messagedata['network'] = None
+        messagedata['type'] = None
+        if bytes is not None:
+            messagedata['canid'] = int.from_bytes(bytes[0:4], byteorder=endian)
+            messagedata['datalen'] = int(bytes[4])
+            if messagedata['datalen'] == 0:
+                messagedata['data'] = [0]
+            else:
+                messagedata['data'] = list(bytes[(16 - messagedata['datalen']):])
+            messagedata['network'] = network
+            messagedata['type'] = type
+        return json.dumps(messagedata)
 
     """
     Takes the formatted JSON string and convert it to CAN Frame (list of 16 bytes)
-    Returns bytes list
+    and endian of data.
+    Returns a tuple of bytes list,network,type
     """
-    def from_JSON(json):
-        pass
+    def from_JSON(self,json,endian):
+        messagedata = json.loads(json)
+        fstring = b'<IB3x8s' if endian == 'little' else b'>IB3x8s'
+        can = struct.pack(fstring, messagedata['canid'], messagedata['datalen'], bytes(messagedata['data']))
+        can = list(can)
+        can[8:] = (bytes(messagedata['data']))
+        for i in range(8, 16 - messagedata['datalen']):
+            can.insert(i, 0)
+        can = bytes(can)
+        return can, messagedata['network'], messagedata['type']
 
 
     """
