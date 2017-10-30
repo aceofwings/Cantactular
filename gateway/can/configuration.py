@@ -35,7 +35,10 @@ class Configuration(object):
                 config = config[term]
             except KeyError:
                 config = self.__environment("shared")
-                config = config[term]
+                if term in config:
+                    config = config[term]
+                else:
+                    return None
         return config
 
     def __environment(self,e=None):
@@ -50,8 +53,4 @@ class Configuration(object):
 
     @configProperty("core.address")
     def core_socket_address():
-        pass
-
-    @configProperty("engine.maxConnections")
-    def maximum_number_connections():
         pass

@@ -9,6 +9,7 @@ import socket
 import time
 import struct
 import json
+import os
 import logging
 import enum
 
@@ -23,6 +24,8 @@ Nicholas and Federico
 Amatruda and Rueda
 
 """
+
+logger = logging.getLogger(__name__)
 
 class Engine(object):
 
@@ -41,7 +44,6 @@ class Engine(object):
 
     def __init__(self):
         super().__init__()
-
         def load_engine():
             self.conf = Configuration()
             conf_interfaces = self.conf.interfaces()
@@ -60,17 +62,28 @@ class Engine(object):
 
 
         def establish_core():
+            tempfolder = ResourceLocator.get_locator(relative_path="temp")
+
             if self.conf is None:
                 self.conf = Configuration()
-            tempfolder = ResourceLocator.get_locator(relative_path="temp")
             if self.conf.core_socket_address() is None:
-                pass
-            full_path = tempfolder.fetch_file_path(self.conf.core_socket_address())
+                full_path = tempfolder.fetch_file_path('core.out')
+            else:
+                full_path = tempfolder.fetch_file_path(self.conf.core_socket_address())
             try:
+                os.unlink(full_path)
+            except OSError:
+                if os.path.exists(full_path):
+                    print("The path exists")
+            try:
+                self.core_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR, 1)
                 self.core_socket.bind(full_path)
+                self.core_socket.listen(1)
             except socket.error as msg:
                 self.core_socket.close()
                 self.core_socket = None
+            except OSError as msg:
+                print(msg)
 
         def start_recievers():
             for receiver in self.receivers:
@@ -81,8 +94,8 @@ class Engine(object):
         start_recievers()
 
         while True:
-            connection,client_address = core_socket.accept()
-            if self.clients.length() < conf.maximum_number_connections():
+            connection,client_address = self.core_socket.accept()
+            if self.clients.length() < self.conf.maximum_number_connections():
                 self.clients.append(connection)
                 self.COREsend({'notice': EngineNotices.NEW_CONNECTION})
             else:
@@ -98,23 +111,13 @@ class Engine(object):
     CAN Frame: CANID (4) , DataLen (1) , Padding (3) , Data (0 - 8)(Big Endian)
     Returns JSON string
     """
-    def to_JSON(self,bytes,network,type,endian):
-        messagedata = {'time': time.time()}
-        messagedata['canid'] = -1
-        messagedata['datalen'] = -1
-        messagedata['data'] = -1
-        messagedata['network'] = None
-        messagedata['type'] = None
-        if bytes is not None:
-            messagedata['canid'] = int.from_bytes(bytes[0:4], byteorder=endian)
-            messagedata['datalen'] = int(bytes[4])
-            if messagedata['datalen'] == 0:
-                messagedata['data'] = [0]
-            else:
-                messagedata['data'] = list(bytes[(16 - messagedata['datalen']):])
-            messagedata['network'] = network
-            messagedata['type'] = type
-        return json.dumps(messagedata)
+    def to_JSON(self,message):
+        dlc =  message['message']['dlc']
+        if dlc == 0:
+            message['message']['data'] = [0]
+        else:
+            message['message']['data'] = list(message['message']['data'][0: 16 - dlc])
+        return json.dumps(message)
 
     """
     Takes the formatted JSON string and convert it to CAN Frame (list of 16 bytes)
@@ -167,7 +170,9 @@ class Engine(object):
         They decorate a message with type of frame.
 
         """
-        datalength = self.core_socket.sendall(json.dumps(message))
+        
+        for client in self.clients:
+            client.sendall(self.to_JSON(message).encode())
 
 
     def COREerror(self,message,socket=None):
