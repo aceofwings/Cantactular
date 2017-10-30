@@ -15,11 +15,17 @@
           "vcan0": "EVTCAN",
           "vcan1": "CANOPEN"
         }
+      },
+      "engine":{
+        "maxConnections" : 3
       }
     },
     "shared" : {
       "core":{
         "address": "temp/evt.gateway.core.sock"
+      },
+      "engine":{
+        "maxConnections" : 3
       },
       "interfaceTypes" : ["EVTCAN","CANOPEN"]
     }

@@ -4,10 +4,13 @@ from gateway.can.forwarders.canout import CanOutlet
 from gateway.can.configuration import Configuration
 from gateway.can.traffic.reciever import Receiver
 from gateway.utils.resourcelocator import ResourceLocator
+
 import socket
 import time
 import struct
 import json
+import logging
+import enum
 
 """
 CAN Engine|
@@ -21,11 +24,17 @@ Amatruda and Rueda
 
 """
 
-
 class Engine(object):
+
+    class EngineNotices(enum.Enum):
+        NEW_CONNECTION = "A new connection was made"
+
+    class EngineErrors(enum.Enum):
+        TOO_MANY_CONNECTIONS = "To many connections to engine"
 
     receivers = []
     outlets = []
+    clients = []
 
     core_socket =  socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     conf = None
@@ -57,7 +66,6 @@ class Engine(object):
             if self.conf.core_socket_address() is None:
                 pass
             full_path = tempfolder.fetch_file_path(self.conf.core_socket_address())
-
             try:
                 self.core_socket.bind(full_path)
             except socket.error as msg:
@@ -73,7 +81,14 @@ class Engine(object):
         start_recievers()
 
         while True:
-            pass
+            connection,client_address = core_socket.accept()
+            if self.clients.length() < conf.maximum_number_connections():
+                self.clients.append(connection)
+                self.COREsend({'notice': EngineNotices.NEW_CONNECTION})
+            else:
+                self.COREerror({'error': EngineErrors.TOO_MANY_CONNECTIONS, 'msg': "Cannot open request"  }, connection)
+                connection.close()
+                self.notifyEngine(notice=EngineNotices.NEW_CONNECTION)
 
     def avaiable_outlets(self):
         return {"CANOPEN" : CanOpenOutlet, "EVTCAN" : EvtCanOutlet, "DEFAULT" : CanOutlet}
@@ -141,15 +156,24 @@ class Engine(object):
 
 
 
-    def COREsend(self,message):
+    def COREsend(self,message,socket=None):
         """
-        Daemon sends messages from incoming_buffer to core
-        """
-        print(message)
+        Daemon unpacks Canmessage and structures it as a dictionary, ultimately
+        passed to COREsend.
 
-    def COREerror(self,message):
+        The message format depends on the type of outlet the engine uses.
+        There are two types of outlets one instiated for each interface.
+
+        They decorate a message with type of frame.
+
         """
-        Daemon sends error messages from incoming_buffer to core
+        datalength = self.core_socket.sendall(json.dumps(message))
+
+
+    def COREerror(self,message,socket=None):
+        """
+        Recieve messages and foward them as errors to core applications. Will determine
+        wether the error is recoverable
         """
         print(message)
 
@@ -159,4 +183,7 @@ class Engine(object):
         Places core messages in outgoing_buffer if message type is CAN
         Handles other events as necessary
         """
+        pass
+
+    def notifyEngine(notice=None):
         pass

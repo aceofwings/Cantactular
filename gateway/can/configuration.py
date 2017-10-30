@@ -51,3 +51,7 @@ class Configuration(object):
     @configProperty("core.address")
     def core_socket_address():
         pass
+
+    @configProperty("engine.maxConnections")
+    def maximum_number_connections():
+        pass
