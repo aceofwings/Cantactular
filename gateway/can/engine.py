@@ -1,18 +1,16 @@
 from gateway.can.forwarders.canopenout import CanOpenOutlet
 from gateway.can.forwarders.evtout import EvtCanOutlet
 from gateway.can.forwarders.canout import CanOutlet
-from gateway.can.configuration import Configuration
 from gateway.can.traffic.reciever import Receiver
 from gateway.utils.resourcelocator import ResourceLocator
 
 import socket
-import time
 import struct
 import json
 import os
 import logging
 import enum
-
+import threading
 """
 CAN Engine|
 -----------
@@ -42,14 +40,10 @@ class Engine(object):
     core_socket =  socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     conf = None
 
-    def __init__(self):
+    def __init__(self, *args, **options):
         super().__init__()
         def load_engine():
-            self.conf = Configuration()
-            conf_interfaces = self.conf.interfaces()
-            if conf_interfaces is None:
-                raise EnvironmentError
-            for address, interfaceType in conf_interfaces.items():
+            for address, interfaceType in options['interfaces']:
                 if interfaceType in self.avaiable_outlets():
                     outlet = self.avaiable_outlets()[interfaceType](self)
                     self.outlets.append(outlet)
@@ -63,13 +57,10 @@ class Engine(object):
 
         def establish_core():
             tempfolder = ResourceLocator.get_locator(relative_path="temp")
-
-            if self.conf is None:
-                self.conf = Configuration()
-            if self.conf.core_socket_address() is None:
+            if options['core_address'] in options:
                 full_path = tempfolder.fetch_file_path('core.out')
             else:
-                full_path = tempfolder.fetch_file_path(self.conf.core_socket_address())
+                full_path = tempfolder.fetch_file_path(options['core_address'])
             try:
                 os.unlink(full_path)
             except OSError:
@@ -84,15 +75,21 @@ class Engine(object):
                 self.core_socket = None
             except OSError as msg:
                 print(msg)
-
+        
         def start_recievers():
             for receiver in self.receivers:
                 receiver.start()
+        #
+        # load_engine()
+        # establish_core()
+        # start_recievers()
+        #
+        #
 
-        load_engine()
-        establish_core()
-        start_recievers()
+    def start(self):
+        pass
 
+    def accept_clients(self):
         while True:
             connection,client_address = self.core_socket.accept()
             if self.clients.length() < self.conf.maximum_number_connections():
@@ -170,7 +167,7 @@ class Engine(object):
         They decorate a message with type of frame.
 
         """
-        
+
         for client in self.clients:
             client.sendall(self.to_JSON(message).encode())
 

@@ -18,6 +18,8 @@ class Configuration(object):
         self.json_dict = json.load(self.config_file)
         if environment is None:
             self.environment = "development"
+        else:
+            self.environment = environment
 
     def configProperty(p=None):
         def _configProperty(function):
@@ -41,6 +43,13 @@ class Configuration(object):
                     return None
         return config
 
+    @classmethod
+    def conf_with_environment(cls, env):
+        if env in self.json_dict["environments"]:
+            return Configuration(env)
+        else:
+            return None
+
     def __environment(self,e=None):
             if e is not None:
                 return self.json_dict["environments"][e]
@@ -54,3 +63,8 @@ class Configuration(object):
     @configProperty("core.address")
     def core_socket_address():
         pass
+
+class MisconfigurationExecption(Exception):
+    def __init__(self, message, errors):
+        super().__init__(message)
+        self.errors = errors
