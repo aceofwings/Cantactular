@@ -1,6 +1,3 @@
-from gateway.can.forwarders.canopenout import CanOpenOutlet
-from gateway.can.forwarders.evtout import EvtCanOutlet
-from gateway.can.forwarders.canout import CanOutlet
 from gateway.can.traffic.reciever import Receiver
 from gateway.utils.resourcelocator import ResourceLocator
 
@@ -43,17 +40,9 @@ class Engine(object):
     def __init__(self, *args, **options):
         super().__init__()
         def load_engine():
-            for address, interfaceType in options['interfaces']:
-                if interfaceType in self.avaiable_outlets():
-                    outlet = self.avaiable_outlets()[interfaceType](self)
-                    self.outlets.append(outlet)
-                    reciever = Receiver(address, outlet)
-                    self.receivers.append(reciever)
-                else:
-                    outlet = self.avaiable_outlets()["DEFAULT"](self, message_type=interfaceType)
-                    self.outlets.append(outlet)
-                    reciever = Receiver(address, outlet)
-
+            for address, interfaceType in options['interfaces'].items():
+                    receiver = Receiver((address, interfaceType), self)
+                    self.receivers.append(receiver)
 
         def establish_core():
             tempfolder = ResourceLocator.get_locator(relative_path="temp")
@@ -75,17 +64,19 @@ class Engine(object):
                 self.core_socket = None
             except OSError as msg:
                 print(msg)
-        
+
         def start_recievers():
             for receiver in self.receivers:
                 receiver.start()
         #
-        # load_engine()
-        # establish_core()
-        # start_recievers()
+        load_engine()
+        establish_core()
+        start_recievers()
         #
         #
-
+        #
+        while True:
+            pass
     def start(self):
         pass
 
@@ -167,7 +158,7 @@ class Engine(object):
         They decorate a message with type of frame.
 
         """
-
+        print(message)
         for client in self.clients:
             client.sendall(self.to_JSON(message).encode())
 

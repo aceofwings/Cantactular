@@ -12,6 +12,9 @@ import fcntl
 import array
 import struct
 import time
+
+from gateway.can.traffic.canout import CanOutlet
+
 SIOCGSTAMP = 0x8906
 SO_TIMESTAMPNS = 35
 
@@ -21,15 +24,16 @@ class TIME_VALUE(ctypes.Structure):
 
 class Receiver(object):
 
-    def __init__(self,address,outlet,time_stamp=False):
+    def __init__(self,socketInfo,engine):
         """
         Initialize a reciever with a function that will handle incoming data and
         a socket address
         :param forwards: A function that the reciever will forward its data too.
         """
         super().__init__()
+        address, type = socketInfo
         self.stopped = False
-        self.outlet = outlet
+        self.outlet = CanOutlet(engine, message_type=type)
         self.canSocket = CanSocket(address)
         self.daemonThread = threading.Thread(target=self.recieve_and_forward)
         self.daemonThread.setDaemon(True)

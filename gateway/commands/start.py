@@ -32,6 +32,7 @@ class StartCommand(GatewayCommand):
         try:
             Engine(**options).start()
         except KeyboardInterrupt as msg:
+            print("Exiting...")
             sys.exit(0)
 
 

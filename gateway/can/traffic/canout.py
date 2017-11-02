@@ -1,6 +1,6 @@
 import struct
 import time
-class CanOutlet():
+class CanOutlet(object):
     """
     Base Outlet responsible for filtering and fowarding messages to the Engine
 
@@ -11,7 +11,7 @@ class CanOutlet():
     """
     can_frame_fmt = "=IB3x8s"
 
-    def init(self,engine,message_type=None):
+    def __init__(self,engine,message_type=None):
         self.base = message_type
         self._engine = engine
 
