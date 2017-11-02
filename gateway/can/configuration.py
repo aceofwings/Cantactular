@@ -19,7 +19,10 @@ class Configuration(object):
         if environment is None:
             self.environment = "development"
         else:
-            self.environment = environment
+            if environment in self.json_dict["environments"]:
+                self.environment = environment
+            else:
+                raise MisconfigurationExecption("No such environment" , environment)
 
     def configProperty(p=None):
         def _configProperty(function):

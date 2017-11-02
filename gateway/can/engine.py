@@ -51,7 +51,7 @@ class Engine(object):
             else:
                 full_path = tempfolder.fetch_file_path(options['core_address'])
             try:
-                os.unlink(full_path)
+                 os.unlink(full_path)
             except OSError:
                 if os.path.exists(full_path):
                     print("The path exists")

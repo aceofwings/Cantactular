@@ -14,10 +14,10 @@ class StartCommand(GatewayCommand):
     def run(self,arguments):
 
         options = {}
-
-        self.conf = Configuration(environment=arguments.environment)
-        if self.conf is None:
-            raise MisconfigurationExecption("The enviroment does not exist")
+        try:
+            self.conf = Configuration(environment=arguments.environment)
+        except MisconfigurationExecption as msg:
+            print(msg)
             sys.exit(1)
         if self.conf.interfaces() is not None:
             options['interfaces'] = self.conf.interfaces()
