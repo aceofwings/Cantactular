@@ -1,5 +1,6 @@
 from gateway.can.traffic.reciever import Receiver
 from gateway.utils.resourcelocator import ResourceLocator
+from gateway.can.traffic.server import  Server, CoreHandler
 
 import socket
 import struct
@@ -22,6 +23,8 @@ Amatruda and Rueda
 
 logger = logging.getLogger(__name__)
 
+defautOptions = {'interfaces' : {}}
+
 class Engine(object):
 
     class EngineNotices(enum.Enum):
@@ -34,10 +37,12 @@ class Engine(object):
     outlets = []
     clients = []
 
-    core_socket =  socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    engine_server = None
     conf = None
 
     def __init__(self, *args, **options):
+        options =  {**defautOptions, **options}
+
         super().__init__()
         def load_engine():
             for address, interfaceType in options['interfaces'].items():
@@ -46,7 +51,7 @@ class Engine(object):
 
         def establish_core():
             tempfolder = ResourceLocator.get_locator(relative_path="temp")
-            if options['core_address'] in options:
+            if 'core_address' not in options:
                 full_path = tempfolder.fetch_file_path('core.out')
             else:
                 full_path = tempfolder.fetch_file_path(options['core_address'])
@@ -56,48 +61,29 @@ class Engine(object):
                 if os.path.exists(full_path):
                     print("The path exists")
             try:
-                self.core_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR, 1)
-                self.core_socket.bind(full_path)
-                self.core_socket.listen(1)
+                self.engine_server = Server(full_path, CoreHandler)
             except socket.error as msg:
-                self.core_socket.close()
-                self.core_socket = None
+                pass
             except OSError as msg:
                 print(msg)
 
         def start_recievers():
             for receiver in self.receivers:
                 receiver.start()
-        #
+
         load_engine()
         establish_core()
         start_recievers()
-        #
-        #
-        #
-        while True:
-            pass
+
     def start(self):
-        pass
+        self.engine_server.serve_forever()
 
-    def accept_clients(self):
-        while True:
-            connection,client_address = self.core_socket.accept()
-            if self.clients.length() < self.conf.maximum_number_connections():
-                self.clients.append(connection)
-                self.COREsend({'notice': EngineNotices.NEW_CONNECTION})
-            else:
-                self.COREerror({'error': EngineErrors.TOO_MANY_CONNECTIONS, 'msg': "Cannot open request"  }, connection)
-                connection.close()
-                self.notifyEngine(notice=EngineNotices.NEW_CONNECTION)
 
-    def avaiable_outlets(self):
-        return {"CANOPEN" : CanOpenOutlet, "EVTCAN" : EvtCanOutlet, "DEFAULT" : CanOutlet}
     """
     Takes Can Packet as list of 16 bytes, the network, type and endian of data
     bytes: list of integers, length should be 16
     CAN Frame: CANID (4) , DataLen (1) , Padding (3) , Data (0 - 8)(Big Endian)
-    Returns JSON string
+    Returns JSON string that can be encoded
     """
     def to_JSON(self,message):
         dlc =  message['message']['dlc']
@@ -112,16 +98,19 @@ class Engine(object):
     and endian of data.
     Returns a tuple of bytes list,network,type
     """
-    def from_JSON(self,json,endian):
-        messagedata = json.loads(json)
-        fstring = b'<IB3x8s' if endian == 'little' else b'>IB3x8s'
-        can = struct.pack(fstring, messagedata['canid'], messagedata['datalen'], bytes(messagedata['data']))
+    def from_JSON(self,line):
+        message = json.loads(line)
+        messagedata = message['message']
+        fstring = b'<IB3x8s'
+
+        can = struct.pack(fstring, messagedata['canid'], messagedata['dlc'], bytes(messagedata['data']))
         can = list(can)
+
         can[8:] = (bytes(messagedata['data']))
-        for i in range(8, 16 - messagedata['datalen']):
+        for i in range(8, 16 - messagedata['dlc']):
             can.insert(i, 0)
         can = bytes(can)
-        return can, messagedata['network'], messagedata['type']
+        return can, message['type']
 
 
     """
@@ -142,8 +131,11 @@ class Engine(object):
     Daemon takes messages from the outgoing_buffer
     JSON string is converted to bytes and sent across CAN socket
     """
-    def CANsend(self):
-        pass
+    def CANsend(self,message):
+        message = self.from_JSON(message)
+        print(message)
+        #
+        #
 
 
 
@@ -158,9 +150,7 @@ class Engine(object):
         They decorate a message with type of frame.
 
         """
-        print(message)
-        for client in self.clients:
-            client.sendall(self.to_JSON(message).encode())
+        print(self.to_JSON(message).encode())
 
 
     def COREerror(self,message,socket=None):
@@ -170,13 +160,15 @@ class Engine(object):
         """
         print(message)
 
-    def COREreceive(self):
+    def COREreceive(self,message):
         """
         Daemon polls the core socket for messages in JSON
         Places core messages in outgoing_buffer if message type is CAN
         Handles other events as necessary
         """
-        pass
+        self.from_JSON(message.decode())
+        #perhaps check to see what kinda of message it is....
+        #then forward to the bus
 
     def notifyEngine(notice=None):
         pass
