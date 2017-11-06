@@ -1,5 +1,6 @@
 import json
 from gateway.utils.resourcelocator import ResourceLocator
+from gateway.can.handler import
 
 CONFIG_LOCATION = "config/canEngine/"
 

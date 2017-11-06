@@ -1,7 +1,7 @@
 from gateway.can.traffic.reciever import Receiver
 from gateway.utils.resourcelocator import ResourceLocator
 from gateway.can.traffic.server import  Server, CoreHandler
-
+from gateway.can.handler import BasicMessageHandler
 import socket
 import struct
 import json
@@ -27,27 +27,28 @@ defautOptions = {'interfaces' : {}}
 
 class Engine(object):
 
+
     class EngineNotices(enum.Enum):
         NEW_CONNECTION = "A new connection was made"
 
     class EngineErrors(enum.Enum):
-        TOO_MANY_CONNECTIONS = "To many connections to engine"
-
-    receivers = []
-    outlets = []
-    clients = []
+        TOO_MANY_CONNECTIONS = 0
+        GEN_ERROR = 1
+        DATA_UNREADABLE = 2
 
     engine_server = None
+    engine_handler = None
     conf = None
 
     def __init__(self, *args, **options):
         options =  {**defautOptions, **options}
-
         super().__init__()
         def load_engine():
             for address, interfaceType in options['interfaces'].items():
                     receiver = Receiver((address, interfaceType), self)
                     self.receivers.append(receiver)
+
+            self.engine_handler = BasicMessageHandler(self)
 
         def establish_core():
             tempfolder = ResourceLocator.get_locator(relative_path="temp")
@@ -133,9 +134,7 @@ class Engine(object):
     """
     def CANsend(self,message):
         message = self.from_JSON(message)
-        print(message)
-        #
-        #
+    
 
 
 
@@ -166,9 +165,9 @@ class Engine(object):
         Places core messages in outgoing_buffer if message type is CAN
         Handles other events as necessary
         """
-        self.from_JSON(message.decode())
-        #perhaps check to see what kinda of message it is....
-        #then forward to the bus
+        can_d = self.from_JSON(message.decode())
+        self.engine_handler.setup_and_handle(can_d['type'], can_d['message'])
+
 
     def notifyEngine(notice=None):
         pass
