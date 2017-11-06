@@ -2,13 +2,15 @@ from gateway.can.traffic.reciever import Receiver
 from gateway.utils.resourcelocator import ResourceLocator
 from gateway.can.traffic.server import  Server, CoreHandler
 from gateway.can.handler import BasicMessageHandler
+
 import socket
 import struct
 import json
 import os
 import logging
-import enum
 import threading
+import queue
+
 """
 CAN Engine|
 -----------
@@ -27,19 +29,11 @@ defautOptions = {'interfaces' : {}}
 
 class Engine(object):
 
-
-    class EngineNotices(enum.Enum):
-        NEW_CONNECTION = "A new connection was made"
-
-    class EngineErrors(enum.Enum):
-        TOO_MANY_CONNECTIONS = 0
-        GEN_ERROR = 1
-        DATA_UNREADABLE = 2
-
     engine_server = None
     engine_handler = None
     conf = None
-
+    errors = queue.Queue()
+    receivers = []
     def __init__(self, *args, **options):
         options =  {**defautOptions, **options}
         super().__init__()
@@ -134,7 +128,7 @@ class Engine(object):
     """
     def CANsend(self,message):
         message = self.from_JSON(message)
-    
+
 
 
 
@@ -149,15 +143,15 @@ class Engine(object):
         They decorate a message with type of frame.
 
         """
-        print(self.to_JSON(message).encode())
+        self.to_JSON(message).encode()
 
 
-    def COREerror(self,message,socket=None):
+    def COREerror(self,message):
         """
         Recieve messages and foward them as errors to core applications. Will determine
         wether the error is recoverable
         """
-        print(message)
+        self.errors.put(message)
 
     def COREreceive(self,message):
         """
@@ -165,8 +159,10 @@ class Engine(object):
         Places core messages in outgoing_buffer if message type is CAN
         Handles other events as necessary
         """
-        can_d = self.from_JSON(message.decode())
+        can_d = json.loads(message.decode())
         self.engine_handler.setup_and_handle(can_d['type'], can_d['message'])
+
+        return can_d
 
 
     def notifyEngine(notice=None):
