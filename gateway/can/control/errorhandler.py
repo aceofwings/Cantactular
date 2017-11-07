@@ -22,7 +22,7 @@ class ErrorHandler(object):
     def setup(self,error):
         b_error = None
         if type(error) is BaseErrorTypes:
-            b_error = None
+            return error
         elif type(error) is str:
             b_error = BaseErrorTypes[error]
         elif type(error) is int:
@@ -60,7 +60,7 @@ class ErrorHandler(object):
                         error.msg['type'] = "CAN"
                         self.engine.force_send(error.msg)
                     except Exception as msg:
-                        logger.error(msg)
+                        logger.error(msg) #a formating issued occur
             else:
                 logger.error("Engine has encountered a non-existent message type")
 
