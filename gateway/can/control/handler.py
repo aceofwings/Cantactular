@@ -1,5 +1,6 @@
 
 import enum
+from gateway.can.control.errorhandler import BaseErrorTypes
 
 """
 Base handle
@@ -42,7 +43,9 @@ class BasicMessageHandler(object):
         try:
             self.handle(self._msg_type_compose(msg_type),message)
         except KeyError as msg:
-            pass
+            error = BaseErrorTypes.NON_EXIST_TYPE
+            error.msg = message
+            self.engine.queue_error(error)
 
     def handle(self,e_type,message):
         if e_type is BaseMessageTypes.EVTCAN:

@@ -1,7 +1,8 @@
-from gateway.can.traffic.reciever import Receiver
 from gateway.utils.resourcelocator import ResourceLocator
 from gateway.can.traffic.server import  Server, CoreHandler
-from gateway.can.handler import BasicMessageHandler
+from gateway.can.traffic.reciever import Receiver
+from gateway.can.control.handler import BasicMessageHandler
+from gateway.can.control.errorhandler import ErrorHandler
 
 import socket
 import struct
@@ -43,6 +44,7 @@ class Engine(object):
                     self.receivers.append(receiver)
 
             self.engine_handler = BasicMessageHandler(self)
+            self.error_handler = ErrorHandler(self, {force_send : True})
 
         def establish_core():
             tempfolder = ResourceLocator.get_locator(relative_path="temp")
@@ -69,6 +71,9 @@ class Engine(object):
         load_engine()
         establish_core()
         start_recievers()
+
+        while True:
+
 
     def start(self):
         self.engine_server.serve_forever()
@@ -151,7 +156,7 @@ class Engine(object):
         Recieve messages and foward them as errors to core applications. Will determine
         wether the error is recoverable
         """
-        self.errors.put(message)
+        self.queue_error(message)
 
     def COREreceive(self,message):
         """
@@ -160,10 +165,18 @@ class Engine(object):
         Handles other events as necessary
         """
         can_d = json.loads(message.decode())
+
         self.engine_handler.setup_and_handle(can_d['type'], can_d['message'])
 
         return can_d
 
+    def queue_error(self,error):
+        try:
+            self.errors.put(error)
+        except queue.Full as msg:
+            self.notifyEngine()
+
+    def force_send(self,msg):
+        pass
 
     def notifyEngine(notice=None):
-        pass
