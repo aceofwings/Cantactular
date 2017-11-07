@@ -61,4 +61,4 @@ class CanOutlet(object):
         """
         will take in the except and determine whether to handle and forward to engine
         """
-        self._engine.COREerror(message)
+        self._engine.engine_error(message)

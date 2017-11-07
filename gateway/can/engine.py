@@ -156,7 +156,10 @@ class Engine(object):
         Recieve messages and foward them as errors to core applications. Will determine
         wether the error is recoverable
         """
+
+    def engine_error(self,message):
         self.queue_error(message)
+
 
     def COREreceive(self,message):
         """

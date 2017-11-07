@@ -13,6 +13,7 @@ import array
 import struct
 import time
 
+from gateway.can.control.errorhandler import BaseErrorTypes
 from gateway.can.traffic.canout import CanOutlet
 
 SIOCGSTAMP = 0x8906
@@ -49,9 +50,9 @@ class Receiver(object):
             try:
                 self.canSocket.bind()
             except socket.error as msg:
-                self.outlet.forward_error(socket.error,msg)
-
+                self.outlet.forward_error(msg)
                 return 0
+
             self.daemonThread.start()
 
     def stop(self):
@@ -59,16 +60,22 @@ class Receiver(object):
 
     def recieve_and_forward(self):
         #self.canSocket.socket.settimeout(0)
-
         try:
             while not self._stop.isSet():
                 self.outlet.forward(self.canSocket.read())
-                #res = fcntl.ioctl(self.canSocket.socket, SIOCGSTAMP, struct.pack('@LL',0,0))
         except socket.timeout as msg:
-            self.outlet.forward_error(socket.timeout, msg)
+            error = BaseErrorTypes.SOCKET_TIMEOUT
+            error.msg = msg
+            error.socket = self.canSocket.socket
+            self.outlet.forward_error(error)
+            self._stop.set()
 
-    def attempt_recovery():
+    def attempt_recovery(self):
         pass
+
+    @property
+    def socket_descriptor(self):
+        return self.canSocket.socket
 
 class CanSocket(object):
 

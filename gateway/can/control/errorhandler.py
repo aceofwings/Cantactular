@@ -9,7 +9,7 @@ class BaseErrorTypes(enum.Enum):
     INVALID_FORMAT = 3
     OTHER_ERROR = 4
 
-class ErrorHandler(object)
+class ErrorHandler(object):
     """
     Error Message may have a message attribute which will have a parsed
     object message structure. Depending on the error the msg could be different
@@ -28,7 +28,7 @@ class ErrorHandler(object)
         elif type(error) is int:
             b_error = BaseErrorTypes(error)
         else:
-            logger.error("Unknown Message type")
+            logger.error("Unknown Error type")
 
         if hasattr(error,msg):
             b_error.msg = msg
@@ -66,4 +66,16 @@ class ErrorHandler(object)
 
         if error is SOCKET_TIMEOUT:
             if hasattr(error,socket):
-                error.socket
+                for receiver in self.engine.receivers:
+                    if receiver.socket_descriptor is socket and receiver.stopped.isSet():
+                        receiver.attempt_recovery()
+                        logger.error("the receiver has stopped, due to in inactivity")
+                    if receiver.stopped.isSet():
+                        self.engine.coreError({message: { error : "SOCKET_DISCONECT" } })
+                        logger.error("Failed to start receiver")
+            else:
+                    for receiver in self.engine.receivers:
+                        if receiver.stopped.isSet():
+                            receiver.attempt_recovery():
+                        if receiver.stopped.isSet():
+                            self.engine.coreError({message: { error : "SOCKET_DISCONECT" } })
