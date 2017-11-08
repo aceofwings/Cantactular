@@ -50,12 +50,12 @@ class ErrorHandler(object):
                         logger.error(msg) #a formating issued occur
         except errors.InvalidMessageFormat as IM:
             logger.error("Invalid message format")
-            self.engine.coreError({message: {error : "INVALID_MESSAGE_FORMAT"}})
+            self.engine.COREerror({'message': {'error' : "INVALID_MESSAGE_FORMAT"}})
         except errors.CanSocketTimeout as CT:
             for receiver in self.engine.receivers:
-                if receiver.socket_descriptor is CT.socket and receiver.stopped.isSet():
+                if receiver.socket_descriptor is CT.socket:
                     receiver.attempt_recovery()
                     logger.error("the receiver has stopped, due to in inactivity")
-                if receiver.stopped.isSet():
-                    self.engine.coreError({message: { error : "SOCKET_DISCONECT" } })
-                    logger.error("Failed to start receiver")
+                    if receiver._stop.isSet():
+                        self.engine.COREerror({'message': { 'error' : "SOCKET_DISCONECT" } })
+                        logger.error("Failed to start receiver")

@@ -27,5 +27,5 @@ class CanSocketTimeout(EngineError):
     Thrown when a cansocket timeouts out due to a lack of traffic
     """
     def __init__(self,socket):
-        super.__init__()
+        super().__init__()
         self.socket = socket
