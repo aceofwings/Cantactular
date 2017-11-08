@@ -13,8 +13,10 @@ import array
 import struct
 import time
 
+from gateway.can.control.errors import CanSocketTimeout
 from gateway.can.control.errorhandler import BaseErrorTypes
 from gateway.can.traffic.canout import CanOutlet
+
 
 SIOCGSTAMP = 0x8906
 SO_TIMESTAMPNS = 35
@@ -64,9 +66,8 @@ class Receiver(object):
             while not self._stop.isSet():
                 self.outlet.forward(self.canSocket.read())
         except socket.timeout as msg:
-            error = BaseErrorTypes.SOCKET_TIMEOUT
-            error.msg = msg
-            error.socket = self.canSocket.socket
+            error = BaseErrorTypes.SOCKET_TIMEOUT()
+            error.socket = self.socket_descriptor()
             self.outlet.forward_error(error)
             self._stop.set()
 

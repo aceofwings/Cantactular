@@ -1,7 +1,6 @@
 
 import enum
-from gateway.can.control.errorhandler import BaseErrorTypes
-
+from gateway.can.control.errors import NonExtistentType
 """
 Base handle
 """
@@ -43,7 +42,7 @@ class BasicMessageHandler(object):
         try:
             self.handle(self._msg_type_compose(msg_type),message)
         except KeyError as msg:
-            error = BaseErrorTypes.NON_EXIST_TYPE
+            error = NonExtistentType()
             error.msg = message
             self.engine.queue_error(error)
 

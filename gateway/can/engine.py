@@ -107,10 +107,8 @@ class Engine(object):
         message = json.loads(line)
         messagedata = message['message']
         fstring = b'<IB3x8s'
-
         can = struct.pack(fstring, messagedata['canid'], messagedata['dlc'], bytes(messagedata['data']))
         can = list(can)
-
         can[8:] = (bytes(messagedata['data']))
         for i in range(8, 16 - messagedata['dlc']):
             can.insert(i, 0)
@@ -173,9 +171,7 @@ class Engine(object):
         Handles other events as necessary
         """
         can_d = json.loads(message.decode())
-
         self.engine_handler.setup_and_handle(can_d['type'], can_d['message'])
-
         return can_d
 
     def queue_error(self,error):
