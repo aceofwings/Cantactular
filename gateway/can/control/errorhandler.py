@@ -33,27 +33,27 @@ class ErrorHandler(object):
         e.finish()
 
     def handle_error(self,error):
-    #a message has been appended to the error, read it for more details
-    ## A type error occured for some reason, perhaps send the message as can through both sockets
-    ## to see if a response may occur
+    """
+    Handle an error from the engine. To see how the engine
+    """
     try:
         raise error
         logger.info("An Engine error has risen")
     except errors.NonExtistentType as NT:
             logger.error("Could not handle message type " + error.msg['type'])
             if self.force_send:
-                logger.info("Attempting to send message as type CAN")
+                logger.warning("Attempting to send message as type CAN")
                 try:
                     error.msg['type'] = "CAN"
                     self.engine.force_send(error.msg)
                 except Exception as msg:
                     logger.error(msg) #a formating issued occur
-    except errors.InvalidMessageFormat as  IM:
+    except errors.InvalidMessageFormat as IM:
         logger.error("Invalid message format")
         self.engine.coreError({message: {error : "INVALID_MESSAGE_FORMAT"}})
     except errors.CanSocketTimeout as CT:
         for receiver in self.engine.receivers:
-            if receiver.socket_descriptor is socket and receiver.stopped.isSet():
+            if receiver.socket_descriptor is CT.socket and receiver.stopped.isSet():
                 receiver.attempt_recovery()
                 logger.error("the receiver has stopped, due to in inactivity")
             if receiver.stopped.isSet():

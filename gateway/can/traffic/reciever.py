@@ -66,9 +66,7 @@ class Receiver(object):
             while not self._stop.isSet():
                 self.outlet.forward(self.canSocket.read())
         except socket.timeout as msg:
-            error = BaseErrorTypes.SOCKET_TIMEOUT()
-            error.socket = self.socket_descriptor()
-            self.outlet.forward_error(error)
+            self.outlet.forward_error(BaseErrorTypes.CanSocketTimeout(self.socket_descriptor))
             self._stop.set()
 
     def attempt_recovery(self):

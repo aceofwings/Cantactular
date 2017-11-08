@@ -9,10 +9,23 @@ class EngineError(Exception):
         """
         pass
 class NonExtistentType(EngineError):
-    pass
+    """
+    Thrown when an incoming message has an unidentifiable type.
+    """
+    def __init__(self,msg):
+        super().__init__()
+        self.msg = msg
 
 class InvalidMessageFormat(EngineError):
+    """
+    Thrown when an incoming message cannot be formated to the correct message object
+    """
     pass
 
 class CanSocketTimeout(EngineError):
-    pass
+    """
+    Thrown when a cansocket timeouts out due to a lack of traffic
+    """
+    def __init__(self,socket):
+        super.__init__()
+        self.socket = socket
