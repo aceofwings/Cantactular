@@ -75,7 +75,7 @@ class Engine(object):
         while True:
             try:
                 self.error_handler.handle_error(self.errors.get())
-            except queue.Queue.Empty as msg:
+            except queue.Empty as msg:
                 print(msg)
 
 
