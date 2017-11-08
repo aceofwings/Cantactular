@@ -59,7 +59,7 @@ class Receiver(object):
         self._stop.set()
 
     def recieve_and_forward(self):
-        #self.canSocket.socket.settimeout(0)
+        self.canSocket.socket.settimeout(5)
         try:
             while not self._stop.isSet():
                 self.outlet.forward(self.canSocket.read())

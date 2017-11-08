@@ -44,7 +44,7 @@ class Engine(object):
                     self.receivers.append(receiver)
 
             self.engine_handler = BasicMessageHandler(self)
-            self.error_handler = ErrorHandler(self, {force_send : True})
+            self.error_handler = ErrorHandler(self, **{'force_send' : True})
 
         def establish_core():
             tempfolder = ResourceLocator.get_locator(relative_path="temp")
@@ -73,6 +73,11 @@ class Engine(object):
         start_recievers()
 
         while True:
+            try:
+                self.error_handler.handle_error(self.errors.get())
+            except queue.Queue.Empty as msg:
+                print(msg)
+
 
 
     def start(self):
@@ -183,3 +188,4 @@ class Engine(object):
         pass
 
     def notifyEngine(notice=None):
+        pass

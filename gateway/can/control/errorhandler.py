@@ -76,6 +76,6 @@ class ErrorHandler(object):
             else:
                     for receiver in self.engine.receivers:
                         if receiver.stopped.isSet():
-                            receiver.attempt_recovery():
+                            receiver.attempt_recovery()
                         if receiver.stopped.isSet():
                             self.engine.coreError({message: { error : "SOCKET_DISCONECT" } })

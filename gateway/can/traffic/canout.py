@@ -57,8 +57,8 @@ class CanOutlet(object):
         can_d = self.deconstruct_can_message(message)
         self._validate_and_send(can_d)
 
-    def forward_error(self,error,message):
+    def forward_error(self,error):
         """
         will take in the except and determine whether to handle and forward to engine
         """
-        self._engine.engine_error(message)
+        self._engine.engine_error(error)
