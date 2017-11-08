@@ -12,7 +12,6 @@ class StartCommand(GatewayCommand):
         super().__init__(args)
 
     def run(self,arguments):
-
         options = {}
         try:
             self.conf = Configuration(environment=arguments.environment)
@@ -29,10 +28,14 @@ class StartCommand(GatewayCommand):
             options["core_address"] = self.conf.core_socket_address()
         else:
             raise MisconfigurationExecption("No core socket address")
+
+        engine = Engine(**options)
+
         try:
-            Engine(**options).start()
+            engine.start()
         except KeyboardInterrupt as msg:
             print("Exiting...")
+            engine.shutdown()
             sys.exit(0)
 
 

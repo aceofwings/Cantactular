@@ -4,6 +4,7 @@ from gateway.utils.resourcelocator import ResourceLocator
 
 class Server(SocketServer.UnixDatagramServer):
 
+
     engine = None
 
 
@@ -12,3 +13,7 @@ class CoreHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         data = self.request[0]
         self.server.engine.COREreceive(data)
+
+
+    def server_close(self):
+        pass

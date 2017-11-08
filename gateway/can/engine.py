@@ -71,18 +71,19 @@ class Engine(object):
         load_engine()
         establish_core()
         start_recievers()
+        self.server_thread = threading.Thread(target=self.engine_server.serve_forever)
 
+    def start(self):
+        self.server_thread.start()
         while True:
             try:
                 self.error_handler.handle_error(self.errors.get())
             except queue.Empty as msg:
                 print(msg)
 
-
-
-    def start(self):
-        self.engine_server.serve_forever()
-
+    def shutdown(self):
+        self.engine_server.shutdown()
+        #handle errors in queue if there are any and send out any messages
 
     """
     Takes Can Packet as list of 16 bytes, the network, type and endian of data
