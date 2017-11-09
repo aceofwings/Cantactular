@@ -14,7 +14,7 @@ import struct
 import time
 
 from gateway.can.traffic.canout import CanOutlet
-from gateway.can.control.errors import CanSocketTimeout
+from gateway.can.control.errors import CanSocketTimeout, RecoveryTimeout
 
 SIOCGSTAMP = 0x8906
 SO_TIMESTAMPNS = 35
@@ -33,6 +33,7 @@ class Receiver(object):
         """
         super().__init__()
         address, type = socketInfo
+        self.RECOVERY_TIMEOUT = 120
         self.stopped = False
         self.outlet = CanOutlet(engine, message_type=type)
         self.canSocket = CanSocket(address)
@@ -40,7 +41,7 @@ class Receiver(object):
         self.daemonThread.setDaemon(True)
         self._stop = threading.Event()
         self.time_buffer = array.array('B', [0] * 8)
-
+        self._inRecovery = False;
         #Setting the SO_TIMESTAMPNS option will allow the frame to  be recieved with additional ancillary data.
         #The time stamp is now generated  when the interupt is recieved to read from the socket.``
         self.canSocket.socket.setsockopt(socket.SOL_SOCKET, SO_TIMESTAMPNS,1)
@@ -59,7 +60,16 @@ class Receiver(object):
         self._stop.set()
 
     def recieve_and_forward(self):
-        self.canSocket.socket.settimeout(1)
+        if self._inRecovery:
+            self.canSocket.socket.settimeout(self.RECOVERY_TIMEOUT)
+            try:
+                self.outlet.forward(self.canSocket.read())
+                self._inRecovery = False
+                #notify the socket has recovered to the engine
+            except socket.timeout as msg:
+                #let the engine know that recovery failed 
+                self.outlet.forward_error(RecoveryTimeout(self.socket_descriptor)
+
         try:
             while not self._stop.isSet():
                 self.outlet.forward(self.canSocket.read())
@@ -68,7 +78,8 @@ class Receiver(object):
             self._stop.set()
 
     def attempt_recovery(self):
-        pass
+        self._inRecovery = True
+        self.start()
 
     @property
     def socket_descriptor(self):

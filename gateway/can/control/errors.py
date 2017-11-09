@@ -22,6 +22,10 @@ class InvalidMessageFormat(EngineError):
     """
     pass
 
+class RecoveryTimeout(EngineError):
+    def __init__(self,socket):
+        super().__init__()
+        self.socket = socket
 class CanSocketTimeout(EngineError):
     """
     Thrown when a cansocket timeouts out due to a lack of traffic
