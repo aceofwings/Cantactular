@@ -23,6 +23,10 @@ class NoticeContainer(object):
         self._noticers[notice.__class__](self.engine,notice)
 
 class NoticeHandler(object):
+    """
+    The Notice handler which can be overriden for additional functionality, reponds and changes state and execution of the engine based on the notices recieved.
+    Some notices may just be warnings, while others may follow with the engine fowarding to its clients about state change.
+    """
 
     NC = NoticeContainer()
 

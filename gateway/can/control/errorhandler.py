@@ -6,9 +6,10 @@ logger = logging.getLogger(__name__)
 
 class ErrorHandler(object):
     """
-    Error Message may have a message attribute which will have a parsed
-    object message structure. Depending on the error the msg could be different
+    The error handler is responsible for handling all errors risen within the engine and child threads.
+    Based on the type of error, the engine will react, change state and executution.
     """
+
     engine = None
 
 

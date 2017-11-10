@@ -65,4 +65,7 @@ class CanOutlet(object):
 
 
     def forward_notice(self,notice):
+        """
+        will forward notice to the engine for the notice handler to process
+        """
         self._engine.engine_notice(notice)

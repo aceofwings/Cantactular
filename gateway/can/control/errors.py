@@ -23,6 +23,10 @@ class InvalidMessageFormat(EngineError):
     pass
 
 class RecoveryTimeout(EngineError):
+    """
+    Thrown when the engine is in recovery mode and the timeout expires
+    without seeing any change in traffic
+    """
     def __init__(self,socket):
         super().__init__()
         self.socket = socket
