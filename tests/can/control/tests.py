@@ -9,8 +9,8 @@ class TestNotice(unittest.TestCase):
         self.NT = NoticeHandler(Engine())
 
     def test_simpleNoticeHandle(self):
+        pass
         #self.NT.recoverySucessFull(notices.RecoverySucessFull())
-        print(self.NT._noticers)
         #self.NT.handle_notice(notices.RecoverySucessFull())
     def tearDown(self):
         pass

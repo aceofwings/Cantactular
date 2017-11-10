@@ -2,27 +2,32 @@
 
 from gateway.can.control import notices
 
-class NoticeHandler(object):
 
-    engine = None
+class NoticeContainer(object):
+
     _noticers = {}
 
-    def __init__(self,engine):
-        self.engine = engine
+    def __init__(self):
+        pass
 
-    def handler(p=None):
+    def handler(self,p=None):
         def _handle(function):
-            def wrapper(*args,**kwargs):
-                handlerInstance = args[0]
-                handlerInstance._noticers[p] = function
-                return function
-            return wrapper
+            self._noticers[p] = function
+            return function
         return _handle
-
 
     def handle_notice(self,notice):
         self._noticers[notice.__class__](notice)
 
-    @handler(notices.RecoverySucessFull)
+class NoticeHandler(object):
+
+    NC = NoticeContainer()
+
+    def __init__(self,engine):
+        super().__init__()
+        self.engine = engine
+
+
+    @NC.handler(notices.RecoverySucessFull)
     def recoverySucessFull(self,notice):
         print("Hello")
