@@ -62,3 +62,7 @@ class CanOutlet(object):
         will take in the except and determine whether to handle and forward to engine
         """
         self._engine.engine_error(error)
+
+
+    def forward_notice(self,notice):
+        self._engine.engine_notice(notice)

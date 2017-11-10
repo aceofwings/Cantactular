@@ -1,14 +1,17 @@
 
 
 from gateway.can.control import notices
+import logging
 
+
+logger = logging.getLogger(__name__)
 
 class NoticeContainer(object):
 
     _noticers = {}
 
     def __init__(self):
-        pass
+        self.engine = None
 
     def handler(self,p=None):
         def _handle(function):
@@ -16,8 +19,8 @@ class NoticeContainer(object):
             return function
         return _handle
 
-    def handle_notice(self,notice):
-        self._noticers[notice.__class__](notice)
+    def handle(self,notice):
+        self._noticers[notice.__class__](self.engine,notice)
 
 class NoticeHandler(object):
 
@@ -25,9 +28,15 @@ class NoticeHandler(object):
 
     def __init__(self,engine):
         super().__init__()
-        self.engine = engine
+        self.NC.engine = engine
 
 
-    @NC.handler(notices.RecoverySucessFull)
-    def recoverySucessFull(self,notice):
-        print("Hello")
+    @NC.handler(notices.RecoverySuccessfull)
+    def recoverySucessFull(engine,notice):
+        logger.error("A receiver is now seeing traffic")
+
+    def handle_notice(self,notice):
+        try:
+            self.NC.handle(notice)
+        except KeyError as msg:
+            print("Cannot handle error")

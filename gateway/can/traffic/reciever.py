@@ -14,6 +14,7 @@ import logging
 
 from gateway.can.traffic.canout import CanOutlet
 from gateway.can.control.errors import CanSocketTimeout, RecoveryTimeout
+from gateway.can.control.notices import RecoverySuccessfull
 
 SIOCGSTAMP = 0x8906
 SO_TIMESTAMPNS = 35
@@ -65,7 +66,7 @@ class Receiver(object):
             try:
                 self.outlet.forward(self.canSocket.read())
                 self._inRecovery = False
-                #notify the socket has recovered to the engine
+                self.outlet.forward_notice(RecoverySuccessfull(self.socket_descriptor))
             except socket.timeout as msg:
                 #let the engine know that recovery failed
                 self.outlet.forward_error(RecoveryTimeout(self.socket_descriptor))

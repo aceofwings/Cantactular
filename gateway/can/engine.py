@@ -3,6 +3,8 @@ from gateway.can.traffic.server import  Server, CoreHandler
 from gateway.can.traffic.reciever import Receiver
 from gateway.can.control.handler import BasicMessageHandler
 from gateway.can.control.errorhandler import ErrorHandler
+from gateway.can.control.noticehandler import NoticeHandler
+from gateway.can.control.notices import Notice
 
 import socket
 import struct
@@ -33,7 +35,8 @@ class Engine(object):
     engine_server = None
     engine_handler = None
     conf = None
-    errors = queue.Queue()
+    notices = queue.Queue()
+
     receivers = []
     def __init__(self, *args, **options):
         options =  {**defautOptions, **options}
@@ -45,6 +48,7 @@ class Engine(object):
 
             self.engine_handler = BasicMessageHandler(self)
             self.error_handler = ErrorHandler(self, **{'force_send' : True})
+            self.notice_handler = NoticeHandler(self)
 
         def establish_core():
             tempfolder = ResourceLocator.get_locator(relative_path="temp")
@@ -77,7 +81,12 @@ class Engine(object):
         self.server_thread.start()
         while True:
             try:
-                self.error_handler.handle_error(self.errors.get())
+                engine_msg = self.notices.get()
+
+                if issubclass(type(engine_msg), Exception):
+                    self.error_handler.handle_error(engine_msg)
+                else:
+                    self.notice_handler.handle_notice(engine_msg)
             except queue.Empty as msg:
                 print(msg)
 
@@ -161,8 +170,11 @@ class Engine(object):
         wether the error is recoverable
         """
 
-    def engine_error(self,message):
-        self.queue_error(message)
+    def engine_notice(self,notice):
+        self.queue_notice(notice)
+
+    def engine_error(self,error):
+        self.queue_notice(error)
 
 
     def COREreceive(self,message):
@@ -175,14 +187,15 @@ class Engine(object):
         self.engine_handler.setup_and_handle(can_d['type'], can_d['message'])
         return can_d
 
-    def queue_error(self,error):
+    def queue_notice(self,notice):
         try:
-            self.errors.put(error)
+            self.notices.put(notice)
         except queue.Full as msg:
             self.notifyEngine()
+
 
     def force_send(self,msg):
         pass
 
-    def notifyEngine(notice=None):
+    def notifyEngine(self):
         pass
