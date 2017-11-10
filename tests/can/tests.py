@@ -2,7 +2,7 @@ import unittest
 import json
 
 from gateway.can.engine import Engine
-from gateway.can.handler import BasicMessageHandler,BaseMessageTypes
+from gateway.can.control.handler import BasicMessageHandler,BaseMessageTypes
 class TestEngine(unittest.TestCase):
 
     def setUp(self):

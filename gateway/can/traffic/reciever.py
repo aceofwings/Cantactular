@@ -8,16 +8,17 @@ Note: Reievers are not responsible for processing data.
 import threading
 import socket
 import ctypes
-import fcntl
 import array
 import struct
-import time
+import logging
 
 from gateway.can.traffic.canout import CanOutlet
 from gateway.can.control.errors import CanSocketTimeout, RecoveryTimeout
 
 SIOCGSTAMP = 0x8906
 SO_TIMESTAMPNS = 35
+
+logger = logging.getLogger(__name__)
 
 class TIME_VALUE(ctypes.Structure):
     _fields_ = [("tv_sec", ctypes.c_ulong),
@@ -33,7 +34,7 @@ class Receiver(object):
         """
         super().__init__()
         address, type = socketInfo
-        self.RECOVERY_TIMEOUT = 120
+        self.RECOVERY_TIMEOUT = 5
         self.stopped = False
         self.outlet = CanOutlet(engine, message_type=type)
         self.canSocket = CanSocket(address)
@@ -53,7 +54,6 @@ class Receiver(object):
             except socket.error as msg:
                 self.outlet.forward_error(msg)
                 return 0
-
             self.daemonThread.start()
 
     def stop(self):
@@ -67,8 +67,10 @@ class Receiver(object):
                 self._inRecovery = False
                 #notify the socket has recovered to the engine
             except socket.timeout as msg:
-                #let the engine know that recovery failed 
-                self.outlet.forward_error(RecoveryTimeout(self.socket_descriptor)
+                #let the engine know that recovery failed
+                self.outlet.forward_error(RecoveryTimeout(self.socket_descriptor))
+
+        self.canSocket.socket.settimeout(1)
 
         try:
             while not self._stop.isSet():
@@ -79,6 +81,8 @@ class Receiver(object):
 
     def attempt_recovery(self):
         self._inRecovery = True
+        self.daemonThread = threading.Thread(target=self.recieve_and_forward)
+        self.daemonThread.setDaemon(True)
         self.start()
 
     @property

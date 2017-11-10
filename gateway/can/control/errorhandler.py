@@ -55,7 +55,7 @@ class ErrorHandler(object):
             for receiver in self.engine.receivers:
                 if receiver.socket_descriptor is CT.socket:
                     receiver.attempt_recovery()
-                    logger.error("the receiver has stopped, due to in inactivity")
+                    logger.error("the receiver has stopped, due to in inactivity -  attempting recovery")
                     if receiver._stop.isSet():
                         self.engine.COREerror({'message': { 'error' : "SOCKET_DISCONECT" } })
                         logger.error("Failed to start receiver")
