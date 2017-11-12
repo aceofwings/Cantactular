@@ -12,6 +12,8 @@ class CoreHandler(SocketServer.BaseRequestHandler):
 
     def handle(self):
         data = self.request[0]
+
+        address = self.request[1]
         self.server.engine.COREreceive(data)
 
 
