@@ -50,32 +50,33 @@ class Engine(object):
             self.error_handler = ErrorHandler(self, **{'force_send' : True})
             self.notice_handler = NoticeHandler(self)
 
-        def establish_core():
-            tempfolder = ResourceLocator.get_locator(relative_path="temp")
-            if 'core_address' not in options:
-                full_path = tempfolder.fetch_file_path('core.out')
-            else:
-                full_path = tempfolder.fetch_file_path(options['core_address'])
-            try:
-                 os.unlink(full_path)
-            except OSError:
-                if os.path.exists(full_path):
-                    print("The path exists")
-            try:
-                self.engine_server = Server(full_path, CoreHandler)
-            except socket.error as msg:
-                pass
-            except OSError as msg:
-                print(msg)
 
         def start_recievers():
             for receiver in self.receivers:
                 receiver.start()
 
         load_engine()
-        establish_core()
+        self.establish_core(Server,options)
         start_recievers()
         self.server_thread = threading.Thread(target=self.engine_server.serve_forever)
+
+    def establish_core(self,server_cls,options):
+        tempfolder = ResourceLocator.get_locator(relative_path="temp")
+        if 'core_address' not in options:
+            full_path = tempfolder.fetch_file_path('core.out')
+        else:
+            full_path = tempfolder.fetch_file_path(options['core_address'])
+        try:
+             os.unlink(full_path)
+        except OSError:
+            if os.path.exists(full_path):
+                print("The path exists")
+        try:
+            self.engine_server = server_cls(full_path, CoreHandler)
+        except socket.error as msg:
+            pass
+        except OSError as msg:
+            print(msg)
 
     def start(self):
         self.server_thread.start()
