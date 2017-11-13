@@ -1,15 +1,16 @@
 class Controller(object):
     MSG_SEND_SIZE = 16
 
+
 class ControllerContainer(object):
 
-    _handlers = {}
+    engine = None
+    controllers = {}
 
-    defaultDefinitons = ["*"]
-
-    def __init__(self):
-        self.engine = None
-
+    def __init__(self,engine):
+        self._handlers = {}
+        self.defaultDefinitons = ["*"]
+        self.engine = engine
     def handler(self,p=None):
         def _handle(function):
             if p not in self._handlers:
@@ -31,20 +32,25 @@ class ControllerContainer(object):
         matches = self.defaultDefinitons
         return matches
 
+    @classmethod
+    def getContainer(cls,controller_name):
+        print(cls.controllers)
+        cls.controllers[controller_name] = cls(cls.engine)
+        return cls.controllers[controller_name]
 
 class BaseController(Controller):
 
-    CC = ControllerContainer()
+    CC = ControllerContainer.getContainer(__name__)
 
     def __init__(self,engine,msg_type="CAN"):
         self.type = msg_type
-        self.CC.engine = engine
 
     def send_to_bus(self,message):
         self.CC.engine.CANsend(message)
 
     def handle_message(self,message):
         self.CC.handle(message['message'])
+
 
     #should figure out design to wrap as a debugger
     @CC.handler("*")
@@ -53,7 +59,7 @@ class BaseController(Controller):
 
 class EvtCanController(BaseController):
 
-    CC = ControllerContainer()
+    CC = ControllerContainer.getContainer(__name__)
 
     def __init__(self,engine):
         super().__init__(engine,msg_type="EVTCAN")
@@ -65,7 +71,7 @@ class EvtCanController(BaseController):
 
 class OpenCanController(BaseController):
 
-    CC = ControllerContainer()
+    CC = ControllerContainer.getContainer(__name__)
 
     def __init__(self,engine):
         super().__init__(engine,msg_type="OPENCAN")
@@ -77,12 +83,10 @@ class OpenCanController(BaseController):
 
 class MiscController(BaseController):
 
-    CC = ControllerContainer()
+    CC = ControllerContainer.getContainer(__name__)
 
     def __init__(self,engine):
         super().__init__(engine,msg_type="MISC")
-        print(self.CC._handlers)
-
     @CC.handler("*")
     def stuff(engine,message):
         print(message)
