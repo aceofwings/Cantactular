@@ -75,6 +75,7 @@ class Engine(object):
                 print("The path exists")
         try:
             self.engine_server = server_cls(full_path, CoreHandler)
+            self.engine_server.engine = self
         except socket.error as msg:
             pass
         except OSError as msg:
@@ -154,7 +155,9 @@ class Engine(object):
 
     def get_controllers(self):
         return {"EVTCAN" : base.EvtCanController(self), "OPENCAN": base.OpenCanController(self),
-        "ENGINE": internal.InternalController(self), "ERROR", error.ErrorController(self)}
+        "ENGINE": internal.InternalController(self), "ERROR" : error.ErrorController(self),
+        "MISC": base.MiscController(self)}
+
     def COREerror(self,message):
         """
         Recieve messages and foward them as errors to core applications. Will determine
@@ -173,7 +176,7 @@ class Engine(object):
         Server forwards incoming message from engine
         """
         can_d = json.loads(message.decode())
-        self.controllers[can_d['type']].handle_message(cand_d)
+        self.controllers[can_d['type']].handle_message(can_d)
         return can_d
 
     def queue_notice(self,notice):

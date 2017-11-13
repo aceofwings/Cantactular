@@ -12,8 +12,9 @@ class ControllerContainer(object):
 
     def handler(self,p=None):
         def _handle(function):
-            self._handlers.get(p,[])
-            self._handlers.append(function)
+            if p not in self._handlers:
+                self._handlers.setdefault(p, [])
+            self._handlers[p].append(function)
             return function
         return _handle
 
@@ -32,6 +33,7 @@ class ControllerContainer(object):
 
 
 class BaseController(Controller):
+
     CC = ControllerContainer()
 
     def __init__(self,engine,msg_type="CAN"):
@@ -44,23 +46,43 @@ class BaseController(Controller):
     def handle_message(self,message):
         self.CC.handle(message['message'])
 
+    #should figure out design to wrap as a debugger
     @CC.handler("*")
-    def handle_all(self,engine,message):
-        self.send_to_bus(message)
+    def handle_all(engine,message):
+        pass
 
 class EvtCanController(BaseController):
+
+    CC = ControllerContainer()
+
     def __init__(self,engine):
         super().__init__(engine,msg_type="EVTCAN")
 
+    @CC.handler("*")
+    def foward_to_bus(engine,message):
+        pass#engine.CANsend(message)
+
+
 class OpenCanController(BaseController):
+
+    CC = ControllerContainer()
+
     def __init__(self,engine):
         super().__init__(engine,msg_type="OPENCAN")
 
+    @CC.handler("wow")
+    def foward_to_bus(engine,message):
+        print("hello")
+        #engine.CANsend(message)
 
 class MiscController(BaseController):
+
+    CC = ControllerContainer()
+
     def __init__(self,engine):
         super().__init__(engine,msg_type="MISC")
+        print(self.CC._handlers)
 
     @CC.handler("*")
-    def stuff(self,engine,message):
+    def stuff(engine,message):
         print(message)
