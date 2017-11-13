@@ -12,8 +12,13 @@ class Notice(object):
 class RecoverySuccessfull(Notice):
     """
     If a sockettimeout occurs, during an engine's recovery attempt and is able to sucessfully restart its recievers,
-    a RecoverySucessFull notice will be sent. 
+    a RecoverySucessFull notice will be sent.
     """
     def __init__(self,socket):
         self.socket = socket
-        self.msg = {'message' : {'notice' : "A socket is receiving traffice"} , 'type' : 'NOTICE'}
+        self.msg = "An reciever is starting to see data"
+
+class NewConnection(Notice):
+    def __init__(self, address):
+        self.addr = address
+        self.msg = "New Connection : " + self.addr

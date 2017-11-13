@@ -1,10 +1,10 @@
 from gateway.utils.resourcelocator import ResourceLocator
 from gateway.can.traffic.server import  Server, CoreHandler
 from gateway.can.traffic.reciever import Receiver
-from gateway.can.control.handler import BasicMessageHandler
 from gateway.can.control.errorhandler import ErrorHandler
 from gateway.can.control.noticehandler import NoticeHandler
 from gateway.can.control.notices import Notice
+from gateway.can.controllers import base, error,internal
 
 import socket
 import struct
@@ -31,10 +31,12 @@ logger = logging.getLogger(__name__)
 defautOptions = {'interfaces' : {}}
 
 class Engine(object):
-
-    engine_server = None
-    engine_handler = None
+    applications = []
     conf = None
+    can_outs = {}
+    controllers = {}
+    client_lock = threading.RLock()
+    engine_server = None
     notices = queue.Queue()
 
     receivers = []
@@ -45,11 +47,11 @@ class Engine(object):
             for address, interfaceType in options['interfaces'].items():
                     receiver = Receiver((address, interfaceType), self)
                     self.receivers.append(receiver)
+                    self.can_outs[interfaceType] = receiver.socket_descriptor
 
-            self.engine_handler = BasicMessageHandler(self)
             self.error_handler = ErrorHandler(self, **{'force_send' : True})
             self.notice_handler = NoticeHandler(self)
-
+            self.controllers = self.get_controllers()
 
         def start_recievers():
             for receiver in self.receivers:
@@ -128,28 +130,11 @@ class Engine(object):
 
 
     """
-    Creates and binds the sockets of the CAN engine to the default_addresses list.
-    Returns with GLOBAL list of socket objects instantiated
-    """
-    def bindsockets(self):
-        pass
-
-    """
-    Daemon reads the CAN Bus specified by socket connection input
-    Messages recieved are converted to JSON and placed into incoming_buffer
-    """
-    def CANread(self):
-        pass
-
-    """
     Daemon takes messages from the outgoing_buffer
     JSON string is converted to bytes and sent across CAN socket
     """
     def CANsend(self,message):
-        message = self.from_JSON(message)
-
-
-
+        self.can_outs[message['type']].send(bytes([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
 
     def COREsend(self,message,socket=None):
         """
@@ -162,9 +147,14 @@ class Engine(object):
         They decorate a message with type of frame.
 
         """
-        self.to_JSON(message).encode()
+        with self.client_lock:
+            data = self.to_JSON(message).encode()
+            for application in self.applications:
+                self.engine_server.socket.sendto(data, application)
 
-
+    def get_controllers(self):
+        return {"EVTCAN" : base.EvtCanController(self), "OPENCAN": base.OpenCanController(self),
+        "ENGINE": internal.InternalController(self), "ERROR", error.ErrorController(self)}
     def COREerror(self,message):
         """
         Recieve messages and foward them as errors to core applications. Will determine
@@ -180,12 +170,10 @@ class Engine(object):
 
     def COREreceive(self,message):
         """
-        Daemon polls the core socket for messages in JSON
-        Places core messages in outgoing_buffer if message type is CAN
-        Handles other events as necessary
+        Server forwards incoming message from engine
         """
         can_d = json.loads(message.decode())
-        self.engine_handler.setup_and_handle(can_d['type'], can_d['message'])
+        self.controllers[can_d['type']].handle_message(cand_d)
         return can_d
 
     def queue_notice(self,notice):
@@ -193,7 +181,6 @@ class Engine(object):
             self.notices.put(notice)
         except queue.Full as msg:
             self.notifyEngine()
-
 
     def force_send(self,msg):
         pass
