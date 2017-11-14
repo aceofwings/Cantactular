@@ -51,7 +51,6 @@ class Engine(object):
 
             self.error_handler = ErrorHandler(self, **{'force_send' : True})
             self.notice_handler = NoticeHandler(self)
-            self.controllers = self.get_controllers()
 
         def start_recievers():
             for receiver in self.receivers:
@@ -59,6 +58,7 @@ class Engine(object):
 
         load_engine()
         self.establish_core(Server,options)
+        self.load_controllers()
         start_recievers()
         self.server_thread = threading.Thread(target=self.engine_server.serve_forever)
 
@@ -154,13 +154,14 @@ class Engine(object):
                 self.engine_server.socket.sendto(data, application)
 
     def get_controllers(self):
-        return []
+        return [MiscController]
 
 
     def load_controllers(self):
         ControllerContainer.engine = self
+        print(self.get_controllers())
         for controller in self.get_controllers():
-            self.controllers[controller.msg_type] = controller
+            self.controllers[controller.msg_type] = controller()
 
     def COREerror(self,message):
         """

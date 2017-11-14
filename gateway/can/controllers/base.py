@@ -7,10 +7,10 @@ class ControllerContainer(object):
     engine = None
     controllers = {}
 
-    def __init__(self,engine):
+    def __init__(self):
         self._handlers = {}
         self.defaultDefinitons = ["*"]
-        self.engine = engine
+
     def handler(self,p=None):
         def _handle(function):
             if p not in self._handlers:
@@ -34,21 +34,21 @@ class ControllerContainer(object):
 
     @classmethod
     def getContainer(cls,controller_name):
-        cls.controllers[controller_name] = cls(cls.engine)
-        return cls.controllers[controller_name]
+        return cls()
 
 class BaseController(Controller):
 
-    CC = ControllerContainer.getContainer(__name__)
+    CC = ControllerContainer()
+
     msg_type="CAN"
+    def __init__(self):
+        super().__init__()
 
     def send_to_bus(self,message):
-        CC.engine.CANsend(message)
+        pass
 
     def handle_message(self,message):
-        CC.handle(message['message'])
-
-
+        self.CC.handle(message)
     #should figure out design to wrap as a debugger
     @CC.handler("*")
     def handle_all(engine,message):
