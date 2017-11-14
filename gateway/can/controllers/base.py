@@ -34,22 +34,19 @@ class ControllerContainer(object):
 
     @classmethod
     def getContainer(cls,controller_name):
-        print(cls.controllers)
         cls.controllers[controller_name] = cls(cls.engine)
         return cls.controllers[controller_name]
 
 class BaseController(Controller):
 
     CC = ControllerContainer.getContainer(__name__)
-
-    def __init__(self,engine,msg_type="CAN"):
-        self.type = msg_type
+    msg_type="CAN"
 
     def send_to_bus(self,message):
-        self.CC.engine.CANsend(message)
+        CC.engine.CANsend(message)
 
     def handle_message(self,message):
-        self.CC.handle(message['message'])
+        CC.handle(message['message'])
 
 
     #should figure out design to wrap as a debugger
@@ -60,9 +57,7 @@ class BaseController(Controller):
 class EvtCanController(BaseController):
 
     CC = ControllerContainer.getContainer(__name__)
-
-    def __init__(self,engine):
-        super().__init__(engine,msg_type="EVTCAN")
+    msg_type="EVTCAN"
 
     @CC.handler("*")
     def foward_to_bus(engine,message):
@@ -72,9 +67,7 @@ class EvtCanController(BaseController):
 class OpenCanController(BaseController):
 
     CC = ControllerContainer.getContainer(__name__)
-
-    def __init__(self,engine):
-        super().__init__(engine,msg_type="OPENCAN")
+    msg_type="OPENCAN"
 
     @CC.handler("wow")
     def foward_to_bus(engine,message):
@@ -84,9 +77,8 @@ class OpenCanController(BaseController):
 class MiscController(BaseController):
 
     CC = ControllerContainer.getContainer(__name__)
+    msg_type="MISC"
 
-    def __init__(self,engine):
-        super().__init__(engine,msg_type="MISC")
     @CC.handler("*")
     def stuff(engine,message):
         print(message)
