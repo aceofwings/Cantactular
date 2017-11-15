@@ -4,12 +4,13 @@ class Controller(object):
 
 class ControllerContainer(object):
 
-    engine = None
     controllers = {}
+    engine = None
 
     def __init__(self):
-        self._handlers = {}
         self.defaultDefinitons = ["*"]
+        self._handlers = dict.fromkeys(self.defaultDefinitons, [])
+
 
     def handler(self,p=None):
         def _handle(function):
@@ -34,11 +35,17 @@ class ControllerContainer(object):
 
     @classmethod
     def getContainer(cls,controller_name):
+        print(cls.engine)
         return cls()
+    @classmethod
+    def setEngine(cls,engine):
+        cls.engine = engine
+
+
 
 class BaseController(Controller):
 
-    CC = ControllerContainer()
+    CC = ControllerContainer.getContainer(__name__)
 
     msg_type="CAN"
     def __init__(self):
@@ -81,4 +88,4 @@ class MiscController(BaseController):
 
     @CC.handler("*")
     def stuff(engine,message):
-        print(message)
+        print(engine)

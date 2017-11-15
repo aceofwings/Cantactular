@@ -4,7 +4,8 @@ from gateway.can.traffic.reciever import Receiver
 from gateway.can.control.errorhandler import ErrorHandler
 from gateway.can.control.noticehandler import NoticeHandler
 from gateway.can.control.notices import Notice
-from gateway.can.controllers.base import ControllerContainer, MiscController
+from gateway.can.controllers.base import ControllerContainer, MiscController, BaseController
+from gateway.can.controllers.internal import InternalController
 
 import socket
 import struct
@@ -154,12 +155,12 @@ class Engine(object):
                 self.engine_server.socket.sendto(data, application)
 
     def get_controllers(self):
-        return [MiscController]
+        return [InternalController, MiscController]
 
 
     def load_controllers(self):
         ControllerContainer.engine = self
-        print(self.get_controllers())
+        ControllerContainer.setEngine(self)
         for controller in self.get_controllers():
             self.controllers[controller.msg_type] = controller()
 
