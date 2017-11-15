@@ -35,7 +35,6 @@ class ControllerContainer(object):
 
     @classmethod
     def getContainer(cls,controller_name):
-        print(cls.engine)
         return cls()
     @classmethod
     def setEngine(cls,engine):
@@ -68,7 +67,7 @@ class EvtCanController(BaseController):
 
     @CC.handler("*")
     def foward_to_bus(engine,message):
-        pass#engine.CANsend(message)
+        print(message)
 
 
 class OpenCanController(BaseController):
@@ -76,10 +75,9 @@ class OpenCanController(BaseController):
     CC = ControllerContainer.getContainer(__name__)
     msg_type="OPENCAN"
 
-    @CC.handler("wow")
+    @CC.handler("*")
     def foward_to_bus(engine,message):
-        print("hello")
-        #engine.CANsend(message)
+        print("message")
 
 class MiscController(BaseController):
 
@@ -88,4 +86,4 @@ class MiscController(BaseController):
 
     @CC.handler("*")
     def stuff(engine,message):
-        print(engine)
+        print(message)

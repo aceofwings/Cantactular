@@ -39,6 +39,12 @@ class NoticeHandler(object):
     def recoverySucessFull(engine,notice):
         logger.error("A receiver is now seeing traffic")
 
+    @NC.handler(notices.NewConnection)
+    def handleNewConnection(engine,notice):
+        with engine.client_lock:
+            logger.error("A new application has connected " + notice.addr)
+            engine.applications.append(notice.addr)
+
     def handle_notice(self,notice):
         try:
             self.NC.handle(notice)

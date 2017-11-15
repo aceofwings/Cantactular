@@ -35,7 +35,7 @@ class Receiver(object):
         """
         super().__init__()
         address, type = socketInfo
-        self.RECOVERY_TIMEOUT = 5
+        self.RECOVERY_TIMEOUT = 500
         self.stopped = False
         self.outlet = CanOutlet(engine, message_type=type)
         self.canSocket = CanSocket(address)
@@ -66,13 +66,12 @@ class Receiver(object):
             try:
                 self.outlet.forward(self.canSocket.read())
                 self._inRecovery = False
+                self._stop.clear()
                 self.outlet.forward_notice(RecoverySuccessfull(self.socket_descriptor))
             except socket.timeout as msg:
                 #let the engine know that recovery failed
                 self.outlet.forward_error(RecoveryTimeout(self.socket_descriptor))
-
         self.canSocket.socket.settimeout(1)
-
         try:
             while not self._stop.isSet():
                 self.outlet.forward(self.canSocket.read())

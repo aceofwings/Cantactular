@@ -151,7 +151,7 @@ class Engine(object):
         """
         with self.client_lock:
             data = self.to_JSON(message).encode()
-            for application in self.applications:
+            for application in self.applications:                
                 self.engine_server.socket.sendto(data, application)
 
     def get_controllers(self):
@@ -159,7 +159,6 @@ class Engine(object):
 
 
     def load_controllers(self):
-        ControllerContainer.engine = self
         ControllerContainer.setEngine(self)
         for controller in self.get_controllers():
             self.controllers[controller.msg_type] = controller()
@@ -182,7 +181,7 @@ class Engine(object):
         Server forwards incoming message from engine
         """
         can_d = json.loads(message.decode())
-        self.controllers[can_d['type']].handle_message(can_d)
+        self.controllers[can_d['type']].handle_message(can_d['message'])
         return can_d
 
     def queue_notice(self,notice):
