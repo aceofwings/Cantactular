@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-# Evt-Gateway
-We have moved to Bit Bucket.
-
-https://bitbucket.org/evt/gateway-applications/overview
-=======
 # Evt-Gateway(VERSION SDO JSON)
->>>>>>> rev2devd
 
 A heaven for our RIT electric vehicle team code.  
 
