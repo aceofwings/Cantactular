@@ -13,7 +13,6 @@ import os
 import logging
 from gateway.command import gatewayCommandLine
 from gateway.utils.resourcelocator import ResourceLocator
-
 ROOT_PATH = os.path.abspath('.')
 ResourceLocator.ROOT_PATH = ROOT_PATH
 gatewayCommandLine()

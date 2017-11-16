@@ -17,7 +17,7 @@ import os
 import sys
 
 def main_func_gateway():
-    RUN_FILE = os.path.join('gateway', 'launcher.py')
+    RUN_FILE = 'launcher.py'
     LAUNCHER_FILE = 'launcher.py'
     CALL_PATH = os.path.abspath('.')
     currentdir = CALL_PATH
