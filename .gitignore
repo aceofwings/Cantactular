@@ -1,13 +1,9 @@
-<<<<<<< HEAD
 *.egg-info
 *.pot
-=======
 #ignore installer generated files
 *.egg-info
 *.pot
-
 #ignore python compiled files
->>>>>>> rev2devd
 *.py[co]
 .DS_Store
 .tox/
