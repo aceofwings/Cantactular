@@ -1,11 +1,5 @@
 #!/bin/sh
-<<<<<<< HEAD
-modprobe vcansudo ip link set up vcan0
-sudo ip link add dev vcan0 type vcan
-sudo ip link add dev vcan1 type vcan
-sudo ip link set up vcan1
-sudo ip link set up vcan0
-=======
+
 
 # Run "cansetup" from the terminal.
 # Enables vcan and brings up two interfaces
@@ -19,11 +13,6 @@ else
   exit 1s
 fi
 
-sudo ip link add dev vcan0 type vcan 2>/dev/null
-sudo ip link add dev vcan1 type vcan 2>/dev/null
-sudo ip link set up vcan1
-sudo ip link set up vcan0
-
 if exists=$(ifconfig vcan0);then
   echo "vcan0 is already running"
 fi
@@ -31,4 +20,9 @@ fi
 if exists=$(ifconfig vcan1);then
   echo "vcan1 is already running"
 fi
->>>>>>> rev2devd
+
+
+sudo ip link add dev vcan0 type vcan 2>/dev/null
+sudo ip link add dev vcan1 type vcan 2>/dev/null
+sudo ip link set up vcan1
+sudo ip link set up vcan0

@@ -54,13 +54,14 @@ class ErrorHandler(object):
             self.engine.COREerror({'message': {'error' : "INVALID_MESSAGE_FORMAT"}})
         except errors.CanSocketTimeout as CT:
             for receiver in self.engine.receivers:
+                logger.error("the receiver for %s has stopped, due to in inactivity", CT.socket.getsockname()[0])
                 if receiver.socket_descriptor is CT.socket:
                     receiver.attempt_recovery()
-                    logger.error("the receiver has stopped, due to in inactivity -  attempting recovery")
+                    logger.error(" attempting recovery for %s", CT.socket.getsockname()[0])
                     if receiver._stop.isSet():
                         self.engine.COREerror({'message': { 'error' : "SOCKET_DISCONECT" } })
         except errors.RecoveryTimeout as RT:
                     for receiver in self.engine.receivers:
                         if receiver.socket_descriptor is RT.socket:
-                            logger.error("Failed to recover receiver")
+                            logger.error("Failed to recover receiver for interface %s", RT.socket.getsockname()[0] )
                             #log failure of socket and receiver type

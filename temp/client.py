@@ -21,9 +21,9 @@ client.sendto(json.dumps(message).encode(),sever_address)
 
 client.send(json.dumps(new).encode())
 client.send(json.dumps(message).encode())
-while True:
-    print(client.recv(8048))
-    pass
+# #while True:
+#     print(client.recv(8048))
+#     pass
 
 
 

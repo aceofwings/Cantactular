@@ -27,7 +27,7 @@ Amatruda and Rueda
 
 """
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("gateway")
 
 defautOptions = {'interfaces' : {}}
 
@@ -52,6 +52,7 @@ class Engine(object):
 
             self.error_handler = ErrorHandler(self, **{'force_send' : True})
             self.notice_handler = NoticeHandler(self)
+            self.establishlogging()
 
         def start_recievers():
             for receiver in self.receivers:
@@ -98,6 +99,9 @@ class Engine(object):
     def shutdown(self):
         self.engine_server.shutdown()
         #handle errors in queue if there are any and send out any messages
+
+    def establishlogging(self):
+        logger.setLevel(logging.INFO)
 
     """
     Takes Can Packet as list of 16 bytes, the network, type and endian of data
@@ -151,7 +155,7 @@ class Engine(object):
         """
         with self.client_lock:
             data = self.to_JSON(message).encode()
-            for application in self.applications:                
+            for application in self.applications:
                 self.engine_server.socket.sendto(data, application)
 
     def get_controllers(self):

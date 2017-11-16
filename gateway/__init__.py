@@ -1,4 +1,4 @@
-
+import logging
 """
 Gateway Version
 """
@@ -16,4 +16,5 @@ and have certain resources such notifiers. I do want to add a concrete loggging 
 Anyway this will be my last commit as I am too busy with current devlopment and other projects.
 
 """
-    
+
+logging.basicConfig( level=logging.INFO)
