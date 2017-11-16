@@ -1,0 +1,24 @@
+
+{ "environments" :
+  {
+    "production":{
+      "can": {
+      }
+    },
+    "development":{
+      "can":{
+        "interfaces":{
+          "vcan0": "EVTCAN",
+          "vcan1": "CANOPEN"
+        },
+        "socketTimeout" : 0
+      },
+      "engine":{
+        "maxConnections" : 3
+      }
+    },
+    "shared" : {
+  
+    }
+  }
+}

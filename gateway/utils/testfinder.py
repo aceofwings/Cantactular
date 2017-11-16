@@ -1,60 +1,49 @@
 import os
-from  importlib import import_module
-#import_module(name, package=None)
-#
-from gateway.utils.projectpaths import common
 import unittest
-#
-#
-#Test Finder will find and search for test given the specifications
-#Each main module ( CAN, Utils) will have its own tests.py
-#
-#tests.py must contain classes that inherit from unittest and the appropriate
-#prefixes for functions. Eg. test_name
-#
-#Each test must also assert something or skip. It cannot do both.
-#
-TEST_PATH = common.tests
-TEST_MODULE = '.tests'
-#
-#Use a default loader provied by unittest.
-#
-testLoader = unittest.defaultTestLoader
-#
-#Use default test Runner four  our test cases
-#
-testRunner = unittest.TextTestRunner(verbosity=2)
-#find  modules
-def findTestModules():
-    modules = []
-    for directory in os.listdir(common.tests):
-        directoryPath = os.path.join(common.tests,directory)
-        if os.path.isdir(directoryPath):
-            directoryCheck = os.listdir(directoryPath)
-            for testMod in directoryCheck:
-                if testMod == '__init__.py':
-                    modules.append(os.path.basename(directoryPath))
-    return modules
-#load  modules
-def loadTestModules():
-    testing = []
-    testmodules = findTestModules()
-    for module in testmodules:
-         testing.append(import_module('tests.' + module + TEST_MODULE))
-    return testing
+from gateway.utils.resourcelocator import ResourceLocator
+from unittest import TestLoader
 
-def loadTestModulesfromArray(modules):
-    tests = []
-    suite = unittest.TestSuite()
-    for module in modules:
-        test =  testLoader.loadTestsFromModule(import_module(module))
-        suite.addTest(test)
-    return suite
+TEST_PATH = "tests"
+verbosity = 1
+test_loader = unittest.defaultTestLoader
 
 
-#begin testing
-def startTestSequence():
-    modules = loadTestModules()
-    for module in modules:
-        test = testLoader.loadTestsFromModule(module)
-        testRunner.run(test)
+def find_test_modules(file_pattern='test*.py'):
+    test_locator = ResourceLocator.get_locator(TEST_PATH)
+    test_suite = test_loader.discover(test_locator.ROOT_PATH, pattern=file_pattern)
+    return test_suite
+
+def run_tests(test_classes=None):
+    """
+    run_tests - runs a test suite with specified paramters
+    :param test_classes: list of tests classnames to only test
+    :return int: -1 for failure or 0 for success
+    """
+    test_runner = unittest.TextTestRunner(verbosity=verbosity)
+
+    if test_classes is not None:
+        suite = load_test_from_classes(test_classes)
+        if not suite.countTestCases():
+            return False
+        else:
+            test_runner.run(suite)
+            return True
+
+    tests = find_test_modules()
+    test_runner.run(tests)
+    return True
+
+def load_test_from_classes(class_names):
+    """
+    load_test_from_classes - returns a suite with specified class_names
+    :param class_names: list of tests classnames to add to the suite
+    """
+    test_suite = find_test_modules()
+    temp_ts = unittest.TestSuite()
+    for test in test_suite:
+        suite = test.__dict__["_tests"]
+        if len(suite):
+            for case in suite:
+                if case.__dict__["_tests"][0].__class__.__name__ in class_names:
+                    temp_ts.addTest(case)
+    return temp_ts
