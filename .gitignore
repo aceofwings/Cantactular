@@ -1,8 +1,7 @@
-*.egg-info
-*.pot
 #ignore installer generated files
 *.egg-info
 *.pot
+
 #ignore python compiled files
 *.py[co]
 .DS_Store

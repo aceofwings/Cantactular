@@ -1,4 +1,7 @@
 import argparse
+import sys
+
+from gateway.launchers.initializer import find_launcher
 
 class GatewayCommand(object):
     """
@@ -32,8 +35,11 @@ class GatewayCommand(object):
         Perform various actions off arguments recieved
         Parameters:
         arguments - arguments recieved from command line excluding command prefix
+        By default will attempt to find the launcher
         """
-        pass
+        if not find_launcher():
+            print("Could not find launcher")
+            sys.exit(1)
 
     def extendArgparse(self,parser):
         """

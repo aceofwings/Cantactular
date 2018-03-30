@@ -15,28 +15,8 @@ be at the top level of this project, gateway-applications.
 """
 import os
 import sys
+from gateway.command import gatewayCommandLine
 
 def main_func_gateway():
-    RUN_FILE = os.path.join('gateway', 'launcher.py')
-    LAUNCHER_FILE = 'launcher.py'
-    CALL_PATH = os.path.abspath('.')
-    currentdir = CALL_PATH
-    STOP_PATH = os.path.join('','/')
-
-    def lookForLauncher(path):
-        return os.path.isfile(path)
-    def unpackLauncher(path):
-        return open(path, 'r').read()
-    #Loop through until a launcher is found or until it has exhausted all parent directories('/')
-    while True:
-        checkDir = os.path.join(os.path.abspath('.'), RUN_FILE)
-        launcher = lookForLauncher(checkDir)
-        if launcher:
-            f = unpackLauncher(checkDir)
-            exec(f)
-            break
-        elif currentdir == STOP_PATH:
-            print("Fail to find launcher")
-            break
-        os.chdir('..')
-        currentdir = os.path.abspath('.')
+    gatewayCommandLine()
+    

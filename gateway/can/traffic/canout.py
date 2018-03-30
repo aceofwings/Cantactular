@@ -1,5 +1,8 @@
+from gateway.can.traffic.message import CanMessage
+
 import struct
 import time
+
 class CanOutlet(object):
     """
     Base Outlet responsible for filtering and fowarding messages to the Engine
@@ -25,8 +28,7 @@ class CanOutlet(object):
         returns a dictionary representing the canmessage
         """
         canid, dlc, data = struct.unpack(self.can_frame_fmt,message[0])
-        return {'message' : {'canid' : canid, 'dlc' : dlc, 'data' : data}, 'recieved' : (message[1][0] + message[1][1] / 1000000),
-                    'type': self.base}
+        return CanMessage(**{'canid' : canid, 'dlc' : dlc, 'data' : data, 'received' : time.time() , 'type': self.base})
 
     def deconstruct_error_message(self,message):
         pass

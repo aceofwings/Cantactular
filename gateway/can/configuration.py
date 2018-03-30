@@ -7,13 +7,14 @@ class Configuration(object):
     """
     Fetch engine configurations
     """
-    engine_locator = ResourceLocator.get_locator(CONFIG_LOCATION)
+    engine_locator = None
     config_file = None
     json_dict = None
     environment = None
 
     def __init__(self,environment=None):
         super().__init__()
+        self.engine_locator = ResourceLocator.get_locator(CONFIG_LOCATION)
         self.config_file = self.engine_locator.fetch_file("configuration.json","r")
         self.json_dict = json.load(self.config_file)
         if environment is None:
@@ -60,12 +61,28 @@ class Configuration(object):
                 return self.json_dict["environments"][self.environment]
 
     @configProperty("can.interfaces")
-    def interfaces(self):
+    def interfaces():
         pass
 
     @configProperty("core.address")
     def core_socket_address():
         pass
+
+    @configProperty("core.app_type")
+    def core_type():
+        pass
+
+    @configProperty("server")
+    def server_address():
+        pass
+
+    @configProperty("engine.max_ipc_connections")
+    def max_ipc_connections():
+        pass
+    @configProperty("engine.limit_connections")
+    def limit_connection():
+        pass
+
 
 class MisconfigurationExecption(Exception):
     def __init__(self, message, errors):

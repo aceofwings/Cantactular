@@ -1,4 +1,4 @@
-
+import json
 
 class Notice(object):
     """
@@ -6,7 +6,12 @@ class Notice(object):
     an Error should be consider to be fowarded to the Engine to handle that event. Notices may follow after an error has been resolved or
     a state change occurs.
     """
-    pass
+
+    def __init__(self):
+        self.type = "ENGINE"
+
+    def TO_JSON(self):
+        return json.dumps({'type' : self.type})
 
 
 class RecoverySuccessfull(Notice):
@@ -15,10 +20,15 @@ class RecoverySuccessfull(Notice):
     a RecoverySucessFull notice will be sent.
     """
     def __init__(self,socket):
+        super().__init__()
         self.socket = socket
         self.msg = "An reciever is starting to see data"
 
 class NewConnection(Notice):
     def __init__(self, address):
+        super().__init__()
+        self.header =  "NEWCONNECTION"
         self.addr = address
-        self.msg = "New Connection : " + self.addr
+
+    def TO_JSON(self):
+        return json.dumps({'type': self.type, 'header' : self.header,'addr' : self.addr})

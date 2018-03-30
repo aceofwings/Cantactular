@@ -1,2 +1,0 @@
-Command to find ip of local ethernet connection:
-cat /var/lib/misc/dnsmasq.leases

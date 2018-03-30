@@ -1,52 +1,39 @@
-class Controller(object):
+
+EVTCAN = "EVTCAN"
+OPENCAN = "OPENCAN"
+
+class HandlerAssociator(type):
+    def __new__(cls, clsname, bases, dct):
+        class_frame =  type.__new__(cls, clsname, bases, dct)
+        handlers = []
+        for attribute in dct.values():
+            if(hasattr(attribute,'match')):
+                handlers.append(attribute)
+        class_frame.handlers = handlers
+        return class_frame
+
+class Controller(object,metaclass=HandlerAssociator):
     MSG_SEND_SIZE = 16
 
-
-class ControllerContainer(object):
-
-    controllers = {}
-    engine = None
-
     def __init__(self):
-        self.defaultDefinitons = ["*"]
-        self._handlers = dict.fromkeys(self.defaultDefinitons, [])
+        super().__init__()
 
-
-    def handler(self,p=None):
-        def _handle(function):
-            if p not in self._handlers:
-                self._handlers.setdefault(p, [])
-            self._handlers[p].append(function)
-            return function
-        return _handle
-
-    def handle(self,message):
+    def build_controller(self):
         """
-        handle function called specifically to route messages to correct functions
+        Associate the defined handlers with the instance, return a list
+        assocaited handlers for further match definitions
         """
-        matches = self.matcher(message)
-        for match in matches:
-            for handler in self._handlers[match]:
-                handler(self.engine,message)
-
-    def matcher(self,message):
-        matches = self.defaultDefinitons
-        return matches
-
-    @classmethod
-    def getContainer(cls,controller_name):
-        return cls()
-    @classmethod
-    def setEngine(cls,engine):
-        cls.engine = engine
+        ctrl_funcs = []
+        for handler in self.handlers:
+            ctrl_funcs.append(handler.__get__(self))
+        return ctrl_funcs
 
 
 
 class BaseController(Controller):
 
-    CC = ControllerContainer.getContainer(__name__)
-
     msg_type="CAN"
+
     def __init__(self):
         super().__init__()
 
@@ -56,34 +43,40 @@ class BaseController(Controller):
     def handle_message(self,message):
         self.CC.handle(message)
     #should figure out design to wrap as a debugger
-    @CC.handler("*")
-    def handle_all(engine,message):
-        pass
+    def handler(p):
+        def _handle(function):
+            function.match = p
+            return function
+        return _handle
+
+    def handleEvt(messageid = None):
+            def _handle(function):
+                function.match = (messageid)
+                function.type = EVTCAN
+                return function
+            return _handle
+
+    def handleOpen(index = None, sub = None):
+            def _handle(function):
+                function.match = (index,sub)
+                function.type = OPENCAN
+                return function
+            return _handle
 
 class EvtCanController(BaseController):
 
-    CC = ControllerContainer.getContainer(__name__)
     msg_type="EVTCAN"
 
-    @CC.handler("*")
-    def foward_to_bus(engine,message):
-        print(message)
-
-
+    @BaseController.handleEvt(13)
+    def handle_me(self,message):
+        pass
 class OpenCanController(BaseController):
 
-    CC = ControllerContainer.getContainer(__name__)
     msg_type="OPENCAN"
-
-    @CC.handler("*")
-    def foward_to_bus(engine,message):
-        print("message")
+    @BaseController.handleOpen(0x1800,0x00)
+    def handle_you(self,message):
+        pass
 
 class MiscController(BaseController):
 
-    CC = ControllerContainer.getContainer(__name__)
     msg_type="MISC"
-
-    @CC.handler("*")
-    def stuff(engine,message):
-        print(message)

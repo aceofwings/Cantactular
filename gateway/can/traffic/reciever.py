@@ -13,7 +13,7 @@ import struct
 import logging
 
 from gateway.can.traffic.canout import CanOutlet
-from gateway.can.control.errors import CanSocketTimeout, RecoveryTimeout
+from gateway.can.control.errors import CanSocketTimeout, RecoveryTimeout, NonExistentInterface
 from gateway.can.control.notices import RecoverySuccessfull
 
 SIOCGSTAMP = 0x8906
@@ -52,9 +52,10 @@ class Receiver(object):
         if not self.daemonThread.isAlive():
             try:
                 self.canSocket.bind()
-            except socket.error as msg:
-                self.outlet.forward_error(msg)
-                return 0
+            except OSError as msg:
+                if msg.args[0] == 19:
+                    self.outlet.forward_error(NonExistentInterface(self.canSocket.address))
+                    return 0
             self.daemonThread.start()
 
     def stop(self):

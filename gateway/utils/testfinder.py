@@ -41,9 +41,9 @@ def load_test_from_classes(class_names):
     test_suite = find_test_modules()
     temp_ts = unittest.TestSuite()
     for test in test_suite:
-        suite = test.__dict__["_tests"]
+        suite = test.__dict__['_tests']
         if len(suite):
             for case in suite:
-                if case.__dict__["_tests"][0].__class__.__name__ in class_names:
+                if case.__dict__['_tests'][0].__class__.__name__ in class_names:
                     temp_ts.addTest(case)
     return temp_ts

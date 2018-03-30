@@ -11,6 +11,9 @@ class TestCommand(GatewayCommand):
         super().__init__(args)
 
     def run(self,arguments):
+
+        super().run(arguments)
+
         if(arguments.verbose):
             testfinder.verbosity = arguments.verbose
 

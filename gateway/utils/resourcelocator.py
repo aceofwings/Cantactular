@@ -14,13 +14,13 @@ class ResourceLocator(object):
 
     def fetch_file_path(self,filename):
         path = os.path.join(self.ROOT_PATH,filename)
-        return path
+        return os.path.abspath(path)
 
     def fetch_file(self,filename,mode):
         file_resource = open(self.fetch_file_path(filename),mode)
         return file_resource
     @classmethod
-    def get_locator(cls,relative_path=""):
+    def get_locator(cls,relative_path="",lazy=False):
         """
         get_locator - returns a resource locator within the project directory
         :param relative_path: specify a path relative to the projects ROOT_PATH
@@ -30,7 +30,7 @@ class ResourceLocator(object):
         if cls.ROOT_PATH is None:
             raise NoPathSpecified("No ROOT_PATH specified")
         path = os.path.join(cls.ROOT_PATH,relative_path)
-        if not os.path.isdir(path):
+        if not os.path.isdir(path) and  not lazy:
             raise NonExistentDirectory("Folder non existent ", path)
         locator = ResourceLocator(path)
         return locator

@@ -37,3 +37,9 @@ class CanSocketTimeout(EngineError):
     def __init__(self,socket):
         super().__init__()
         self.socket = socket
+
+class NonExistentInterface(EngineError):
+
+    def __init__(self,address):
+        super().__init__()
+        self.address = address

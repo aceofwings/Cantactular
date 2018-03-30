@@ -1,0 +1,37 @@
+
+{ "environments" :
+  {
+    "production":{
+      "can": {
+        "interfaces": {
+          "can0" : "EVTCAN",
+          "can1" : "CANOPEN"
+        }
+      }
+    },
+    "development":{
+      "can":{
+        "interfaces":{
+          "vcan0": "EVTCAN",
+          "vcan1": "CANOPEN"
+        },
+        "socketTimeout" : 0
+      },
+      "engine":{
+        "max_ipc_connections" : 3,
+        "limit_connections" : true
+      }
+    },
+    "shared" : {
+      "core":{
+        "address": "evt.gateway.core.sock",
+        "app_type": "SERVER"
+      },
+      "engine":{
+        "max_ipc_connections" : 3,
+        "limit_connections" : false
+      },
+      "interfaceTypes" : ["EVTCAN","CANOPEN"]
+    }
+  }
+}

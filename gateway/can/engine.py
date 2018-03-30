@@ -1,19 +1,24 @@
 from gateway.utils.resourcelocator import ResourceLocator
 from gateway.can.traffic.server import  Server, CoreHandler
 from gateway.can.traffic.reciever import Receiver
+from gateway.can.traffic.message import CanMessage
 from gateway.can.control.errorhandler import ErrorHandler
 from gateway.can.control.noticehandler import NoticeHandler
-from gateway.can.control.notices import Notice
-from gateway.can.controllers.base import ControllerContainer, MiscController, BaseController
-from gateway.can.controllers.internal import InternalController
+from gateway.can.control.notices import NewConnection
+from gateway.core.server import Server as ServiceServer
+from gateway.core.application import Application
+
+
 
 import socket
 import struct
-import json
 import os
+import sys
 import logging
 import threading
 import queue
+import json
+
 
 """
 CAN Engine|
@@ -27,41 +32,32 @@ Amatruda and Rueda
 
 """
 
+APP = "APPLICATION"
+SERVER = "SERVER"
 logger = logging.getLogger(__name__)
 
 defautOptions = {'interfaces' : {}}
 
 class Engine(object):
-    applications = []
     conf = None
     can_outs = {}
-    controllers = {}
-    client_lock = threading.RLock()
     engine_server = None
     notices = queue.Queue()
+    core_class = None
 
     receivers = []
     def __init__(self, *args, **options):
         options =  {**defautOptions, **options}
         super().__init__()
-        def load_engine():
-            for address, interfaceType in options['interfaces'].items():
-                    receiver = Receiver((address, interfaceType), self)
-                    self.receivers.append(receiver)
-                    self.can_outs[interfaceType] = receiver.socket_descriptor
 
-            self.error_handler = ErrorHandler(self, **{'force_send' : True})
-            self.notice_handler = NoticeHandler(self)
-
-        def start_recievers():
-            for receiver in self.receivers:
-                receiver.start()
-
-        load_engine()
+        self.load_engine(options['interfaces'])
         self.establish_core(Server,options)
-        self.load_controllers()
-        start_recievers()
         self.server_thread = threading.Thread(target=self.engine_server.serve_forever)
+        self.start_recievers()
+
+    def start_recievers(self):
+        for receiver in self.receivers:
+            receiver.start()
 
     def establish_core(self,server_cls,options):
         tempfolder = ResourceLocator.get_locator(relative_path="temp")
@@ -82,6 +78,15 @@ class Engine(object):
         except OSError as msg:
             print(msg)
 
+    def load_engine(self, interfaces):
+        for address, interfaceType in interfaces.items():
+                receiver = Receiver((address, interfaceType), self)
+                self.receivers.append(receiver)
+                self.can_outs[interfaceType] = receiver.socket_descriptor
+
+        self.error_handler = ErrorHandler(self, **{'force_send' : True})
+        self.notice_handler = NoticeHandler(self)
+
     def start(self):
         self.server_thread.start()
         while True:
@@ -97,77 +102,38 @@ class Engine(object):
 
     def shutdown(self):
         self.engine_server.shutdown()
-        #handle errors in queue if there are any and send out any messages
+        current_thread = threading.current_thread()
+        for thread in threading.enumerate():
+            if thread is not current_thread and hasattr(thread,"service"):
+                thread.clean_up()
 
-    """
-    Takes Can Packet as list of 16 bytes, the network, type and endian of data
-    bytes: list of integers, length should be 16
-    CAN Frame: CANID (4) , DataLen (1) , Padding (3) , Data (0 - 8)(Big Endian)
-    Returns JSON string that can be encoded
-    """
-    def to_JSON(self,message):
-        dlc =  message['message']['dlc']
-        if dlc == 0:
-            message['message']['data'] = [0]
-        else:
-            message['message']['data'] = list(message['message']['data'][0: 16 - dlc])
-        return json.dumps(message)
+                thread.join()
 
-    """
-    Takes the formatted JSON string and convert it to CAN Frame (list of 16 bytes)
-    and endian of data.
-    Returns a tuple of bytes list,network,type
-    """
-    def from_JSON(self,line):
-        message = json.loads(line)
-        messagedata = message['message']
-        fstring = b'<IB3x8s'
-        can = struct.pack(fstring, messagedata['canid'], messagedata['dlc'], bytes(messagedata['data']))
-        can = list(can)
-        can[8:] = (bytes(messagedata['data']))
-        for i in range(8, 16 - messagedata['dlc']):
-            can.insert(i, 0)
-        can = bytes(can)
-        return can, message['type']
+                thread.clean_up_r()
 
+        sys.exit(1)
 
     """
     Daemon takes messages from the outgoing_buffer
     JSON string is converted to bytes and sent across CAN socket
     """
-    def CANsend(self,message):
-        self.can_outs[message['type']].send(bytes([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
 
-    def COREsend(self,message,socket=None):
+    def COREreceive(self,message):
         """
-        Daemon unpacks Canmessage and structures it as a dictionary, ultimately
-        passed to COREsend.
-
-        The message format depends on the type of outlet the engine uses.
-        There are two types of outlets one instiated for each interface.
-
-        They decorate a message with type of frame.
-
+        Encoding functions go in here
         """
-        with self.client_lock:
-            data = self.to_JSON(message).encode()
-            for application in self.applications:                
-                self.engine_server.socket.sendto(data, application)
+        return CanMessage.from_JSON(message)
 
-    def get_controllers(self):
-        return [InternalController, MiscController]
-
-
-    def load_controllers(self):
-        ControllerContainer.setEngine(self)
-        for controller in self.get_controllers():
-            self.controllers[controller.msg_type] = controller()
-
-    def COREerror(self,message):
+    def COREsend(self,message):
         """
-        Recieve messages and foward them as errors to core applications. Will determine
-        wether the error is recoverable
+        Decoding functions go in here
+        Subclass for more functionality
         """
+        return message.to_JSON().encode()
+
+    def Corenotice(self,message):
+        pass
+
 
     def engine_notice(self,notice):
         self.queue_notice(notice)
@@ -175,14 +141,6 @@ class Engine(object):
     def engine_error(self,error):
         self.queue_notice(error)
 
-
-    def COREreceive(self,message):
-        """
-        Server forwards incoming message from engine
-        """
-        can_d = json.loads(message.decode())
-        self.controllers[can_d['type']].handle_message(can_d['message'])
-        return can_d
 
     def queue_notice(self,notice):
         try:
@@ -194,4 +152,79 @@ class Engine(object):
         pass
 
     def notifyEngine(self):
+        pass
+
+    @classmethod
+    def getEngineType(cls,engine_type):
+        """
+        return an application engine or server engine
+        """
+        if engine_type == SERVER:
+            return ServerEngine
+        elif engine_type == APP:
+            return ApplicationEngine
+        else:
+            return None
+
+class ServerEngine(Engine):
+    applications = []
+    client_lock = threading.RLock()
+    core_class = ServiceServer
+
+    def __init__(self,*args, **options):
+        super().__init__(*args,**options)
+        self.max_connections = options['max_connections']
+        self.core = ServiceServer(self)
+
+    def COREreceive(self,message):
+        message = super().COREreceive(message)
+        self.core.handleMessage(message)
+
+    def COREsend(self,message):
+        enc_msg = super().COREsend(message)
+        with self.client_lock:
+            for application in self.applications:
+                self.engine_server.socket.sendto(enc_msg, application)
+
+
+    def COREnotice(self,message):
+        pass
+
+    def COREerror(self,message):
+        pass
+
+
+
+class ApplicationEngine(Engine):
+    core_class = Application
+    interface_types = []
+
+    def __init__(self,*args, **options):
+        super().__init__(*args,**options)
+        self.core = Application(self)
+        self.connect_to_server(options["server"])
+
+    """
+    For an Application that is not standalone interfaces are actually just expected types to be handled from
+    the incoming core
+    """
+    def load_engine(self,interfaces):
+        for address, interfaceType in interfaces.items():
+            self.interface_types.append(interfaceType)
+
+    def connect_to_server(self,server_address):
+        self.COREnotice(NewConnection(self.engine_server.socket.getsockname()),server_address)
+
+    def COREreceive(self,message):
+        message = super().COREreceive(message)
+        self.core.handleMessage(message)
+
+    def COREsend(self,message):
+        pass
+
+    def COREnotice(self,message,server_address = None):
+        if server_address is not None:
+            self.engine_server.socket.sendto(message.TO_JSON().encode(),server_address)
+
+    def COREerror(self,message):
         pass

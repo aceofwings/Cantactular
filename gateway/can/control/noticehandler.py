@@ -43,7 +43,15 @@ class NoticeHandler(object):
     def handleNewConnection(engine,notice):
         with engine.client_lock:
             logger.error("A new application has connected " + notice.addr)
-            engine.applications.append(notice.addr)
+            if engine.max_connections is None:
+                engine.applications.append(notice.addr)
+            elif engine.max_connections > len(engine.applications):
+                engine.applications.append(notice.addr)
+            else:
+                pass
+                #deny request
+
+
 
     def handle_notice(self,notice):
         try:

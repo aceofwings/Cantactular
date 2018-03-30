@@ -3,7 +3,7 @@ import os
 import pkgutil
 import inspect
 import gateway
-from . import commands
+from gateway import commands
 from  importlib import import_module
 
 #Package where commands are located
