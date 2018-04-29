@@ -1,4 +1,4 @@
-# Most Update to data repository 
+# Most Recent Gateway repository 
 
 https://bitbucket.org/evt/gateway-applications
 
