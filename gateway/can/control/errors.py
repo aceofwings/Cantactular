@@ -8,7 +8,7 @@ class EngineError(Exception):
         a correction has been made or ultimately change the state of an object.
         """
         pass
-class NonExtistentType(EngineError):
+class NonExistentType(EngineError):
     """
     Thrown when an incoming message has an unidentifiable type.
     """
@@ -43,3 +43,14 @@ class NonExistentInterface(EngineError):
     def __init__(self,address):
         super().__init__()
         self.address = address
+
+class ApplicationSocketClosed(EngineError):
+
+    def __init__(self,applicationAddress):
+        super().__init__()
+        self.applicationAddress = applicationAddress
+
+class CannotEstablishConnection(EngineError):
+    def __init__(self,serverAddress):
+        super().__init__()
+        self.serverAddress = serverAddress

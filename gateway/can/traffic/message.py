@@ -49,7 +49,6 @@ class CanMessage(object):
         if self.dlc == 0:
             message['data'] = [0]
         else:
-            print(self.data)
             message['data'] = list(self.data[0: 16 - self.dlc])
         return json.dumps(message)
 

@@ -13,8 +13,11 @@ class StartCommand(GatewayCommand):
 
     def run(self,arguments):
         options = {}
+
         super().run(arguments)
+
         try:
+            Configuration.load_environment(env=arguments.environment)
             self.conf = Configuration(environment=arguments.environment)
         except MisconfigurationExecption as msg:
             print(msg)
@@ -57,6 +60,7 @@ class StartCommand(GatewayCommand):
             sys.exit(0)
         except SystemExit as msg:
             print("Exiting Application")
+            engine.shutdown()
 
 
     def extendArgparse(self,parser):

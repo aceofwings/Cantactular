@@ -5,7 +5,7 @@
       "can": {
         "interfaces": {
           "can0" : "EVTCAN",
-          "can1" : "CANOPEN"
+          "can1" : "OPENCAN"
         }
       }
     },
@@ -13,7 +13,7 @@
       "can":{
         "interfaces":{
           "vcan0": "EVTCAN",
-          "vcan1": "CANOPEN"
+          "vcan1": "OPENCAN"
         },
         "socketTimeout" : 0
       },
@@ -31,7 +31,7 @@
         "max_ipc_connections" : 3,
         "limit_connections" : false
       },
-      "interfaceTypes" : ["EVTCAN","CANOPEN"]
+      "interfaceTypes" : ["EVTCAN","OPENCAN"]
     }
   }
 }

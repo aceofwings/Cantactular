@@ -11,6 +11,7 @@ class Configuration(object):
     config_file = None
     json_dict = None
     environment = None
+    config = None
 
     def __init__(self,environment=None):
         super().__init__()
@@ -49,10 +50,18 @@ class Configuration(object):
 
     @classmethod
     def conf_with_environment(cls, env):
-        if env in self.json_dict["environments"]:
-            return Configuration(env)
+        if env in cls.json_dict["environments"]:
+            cls.config = Configuration(env)
+            return cls.config
         else:
             return None
+
+    @classmethod
+    def load_environment(cls,env):
+        cls.engine_locator = ResourceLocator.get_locator(CONFIG_LOCATION)
+        cls.config_file = cls.engine_locator.fetch_file("configuration.json","r")
+        cls.json_dict = json.load(cls.config_file)
+        return cls.conf_with_environment(env)
 
     def __environment(self,e=None):
             if e is not None:
@@ -74,6 +83,10 @@ class Configuration(object):
 
     @configProperty("server")
     def server_address():
+        pass
+
+    @configProperty("edsfile")
+    def eds_file_name():
         pass
 
     @configProperty("engine.max_ipc_connections")

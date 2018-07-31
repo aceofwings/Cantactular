@@ -17,10 +17,3 @@ from gateway.launchers.controlerize import load_controllers
 
 ROOT_PATH = os.path.abspath('.')
 ResourceLocator.ROOT_PATH = ROOT_PATH
-
-
-try:
-    import controllers
-    load_controllers(controllers)
-except ImportError:
-    print("No Controllers Found")

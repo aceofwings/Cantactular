@@ -1,18 +1,5 @@
-# Most Recent Gateway repository 
-
-https://bitbucket.org/evt/gateway-applications
-
 # Gateway
 
-A Framework designed around implementing vehicle communications with ease.
-Right now any message surround a dbc format can be encoded and decoded.
-This framework concerns itself with being a passive listener.
-
-Some current applications
- * Self-Driving
- * Self-Diagnostic
- * Logging
- * Playback
 
 
 

@@ -14,10 +14,10 @@ class Notice(object):
         return json.dumps({'type' : self.type})
 
 
-class RecoverySuccessfull(Notice):
+class RecoverySuccessful(Notice):
     """
     If a sockettimeout occurs, during an engine's recovery attempt and is able to sucessfully restart its recievers,
-    a RecoverySucessFull notice will be sent.
+    a RecoverySuccessFul notice will be sent.
     """
     def __init__(self,socket):
         super().__init__()

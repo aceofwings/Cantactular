@@ -1,6 +1,6 @@
 from gateway.utils.resourcelocator import ResourceLocator
 from gateway.templates import launcher
-
+from gateway.can.controllers.base import EVTCAN, OPENCAN
 import shutil
 import json
 import os
@@ -11,16 +11,16 @@ config_template = { 'environments' : {
         'production': {
             'can': {
                 'interfaces': {
-                    'can0' : "EVTCAN",
-                    'can1' : "CANOPEN"
+                    'can1' : EVTCAN,
+                    'can0' : OPENCAN
                 }
             }
         },
         'development': {
             'can': {
                 'interfaces': {
-                    'vcan0' : "EVTCAN",
-                    'vcan1' : "CANOPEN"
+                    'vcan1' : EVTCAN,
+                    'vcan0' : OPENCAN
                 }
             }
         },
@@ -75,7 +75,6 @@ class ProjectCreator(object):
     Module('commands'),
     Folder('canEngine',relative_path='config'),
     Folder('edsfiles',relative_path='config'),
-    Folder('temp')
     ]
 
     def __init__(self,projectName, relative_path = None):

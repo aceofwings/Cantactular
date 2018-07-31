@@ -4,16 +4,16 @@
     "production":{
       "can": {
         "interfaces": {
-          "can0" : "EVTCAN",
-          "can1" : "CANOPEN"
+          "can1" : "EVTCAN",
+          "can0" : "OPENCAN"
         }
       }
     },
     "development":{
       "can":{
         "interfaces":{
-          "vcan0": "EVTCAN",
-          "vcan1": "CANOPEN"
+          "vcan1": "EVTCAN",
+          "vcan0": "OPENCAN"
         },
         "socketTimeout" : 0
       },
@@ -29,7 +29,7 @@
       "engine":{
         "maxConnections" : 3
       },
-      "interfaceTypes" : ["EVTCAN","CANOPEN"]
+      "interfaceTypes" : ["EVTCAN","OPENCAN"]
     }
   }
 }

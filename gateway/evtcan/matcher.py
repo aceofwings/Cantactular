@@ -11,13 +11,13 @@ class EvtCanMatcher(Matcher):
     EVTCAN is all canid therefore messages or matched
     """
     match_type = EVTCAN
-    match = {}
+    match = {"*": []}
 
     def __init__(self):
-        super().__init__()
-        self.construct = DeviceConstruct("INTEL_EVT_CAN.dbc")
+        self.construct = DeviceConstruct()
         self.database = self.construct.fetchDatabase()
         self.messageBox = self.construct.masterMessageBox()
+        super().__init__()
 
 
     def setup_quick_match(self):
@@ -25,9 +25,11 @@ class EvtCanMatcher(Matcher):
         convert any handlers with match string type to a canid
         """
         for handler in self.handlers:
-            if type(handler.match) is str:
-                for message in database.Messages():
-                    if message.Name() == handlers.match[0]:
+            if handler.match in self.match:
+                self.match[handler.match].append(handler)
+            elif type(handler.match) is str:
+                for message in self.database.Messages():
+                    if message.Name() == handler.match:
                         self.match.setdefault(message.CANID(),[])
                         self.match[message.CANID()].append[handlers]
             elif type(handler.match) is int:
@@ -40,6 +42,11 @@ class EvtCanMatcher(Matcher):
         """
         Called by the service for a particular message
         """
+        for handler in  self.match["*"]:
+            if message.canid in self.messageBox:
+                handler(message)
+                #handler(self.messageBox[message.canid](message.data_int))
         if message.canid in self.match:
             for handler in self.match[message.canid]:
-                handler(self.messageBox[message.canid](message.data_int))
+                if message.canid in self.messageBox:
+                    handler(self.messageBox[message.canid](message.data_int))

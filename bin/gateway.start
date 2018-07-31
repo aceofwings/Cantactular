@@ -1,0 +1,5 @@
+#!/bin/sh
+sudo cansetup
+gateway server --location /home/pi/.gw >> /home/pi/server.out &
+cd /home/pi/gateway-applications/applications/logger/
+gateway start --server /home/pi/.gw >> /home/pi/apps.out &

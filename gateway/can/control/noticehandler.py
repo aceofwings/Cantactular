@@ -35,8 +35,8 @@ class NoticeHandler(object):
         self.NC.engine = engine
 
 
-    @NC.handler(notices.RecoverySuccessfull)
-    def recoverySucessFull(engine,notice):
+    @NC.handler(notices.RecoverySuccessful)
+    def recoverySuccessFull(engine,notice):
         logger.error("A receiver is now seeing traffic")
 
     @NC.handler(notices.NewConnection)
@@ -44,9 +44,9 @@ class NoticeHandler(object):
         with engine.client_lock:
             logger.error("A new application has connected " + notice.addr)
             if engine.max_connections is None:
-                engine.applications.append(notice.addr)
+                engine.applications.add(notice.addr)
             elif engine.max_connections > len(engine.applications):
-                engine.applications.append(notice.addr)
+                engine.applications.add(notice.addr)
             else:
                 pass
                 #deny request

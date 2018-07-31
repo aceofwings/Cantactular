@@ -5,8 +5,10 @@ from gateway.can.traffic.message import CanMessage
 from gateway.can.control.errorhandler import ErrorHandler
 from gateway.can.control.noticehandler import NoticeHandler
 from gateway.can.control.notices import NewConnection
+from gateway.can.control.errors import ApplicationSocketClosed, CannotEstablishConnection
 from gateway.core.server import Server as ServiceServer
 from gateway.core.application import Application
+from gateway.launchers.controlerize import load_controllers
 
 
 
@@ -79,13 +81,16 @@ class Engine(object):
             print(msg)
 
     def load_engine(self, interfaces):
-        for address, interfaceType in interfaces.items():
-                receiver = Receiver((address, interfaceType), self)
-                self.receivers.append(receiver)
-                self.can_outs[interfaceType] = receiver.socket_descriptor
-
         self.error_handler = ErrorHandler(self, **{'force_send' : True})
         self.notice_handler = NoticeHandler(self)
+
+        try:
+            import controllers
+            print("loading controllers")
+            load_controllers(controllers)
+        except ImportError:
+            print("No Controllers Found")
+
 
     def start(self):
         self.server_thread.start()
@@ -167,7 +172,7 @@ class Engine(object):
             return None
 
 class ServerEngine(Engine):
-    applications = []
+    applications = set()
     client_lock = threading.RLock()
     core_class = ServiceServer
 
@@ -184,8 +189,19 @@ class ServerEngine(Engine):
         enc_msg = super().COREsend(message)
         with self.client_lock:
             for application in self.applications:
-                self.engine_server.socket.sendto(enc_msg, application)
+                try:
+                    self.engine_server.socket.sendto(enc_msg, application)
+                except socket.error as servererror:
+                    if servererror.errno == socket.errno.ECONNREFUSED:
+                        self.engine_error(ApplicationSocketClosed(application))
 
+
+    def load_engine(self, interfaces):
+        super().load_engine(interfaces)
+        for address, interfaceType in interfaces.items():
+                receiver = Receiver((address, interfaceType), self)
+                self.receivers.append(receiver)
+                self.can_outs[interfaceType] = receiver.socket_descriptor
 
     def COREnotice(self,message):
         pass
@@ -209,6 +225,7 @@ class ApplicationEngine(Engine):
     the incoming core
     """
     def load_engine(self,interfaces):
+        super().load_engine(interfaces)
         for address, interfaceType in interfaces.items():
             self.interface_types.append(interfaceType)
 
@@ -224,7 +241,11 @@ class ApplicationEngine(Engine):
 
     def COREnotice(self,message,server_address = None):
         if server_address is not None:
-            self.engine_server.socket.sendto(message.TO_JSON().encode(),server_address)
+            try:
+                self.engine_server.socket.sendto(message.TO_JSON().encode(),server_address)
+            except FileNotFoundError:
+                self.engine_error(CannotEstablishConnection(server_address))
+
 
     def COREerror(self,message):
         pass

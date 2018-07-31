@@ -4,7 +4,6 @@ import os
 
 class ServerCommand(GatewayCommand):
     description = "Start a basic Server for applications to listen on"
-
     INSTALL_PATH = '/etc/gateway'
 
     def __init__(self,args):

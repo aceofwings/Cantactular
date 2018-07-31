@@ -30,16 +30,20 @@ class Matcher(object):
         """
         pass
 
+
     def match_and_handle(self,message):
         """
+
+        Override to handle an incoming messages from a the given type
+
         Ultimately called by the service to handle a Can Message .
         the can message will then be formatted or passed along based on the implementation
         of match and handle
         """
-        pass
+        raise NotImplementedError
 
-class OpenCanMatcher(Matcher):
-    match_type = OPENCAN
+# class OpenCanMatcher(Matcher):
+#     match_type = OPENCAN
 
 class InternalMatcher(Matcher):
 

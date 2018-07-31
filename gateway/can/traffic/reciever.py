@@ -2,7 +2,7 @@
 Responsible for litening and directing traffic to the engine.
 Will forward data to a source using a callback function, provided by the engine.
 
-Note: Reievers are not responsible for processing data.
+Note: Receivers are not responsible for processing data.
 """
 
 import threading
@@ -14,7 +14,7 @@ import logging
 
 from gateway.can.traffic.canout import CanOutlet
 from gateway.can.control.errors import CanSocketTimeout, RecoveryTimeout, NonExistentInterface
-from gateway.can.control.notices import RecoverySuccessfull
+from gateway.can.control.notices import RecoverySuccessful
 
 SIOCGSTAMP = 0x8906
 SO_TIMESTAMPNS = 35
@@ -68,7 +68,7 @@ class Receiver(object):
                 self.outlet.forward(self.canSocket.read())
                 self._inRecovery = False
                 self._stop.clear()
-                self.outlet.forward_notice(RecoverySuccessfull(self.socket_descriptor))
+                self.outlet.forward_notice(RecoverySuccessful(self.socket_descriptor))
             except socket.timeout as msg:
                 #let the engine know that recovery failed
                 self.outlet.forward_error(RecoveryTimeout(self.socket_descriptor))

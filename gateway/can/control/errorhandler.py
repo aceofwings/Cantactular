@@ -40,7 +40,7 @@ class ErrorHandler(object):
         try:
             raise error
             logger.info("An Engine error has risen")
-        except errors.NonExtistentType as NT:
+        except errors.NonExistentType as NT:
                 logger.error("Could not handle message type " + error.msg['type'])
                 if self.force_send:
                     logger.warning("Attempting to send message as type CAN")
@@ -67,3 +67,11 @@ class ErrorHandler(object):
         except errors.NonExistentInterface as error:
                 print("Interface: " + error.address + " does not exist")
                 self.engine.shutdown()
+        except errors.ApplicationSocketClosed as error:
+            with self.engine.client_lock:
+                if error.applicationAddress in self.engine.applications:
+                    self.engine.applications.remove(error.applicationAddress)
+        except errors.CannotEstablishConnection as error:
+            logger.error("Cannot Initiate Connection to server", error.serverAddress)
+            logger.error("Start the server or specify server location with flag --server")
+            raise SystemExit

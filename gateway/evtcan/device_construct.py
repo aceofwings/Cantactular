@@ -1,5 +1,7 @@
 from evtcantools.dbcmaker import DataBaseMaker
+from gateway.utils.resourcelocator import ResourceLocator
 from evtcantools.dbcparser import INTEL, MOTOROLA
+from gateway.can.configuration import Configuration
 import collections
 
 #Author: Daniel Harrington
@@ -107,8 +109,15 @@ class DeviceConstruct(object):
     Helps parse the signals of devices on the evt network.
     """
     __device_cache = DeviceCache()
-    def __init__(self,dbcfileName):
-        self.dbc = dbcfileName
+    def __init__(self):
+        self.configFileLocator = ResourceLocator.get_locator('config/edsfiles')
+        if  Configuration.config.eds_file_name() is not None:
+            path = self.configFileLocator.fetch_file_path(Configuration.config.eds_file_name())
+            self.__device_cache.dbcDescriptor = DataBaseMaker().db_from_path(path)
+        else:
+            self.__device_cache.dbcDescriptor = DataBaseMaker().db_from_repo()
+
+        self.__device_cache.dbcDescriptor.Load()
 
     def fetchDevice(self,deviceName):
         if self.__device_cache.hasDevice(deviceName):
@@ -117,9 +126,6 @@ class DeviceConstruct(object):
             return self.constructDevice(deviceName)
 
     def fetchDatabase(self):
-        if self.__device_cache.dbcDescriptor is None:
-            self.__device_cache.dbcDescriptor = DataBaseMaker().db_from_repo()
-            self.__device_cache.dbcDescriptor.Load()
 
         return  self.__device_cache.dbcDescriptor
     def constructDevice(self,deviceName):
@@ -127,9 +133,6 @@ class DeviceConstruct(object):
         returns a message box representing the devices messages and each messages
         signals.
         """
-        if self.__device_cache.dbcDescriptor is None:
-            self.__device_cache.dbcDescriptor = DataBaseMaker().db_from_repo()
-            self.__device_cache.dbcDescriptor.Load()
         deviceDescriptor = self.__device_cache.dbcDescriptor._txNodes[deviceName]
         if deviceName not in self.__device_cache.devices:
             self.__device_cache.devices[deviceName] = MessageBox(deviceDescriptor)

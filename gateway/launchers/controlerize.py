@@ -4,7 +4,7 @@ import sys
 
 from gateway.can.controllers.base import BaseController, OPENCAN, EVTCAN
 from gateway.evtcan.matcher import EvtCanMatcher
-from gateway.can.control.matcher import OpenCanMatcher
+from gateway.opencan.matcher import OpenCanMatcher
 
 class ControllerBox(object):
     controller_definitons = []
