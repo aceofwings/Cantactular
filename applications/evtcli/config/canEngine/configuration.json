@@ -3,16 +3,16 @@
         "development": {
             "can": {
                 "interfaces": {
-                    "vcan0": "EVTCAN",
-                    "vcan1": "OPENCAN"
+                    "vcan0": "OPENCAN",
+                    "vcan1": "EVTCAN"
                 }
             }
         },
         "production": {
             "can": {
                 "interfaces": {
-                    "can1": "OPENCAN",
-                    "can0": "EVTCAN"
+                    "can0": "EVTCAN",
+                    "can1": "OPENCAN"
                 }
             }
         },

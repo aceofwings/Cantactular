@@ -1,10 +1,11 @@
 [Unit]
 Description=Startup Interfaces and then Gateway server/applications
+After=network.target
 
 [Service]
 Type=forking
 ExecStart=/home/pi/gateway-applications/bin/gateway.start
-Restart=on-failure
+Restart=always
 
 [Install]
 WantedBy=multi-user.target

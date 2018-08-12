@@ -13,9 +13,7 @@ class StartCommand(GatewayCommand):
 
     def run(self,arguments):
         options = {}
-
         super().run(arguments)
-
         try:
             Configuration.load_environment(env=arguments.environment)
             self.conf = Configuration(environment=arguments.environment)
@@ -46,7 +44,7 @@ class StartCommand(GatewayCommand):
             options["max_connections"] = None
 
 
-        if self.conf.core_type() == APP and arguments.server is not None:
+        if arguments.server is not None:
             options["server"] = arguments.server
 
         engine  = Engine.getEngineType(self.conf.core_type())(**options)

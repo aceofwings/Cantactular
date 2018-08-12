@@ -24,6 +24,7 @@ class EvtCanMatcher(Matcher):
         """
         convert any handlers with match string type to a canid
         """
+
         for handler in self.handlers:
             if handler.match in self.match:
                 self.match[handler.match].append(handler)
@@ -37,7 +38,6 @@ class EvtCanMatcher(Matcher):
                 self.match[handler.match].append(handler)
             else:
                 raise CannotMatch()
-
     def match_and_handle(self,message):
         """
         Called by the service for a particular message
