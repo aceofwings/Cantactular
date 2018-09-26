@@ -12,6 +12,7 @@ import array
 import struct
 import logging
 
+from gateway.can.traffic.canout import CanOutlet
 from gateway.can.control.errors import CanSocketTimeout, RecoveryTimeout, NonExistentInterface
 from gateway.can.control.notices import RecoverySuccessful
 
@@ -36,7 +37,7 @@ class Receiver(object):
         address, type = socketInfo
         self.RECOVERY_TIMEOUT = 500
         self.stopped = False
-        self.outlet = engine.outlet(engine, message_type=type)
+        self.outlet = CanOutlet(engine, message_type=type)
         self.canSocket = CanSocket(address)
         self.daemonThread = threading.Thread(target=self.recieve_and_forward)
         self.daemonThread.setDaemon(True)

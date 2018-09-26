@@ -58,7 +58,6 @@ def create_matchers(handlers):
             matcher.handlers = handlers[matcher.match_type]
 
 
-
 def load_controllers(controller_space):
     controller_box = fetch_controllers(controller_space)
     controller_box.controllers = build_controllers(controller_box.controller_definitons)
