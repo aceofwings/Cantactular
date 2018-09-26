@@ -12,6 +12,8 @@ class CanOutlet(object):
     but it should be left to the Core or Applications to further interpret the data
 
     """
+    #I = CanID; B3= Data length content ; x padbyte ; 8s byte string data
+    #please look at canutils , can.h  for the can_frame struct
     can_frame_fmt = "=IB3x8s"
 
     def __init__(self,engine,message_type=None):
@@ -71,3 +73,14 @@ class CanOutlet(object):
         will forward notice to the engine for the notice handler to process
         """
         self._engine.engine_notice(notice)
+
+class StandAloneCanOutlet(CanOutlet):
+    """
+    And Outlet that fowards a mesage directly to the engines receiver.
+    These are used in applications
+    """
+
+
+    def _validate_and_send(self,can_d):
+        if self.validate(can_d):
+            self._engine.COREreceive(can_d)

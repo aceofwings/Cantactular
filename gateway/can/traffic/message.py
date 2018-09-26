@@ -34,7 +34,7 @@ class CanMessage(object):
         return self.__dict__['addr']
     @property
     def data_int(self):
-        return int.from_bytes(self.data,'big')
+        return int.from_bytes(self.data,'little')
 
     def to_JSON(self):
         """
@@ -49,7 +49,7 @@ class CanMessage(object):
         if self.dlc == 0:
             message['data'] = [0]
         else:
-            message['data'] = list(self.data[0: 16 - self.dlc])
+            message['data'] = list(self.data[0 : self.dlc])[::-1]
         return json.dumps(message)
 
     @classmethod
