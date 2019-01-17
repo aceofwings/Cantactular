@@ -1,7 +1,3 @@
-Project Setup
-
-
-
 Setup Python Virtual Env
 ===========================
 Crucial to not step on other package dependencies, it is recommended
@@ -17,23 +13,24 @@ package installer too but is not covered here.
   # or
   pip3 install virtualenv
 
-
 Run the following command in the project directory
 
-.. code-block: bash
 
-    python3 -m virtualenv env
+.. code-block:: bash
+
+  python3 -m virtualenv env
 
 
 Activate the environment
 
-.. code-block: bash
+
+.. code-block:: bash
 
   source env/bin/activate
 
 
 Install the project
 
-.. code-block: bash
+.. code-block:: bash
 
-    python setup.py install
+  python setup.py install
