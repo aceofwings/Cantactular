@@ -18,6 +18,8 @@ tests/.coverage
 build/
 tests/report/
 *.log
-_build
+_build/env
+_build/doctrees
+
 make.bat
 Makefile
