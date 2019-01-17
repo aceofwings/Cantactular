@@ -1,18 +1,17 @@
-# Gateway
+# Cantactular
 
+Cantacular is a framework for receiving can messages from various Can Buses and handling them. The Framework is based on an MVC pattern making it easy
+to organize and write handlers for incoming  Can messages.
 
+The framework allows to develop many versatile apps without much effort. For developing please visit the docs.
 
-
-## Contributors and Team Members  
-* Daniel Harrington
-* Nick Amatruda
+To get started with your first project [Click Here:](https://aceofwings.github.io/Cantactular/index.html)
 
 # Overview  
-The Gateway is a raspherry PI accompanied by a PI-Can Cape. This device is mounted on the bike and connected to several other  devices such as the IMU and BMS through the protocol can-open.  
+
 
 ## Purpose
-Implemented to follow can-open protocol and is able to operate effectivtly and effciently with many nodes on the network, retrieving various data measurements.
-
+In order to develop behavior based off of incoming messages, target particular messages and to also maintain
 ## How can *you* contribute?
 Contributing is easy and must following our *guidelines*.
 
@@ -28,3 +27,7 @@ To setup the testing interface run
 ```
 cansetup
 ```
+
+## Contributors and Team Members  
+
+* Daniel Harrington
