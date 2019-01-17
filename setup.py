@@ -27,9 +27,9 @@ setup(name='evtgateway',
       version='0.4.3',
       description='Gateway for RIT REV1 Sport Bike',
       url='https://bitbucket.org/evt/gateway-applications',
-      data_files = [(ENGINE_CONF_PATH, ['gateway/config/canEngine/configuration.json']),
-      (INSTALL_PATH,['gateway/templates/launcher.py']),
-      (TEMP_PATH,[])],
+      # data_files = [(ENGINE_CONF_PATH, ['gateway/config/canEngine/configuration.json']),
+      # (INSTALL_PATH,['gateway/templates/launcher.py']),
+      # (TEMP_PATH,[])],
       author='EVT RIT',
       author_email='EVT@RIT.EDU',
       packages=find_packages(),
@@ -49,6 +49,3 @@ setup(name='evtgateway',
 BIN_PATH = '/usr/local/bin'
 
 #ONLY SHOULD RUN on Raspian Production environment...
-os.system("cp bin/gateway.service /etc/systemd/system/gateway.service")
-os.system("chmod +x bin/gateway.start")
-os.system("systemctl enable gateway.service")
