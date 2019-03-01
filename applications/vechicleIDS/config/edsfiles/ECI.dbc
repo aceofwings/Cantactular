@@ -1,0 +1,113 @@
+VERSION "HIPBNYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY/4/%%%/4/'%**4YYY///"
+
+
+NS_ : 
+    NS_DESC_
+    CM_
+    BA_DEF_
+    BA_
+    VAL_
+    CAT_DEF_
+    CAT_
+    FILTER
+    BA_DEF_DEF_
+    EV_DATA_
+    ENVVAR_DATA_
+    SGTYPE_
+    SGTYPE_VAL_
+    BA_DEF_SGTYPE_
+    BA_SGTYPE_
+    SIG_TYPE_REF_
+    VAL_TABLE_
+    SIG_GROUP_
+    SIG_VALTYPE_
+    SIGTYPE_VALTYPE_
+
+BS_:
+
+BU_: GTW BMS IMU SGM
+
+BO_ 128 BMS_cell_voltage: 6 BMS
+ SG_ Cell_no0 : 0|8@1+ (1,0) [0|255] "cell"  GTW
+ SG_ Cell_voltage0 : 8|16@1+ (1,0) [0|5000] "100 uV"  GTW
+ SG_ Cell_no1 : 24|8@1+ (1,0) [0|255] "cell"  GTW
+ SG_ Cell_voltage1 : 32|16@1+ (1,0) [0|5000] "100 uV"  GTW
+
+BO_ 129 BMS_cell_temperature: 6 BMS
+ SG_ Cell_no0 : 0|8@1+ (1,0) [0|255] "cell"  GTW
+ SG_ Cell_temperature0 : 8|16@1+ (1,0) [0|65535] "degC"  GTW
+ SG_ Cell_no1 : 24|8@1+ (1,0) [0|255] "cell"  GTW
+ SG_ Cell_temperature1 : 32|16@1+ (1,0) [0|65535] "degC"  GTW
+
+BO_ 130 BMS_pack_info: 2 BMS
+ SG_ Pack_voltage : 0|16@1+ (1,0) [0|65535] "mV"  GTW
+
+BO_ 160 BMS_error_start: 1 BMS
+ SG_ Error_id : 0|8@1+ (1,0) [0|255] "error"  GTW
+
+BO_ 161 BMS_error_message: 8 BMS
+ SG_ Error_char0 : 0|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char1 : 8|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char2 : 16|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char3 : 24|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char4 : 32|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char5 : 40|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char6 : 48|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char7 : 56|8@1+ (1,0) [0|255] "ASCII"  GTW
+
+BO_ 162 BMS_error_end: 0 BMS
+
+BO_ 512 IMU_linear_acceleration: 6 IMU
+ SG_ X_acceleration : 0|16@1+ (1,0) [0|65535] "m/s^2"  GTW
+ SG_ Y_acceleration : 16|16@1+ (1,0) [0|65535] "m/s^2"  GTW
+ SG_ Z_acceleration : 32|16@1+ (1,0) [0|65535] "m/s^2"  GTW
+
+BO_ 513 IMU_gravity_vector: 6 IMU
+ SG_ X_acceleration : 0|16@1+ (1,0) [0|65535] "m/s^2"  GTW
+ SG_ Y_acceleration : 16|16@1+ (1,0) [0|65535] "m/s^2"  GTW
+ SG_ Z_acceleration : 32|16@1+ (1,0) [0|65535] "m/s^2"  GTW
+
+BO_ 514 IMU_quaternion_position: 8 IMU
+ SG_ W_position : 0|16@1+ (1,0) [0|65535] "quatern"  GTW
+ SG_ X_position : 16|16@1+ (1,0) [0|65535] "quatern"  GTW
+ SG_ Y_position : 32|16@1+ (1,0) [0|65535] "quatern"  GTW
+ SG_ Z_position : 48|16@1+ (1,0) [0|65535] "quatern"  GTW
+
+BO_ 544 IMU_error_start: 1 IMU
+ SG_ Error_id : 0|8@1+ (1,0) [0|255] "error"  GTW
+
+BO_ 545 IMU_error_message: 8 IMU
+ SG_ Error_char0 : 0|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char1 : 8|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char2 : 16|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char3 : 24|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char4 : 32|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char5 : 40|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char6 : 48|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char7 : 56|8@1+ (1,0) [0|255] "ASCII"  GTW
+
+BO_ 546 IMU_error_end: 0 IMU
+
+BO_ 640 SGM_strain: 8 SGM
+ SG_ Gauge_no0 : 0|8@1+ (1,0) [0|255] "gauge"  GTW
+ SG_ Raw_strain0 : 8|24@1+ (1,0) [0|16777215] "counts"  GTW
+ SG_ Gauge_no1 : 32|8@1+ (1,0) [0|255] "gauge"  GTW
+ SG_ Raw_strain1 : 40|24@1+ (1,0) [0|16777215] "counts"  GTW
+
+BO_ 672 SGM_error_start: 1 SGM
+ SG_ Error_id : 0|8@1+ (1,0) [0|255] "error"  GTW
+
+BO_ 673 SGM_error_message: 8 SGM
+ SG_ Error_char0 : 0|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char1 : 8|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char2 : 16|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char3 : 24|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char4 : 32|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char5 : 40|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char6 : 48|8@1+ (1,0) [0|255] "ASCII"  GTW
+ SG_ Error_char7 : 56|8@1+ (1,0) [0|255] "ASCII"  GTW
+
+BO_ 674 SGM_error_end: 0 SGM
+
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 1000000;
+BA_DEF_DEF_  "GenMsgCycleTime" 0;
