@@ -15,7 +15,6 @@ docs/locale/
 node_modules/
 tests/coverage_html/
 tests/.coverage
-_build/
 tests/report/
 *.log
 make.bat
