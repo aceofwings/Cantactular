@@ -8,9 +8,9 @@ Welcome to Cantactular!
 
 .. toctree::
    :maxdepth: 2
-	
-   settingup
 
+   settingup
+   documentation
 
 Indices and tables
 ==================
