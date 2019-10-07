@@ -28,3 +28,8 @@ Run this to add the html to the gh-pages
 .. code-block:: bash
 
      git subtree push --prefix _build/html origin gh-pages
+
+Force the update 
+.. code-block:: bash
+
+    git push origin `git subtree split --prefix _build/html`:gh-pages --force
