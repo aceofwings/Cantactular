@@ -15,7 +15,7 @@ Sphinx is used to generate the documentation. Install sphinx and once done at th
 
   make html
 
-This will compile documentation to html and place is place within the *_build* directory
+This will compile documentation to html and is placed within the *_build* directory
 
 ***************
 Deployment
