@@ -18,6 +18,5 @@ tests/.coverage
 build/
 tests/report/
 *.log
-_build
 make.bat
 Makefile
