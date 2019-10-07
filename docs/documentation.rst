@@ -27,5 +27,4 @@ Run this to add the html to the gh-pages
 
 .. code-block:: bash
 
-     git subtree push --prefix _buld/html origin gh-pages
-   
+     git subtree push --prefix _build/html origin gh-pages
