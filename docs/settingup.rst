@@ -34,3 +34,9 @@ Install the project
 .. code-block:: bash
 
   python setup.py install
+
+You should have the command *gateway* available to You
+
+.. code-block:: bash
+
+  gateway --version
