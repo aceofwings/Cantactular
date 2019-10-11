@@ -9,10 +9,15 @@ test_loader = unittest.defaultTestLoader
 
 
 def find_test_modules(file_pattern='test*.py'):
+    """
+    Finds test modules within the test folder
+    """
     test_locator = ResourceLocator.get_locator(TEST_PATH)
     test_suite = test_loader.discover(test_locator.ROOT_PATH, pattern=file_pattern)
     return test_suite
 
+
+def start_framework_test_sequence(test_classes=None)
 def run_tests(test_classes=None):
     """
     run_tests - runs a test suite with specified paramters

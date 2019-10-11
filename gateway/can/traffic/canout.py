@@ -76,8 +76,8 @@ class CanOutlet(object):
 
 class StandAloneCanOutlet(CanOutlet):
     """
-    And Outlet that fowards a mesage directly to the engines receiver.
-    These are used in applications
+    An Outlet that forwards a message directly to the engines receiver.
+    These are used in standaone applications
     """
 
 

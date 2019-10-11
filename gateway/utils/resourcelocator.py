@@ -27,7 +27,8 @@ class ResourceLocator(object):
         can also be an absolute path.
         """
         path = relative_path
-        if cls.ROOT_PATH is None:
+        print(hasattr(cls,"ROOT_PATH"))
+        if not hasattr(cls,"ROOT_PATH") or cls.ROOT_PATH is None:
             raise NoPathSpecified("No ROOT_PATH specified")
         path = os.path.join(cls.ROOT_PATH,relative_path)
         if not os.path.isdir(path) and  not lazy:
@@ -36,11 +37,11 @@ class ResourceLocator(object):
         return locator
 
 class NonExistentDirectory(Exception):
-    def __init__(self, message, errors):
+    def __init__(self, message, payload=None):
         super().__init__(message)
-        self.errors = errors
+        self.errors = payload
 
 class NoPathSpecified(Exception):
-    def __init__(self, message, errors):
+    def __init__(self, message, payload=None):
         super().__init__(message)
-        self.errors = errors
+        self.errors = payload

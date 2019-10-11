@@ -2,4 +2,4 @@ import unittest
 from gateway.utils import testfinder
 
 
-testfinder.startTestSequence()
+testfinder.run_tests()
